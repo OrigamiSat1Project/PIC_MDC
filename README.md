@@ -12,16 +12,6 @@ Mission of this is
 * SMA antenna
 * Thin film solar cells
 
-[](## Demo)
-
-[](## VS.)
-
-[](## Requirement)
-
-[](## Usage)
-
-[](## Install)
-
 ## Contribution
 
 1. Require privileges for owner or admin.
@@ -30,10 +20,6 @@ Mission of this is
 1. Commit your changes (git commit -am 'Add some feature')
 1. Push to the branch (git push origin <my-new-feature>)
 1. Create new Pull Request
-
-[](## Licence)
-
-[]([MIT](https://github.com/tcnksm/tool/blob/master/LICENCE)
 
 ## Author
 
