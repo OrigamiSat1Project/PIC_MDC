@@ -6,12 +6,12 @@
 #include "I2Clib.h"
 #include "skADXL345I2C.h"
 #include "CAN.h"
+#include "ADC.h"
 #include "init.h"
 #include "eepromI2C.h"
 #include "HMC.h"
 #include "PSITG.h"
 #include "interrupt.h"
-#include "ADC.h"
 #include "I2cR.h"
 #include "PWM_LED.h"
 
@@ -74,6 +74,15 @@
 #define __delay_ms(x)    _delay((unsigned long)((x)*(_XTAL_FREQ/4000UL)))
 #define __delay_us(x) _delay((unsigned long)((x)*(_XTAL_FREQ/4000000.0)))
 
+#define UINT_TRUE       1
+#define UINT_FALSE      0
+#define TRIS_IN         1
+#define TRIS_OUT        0
+#define ANSEL_ANALOG    1
+#define ANSEL_DIGITAL   0
+#define DIGITAL_HIGH    1
+#define DIGITAL_LOW     0
+
 //  ÉÅÉCÉìÇÃèàóù
 void main()
 {
@@ -120,7 +129,7 @@ void main()
         cnt = 0;
 
         if(Rx_Data[0] == 0x01){
-            AD_read(Tx_Data);
+            readAD(*Tx_Data);
             CAN_send(Tx_Data);
         }
 

@@ -2,7 +2,7 @@
 #include "interrupt.h"
 #include "I2Clib.h"
 
-void interrupt_int(void){
+void interrupt_init(void){
     INTCON = 0xE0;
     T0CON = 0xC7;   //0xc7
     TMR0H = 0x00;

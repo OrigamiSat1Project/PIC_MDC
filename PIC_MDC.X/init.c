@@ -43,10 +43,10 @@ void all_init(){
     pic_int();
     InitI2C_Master(1) ;          // Ｉ２Ｃの初期化処理(I2C速度400KHz)
     CAN_int();
-    interrupt_int();             //カウントに使用
+    interrupt_init();             //カウントに使用
     acceler_Init() ;             // センサーの初期化を行う(10bit,±2G,OutRate=200Hz)
     magnet_Init();
     gyro_Init();
-    AD_init();
+    initAD();
     PWM_init();
 }

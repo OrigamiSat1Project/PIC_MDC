@@ -20,7 +20,7 @@
  *	FIXME    :   not yet
  *	XXX      :   avoid hardcoding
  */
-void AD_init(void){
+void initAD(void){
     ANCON0 = 0x17; //AN2pin_ON
     ANCON1 = 0x07; //AN10pin_ON
     ADCON1 = 0x00; //外部電圧参�?�設�?
@@ -39,12 +39,12 @@ void AD_init(void){
  *  AD Read Me
  *	arg      :   void
  *	return   :   void
- *	TODO     :   nothing
+ *	TODO     :   understand this method
  *	FIXME    :   not yet
  *	XXX      :   avoid hardcoding
                  avoid AN0,AN1,,,,
  */
- int AD_read(unsigned char *data){
+ void readAD(UBYTE *_data){
 
      //AD読み取り
      AN0; //ADpin_con AN10
@@ -52,7 +52,7 @@ void AD_init(void){
      //ADCON2 = 0x2D; //
      ADCON0bits.GO = 1;
      while(ADCON0bits.GO);
-     data[0] = ADRESH;
+     _data[0] = ADRESH;
 
      //AD変換クリア
      AN4;
@@ -67,7 +67,7 @@ void AD_init(void){
      //ADCON2 = 0x2D; //
      ADCON0bits.GO = 1;
      while(ADCON0bits.GO);
-     data[1] = ADRESH;
+     _data[1] = ADRESH;
 
      //AD変換クリア
      AN4;
@@ -82,7 +82,7 @@ void AD_init(void){
      //ADCON2 = 0x2D; //
      ADCON0bits.GO = 1;
      while(ADCON0bits.GO);
-     data[2] = ADRESH;
+     _data[2] = ADRESH;
 
      //AD変換クリア
      AN4;
@@ -97,7 +97,7 @@ void AD_init(void){
      //ADCON2 = 0x2D; //
      ADCON0bits.GO = 1;
      while(ADCON0bits.GO);
-     data[3] = ADRESH;
+     _data[3] = ADRESH;
 
      //AD変換クリア
      AN4;
@@ -112,7 +112,7 @@ void AD_init(void){
      //ADCON2 = 0x2D; //
      ADCON0bits.GO = 1;
      while(ADCON0bits.GO);
-     data[4] = ADRESH;
+     _data[4] = ADRESH;
 
      //AD変換クリア
      AN4;
@@ -127,8 +127,8 @@ void AD_init(void){
      //ADCON2 = 0x2D; //
      ADCON0bits.GO = 1;
      while(ADCON0bits.GO);
-     data[5] = ADRESH;
+     _data[5] = ADRESH;
 
-     return 0;
+     return;
 
  }
