@@ -6,3 +6,5 @@
 #define ANSEL_DIGITAL   0
 #define DIGITAL_HIGH    1
 #define DIGITAL_LOW     0
+
+#define _XTAL_FREQ    16000000

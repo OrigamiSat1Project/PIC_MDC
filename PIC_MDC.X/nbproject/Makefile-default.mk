@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=ADXL345I2C.c CAN.c HMC.c I2Clib.c I2cR.c PSITG.c PWM_LED.c eepromI2C.c init.c interrupt.c all_test.c I2C.c ADC.c
+SOURCEFILES_QUOTED_IF_SPACED=ADXL345I2C.c CAN.c HMC.c I2Clib.c I2cR.c PSITG.c PWM_LED.c eepromI2C.c init.c interrupt.c all_test.c ADC.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/ADXL345I2C.p1 ${OBJECTDIR}/CAN.p1 ${OBJECTDIR}/HMC.p1 ${OBJECTDIR}/I2Clib.p1 ${OBJECTDIR}/I2cR.p1 ${OBJECTDIR}/PSITG.p1 ${OBJECTDIR}/PWM_LED.p1 ${OBJECTDIR}/eepromI2C.p1 ${OBJECTDIR}/init.p1 ${OBJECTDIR}/interrupt.p1 ${OBJECTDIR}/all_test.p1 ${OBJECTDIR}/I2C.p1 ${OBJECTDIR}/ADC.p1
-POSSIBLE_DEPFILES=${OBJECTDIR}/ADXL345I2C.p1.d ${OBJECTDIR}/CAN.p1.d ${OBJECTDIR}/HMC.p1.d ${OBJECTDIR}/I2Clib.p1.d ${OBJECTDIR}/I2cR.p1.d ${OBJECTDIR}/PSITG.p1.d ${OBJECTDIR}/PWM_LED.p1.d ${OBJECTDIR}/eepromI2C.p1.d ${OBJECTDIR}/init.p1.d ${OBJECTDIR}/interrupt.p1.d ${OBJECTDIR}/all_test.p1.d ${OBJECTDIR}/I2C.p1.d ${OBJECTDIR}/ADC.p1.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/ADXL345I2C.p1 ${OBJECTDIR}/CAN.p1 ${OBJECTDIR}/HMC.p1 ${OBJECTDIR}/I2Clib.p1 ${OBJECTDIR}/I2cR.p1 ${OBJECTDIR}/PSITG.p1 ${OBJECTDIR}/PWM_LED.p1 ${OBJECTDIR}/eepromI2C.p1 ${OBJECTDIR}/init.p1 ${OBJECTDIR}/interrupt.p1 ${OBJECTDIR}/all_test.p1 ${OBJECTDIR}/ADC.p1
+POSSIBLE_DEPFILES=${OBJECTDIR}/ADXL345I2C.p1.d ${OBJECTDIR}/CAN.p1.d ${OBJECTDIR}/HMC.p1.d ${OBJECTDIR}/I2Clib.p1.d ${OBJECTDIR}/I2cR.p1.d ${OBJECTDIR}/PSITG.p1.d ${OBJECTDIR}/PWM_LED.p1.d ${OBJECTDIR}/eepromI2C.p1.d ${OBJECTDIR}/init.p1.d ${OBJECTDIR}/interrupt.p1.d ${OBJECTDIR}/all_test.p1.d ${OBJECTDIR}/ADC.p1.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/ADXL345I2C.p1 ${OBJECTDIR}/CAN.p1 ${OBJECTDIR}/HMC.p1 ${OBJECTDIR}/I2Clib.p1 ${OBJECTDIR}/I2cR.p1 ${OBJECTDIR}/PSITG.p1 ${OBJECTDIR}/PWM_LED.p1 ${OBJECTDIR}/eepromI2C.p1 ${OBJECTDIR}/init.p1 ${OBJECTDIR}/interrupt.p1 ${OBJECTDIR}/all_test.p1 ${OBJECTDIR}/I2C.p1 ${OBJECTDIR}/ADC.p1
+OBJECTFILES=${OBJECTDIR}/ADXL345I2C.p1 ${OBJECTDIR}/CAN.p1 ${OBJECTDIR}/HMC.p1 ${OBJECTDIR}/I2Clib.p1 ${OBJECTDIR}/I2cR.p1 ${OBJECTDIR}/PSITG.p1 ${OBJECTDIR}/PWM_LED.p1 ${OBJECTDIR}/eepromI2C.p1 ${OBJECTDIR}/init.p1 ${OBJECTDIR}/interrupt.p1 ${OBJECTDIR}/all_test.p1 ${OBJECTDIR}/ADC.p1
 
 # Source Files
-SOURCEFILES=ADXL345I2C.c CAN.c HMC.c I2Clib.c I2cR.c PSITG.c PWM_LED.c eepromI2C.c init.c interrupt.c all_test.c I2C.c ADC.c
+SOURCEFILES=ADXL345I2C.c CAN.c HMC.c I2Clib.c I2cR.c PSITG.c PWM_LED.c eepromI2C.c init.c interrupt.c all_test.c ADC.c
 
 
 CFLAGS=
@@ -175,14 +175,6 @@ ${OBJECTDIR}/all_test.p1: all_test.c  nbproject/Makefile-${CND_CONF}.mk
 	@-${MV} ${OBJECTDIR}/all_test.d ${OBJECTDIR}/all_test.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/all_test.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
-${OBJECTDIR}/I2C.p1: I2C.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/I2C.p1.d 
-	@${RM} ${OBJECTDIR}/I2C.p1 
-	${MP_CC} --pass1 $(MP_EXTRA_CC_PRE) --chip=$(MP_PROCESSOR_OPTION) -Q -G  -D__DEBUG=1 --debugger=icd3  --double=24 --float=24 --emi=wordwrite --opt=+asm,+asmfile,-speed,+space,-debug,-local --addrqual=ignore --mode=free -P -N255 --warn=-3 --asmlist -DXPRJ_default=$(CND_CONF)  --summary=default,-psect,-class,+mem,-hex,-file --output=default,-inhx032 --runtime=default,+clear,+init,-keep,-no_startup,-download,+config,+clib,-plib $(COMPARISON_BUILD)  --output=-mcof,+elf:multilocs --stack=compiled:auto:auto:auto "--errformat=%f:%l: error: (%n) %s" "--warnformat=%f:%l: warning: (%n) %s" "--msgformat=%f:%l: advisory: (%n) %s"    -o${OBJECTDIR}/I2C.p1  I2C.c 
-	@-${MV} ${OBJECTDIR}/I2C.d ${OBJECTDIR}/I2C.p1.d 
-	@${FIXDEPS} ${OBJECTDIR}/I2C.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
-	
 ${OBJECTDIR}/ADC.p1: ADC.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/ADC.p1.d 
@@ -279,14 +271,6 @@ ${OBJECTDIR}/all_test.p1: all_test.c  nbproject/Makefile-${CND_CONF}.mk
 	${MP_CC} --pass1 $(MP_EXTRA_CC_PRE) --chip=$(MP_PROCESSOR_OPTION) -Q -G  --double=24 --float=24 --emi=wordwrite --opt=+asm,+asmfile,-speed,+space,-debug,-local --addrqual=ignore --mode=free -P -N255 --warn=-3 --asmlist -DXPRJ_default=$(CND_CONF)  --summary=default,-psect,-class,+mem,-hex,-file --output=default,-inhx032 --runtime=default,+clear,+init,-keep,-no_startup,-download,+config,+clib,-plib $(COMPARISON_BUILD)  --output=-mcof,+elf:multilocs --stack=compiled:auto:auto:auto "--errformat=%f:%l: error: (%n) %s" "--warnformat=%f:%l: warning: (%n) %s" "--msgformat=%f:%l: advisory: (%n) %s"    -o${OBJECTDIR}/all_test.p1  all_test.c 
 	@-${MV} ${OBJECTDIR}/all_test.d ${OBJECTDIR}/all_test.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/all_test.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
-	
-${OBJECTDIR}/I2C.p1: I2C.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/I2C.p1.d 
-	@${RM} ${OBJECTDIR}/I2C.p1 
-	${MP_CC} --pass1 $(MP_EXTRA_CC_PRE) --chip=$(MP_PROCESSOR_OPTION) -Q -G  --double=24 --float=24 --emi=wordwrite --opt=+asm,+asmfile,-speed,+space,-debug,-local --addrqual=ignore --mode=free -P -N255 --warn=-3 --asmlist -DXPRJ_default=$(CND_CONF)  --summary=default,-psect,-class,+mem,-hex,-file --output=default,-inhx032 --runtime=default,+clear,+init,-keep,-no_startup,-download,+config,+clib,-plib $(COMPARISON_BUILD)  --output=-mcof,+elf:multilocs --stack=compiled:auto:auto:auto "--errformat=%f:%l: error: (%n) %s" "--warnformat=%f:%l: warning: (%n) %s" "--msgformat=%f:%l: advisory: (%n) %s"    -o${OBJECTDIR}/I2C.p1  I2C.c 
-	@-${MV} ${OBJECTDIR}/I2C.d ${OBJECTDIR}/I2C.p1.d 
-	@${FIXDEPS} ${OBJECTDIR}/I2C.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
 ${OBJECTDIR}/ADC.p1: ADC.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 

@@ -1,21 +1,19 @@
-/* 
- * File:   interrupt.h
- * Author: ƒeƒBƒ“ƒ_ƒ‹
- *
- * Created on 2016/10/29, 23:03
- */
+/// Prolougue
 
-//#include "eepromI2C.h"
-//#include "PSITG.h"
-//#include "skADXL345I2C.h"
+//  interrupt file for PIC.
+//  Author      :   reo kashiyama
+
+/// Include files
+#include "OrigamiTypeDefine.h"
+#include "CommonDefine.h"
 
 #ifndef INTERRUPT_H
 #define	INTERRUPT_H
 
-unsigned int cnt;
+//  XXX     :   this is not good timer declation is here
+UINT globalCount;
 
-void interrupt_int(void);
-int interrupt InterFunction(void);
+void initInterrupt(void);
+void interrupt incrementTimer(void);
 
 #endif	/* INTERRUPT_H */
-

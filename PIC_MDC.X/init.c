@@ -1,3 +1,9 @@
+/// Prolougue
+
+//  initialise PIC, other device
+//  Author      :   reo kashiyama
+
+/// Include files
 #include <xc.h>
 #include "init.h"
 #include "I2Clib.h"
@@ -9,8 +15,22 @@
 #include "interrupt.h"
 #include "ADC.h"
 #include "PWM_LED.h"
+#include "OrigamiTypeDefine.h"
+#include "CommonDefine.h"
 
-void pic_int(){
+/// Global data
+
+
+/// Method
+/*
+ *  initialise PIC setting
+ *	arg      :   void
+ *	return   :   void
+ *	TODO     :   avoid double declation
+ *	FIXME    :   not yet
+ *	XXX      :   avoid hardcoding
+*/
+void initPic(void){
      OSCCONbits.IRCF0 = 1;
      OSCCONbits.IRCF1 = 1;
      OSCCONbits.IRCF2 = 1;
@@ -18,33 +38,59 @@ void pic_int(){
      ANCON1 = 0x00;
      TRISA = 0x00;
      TRISB = 0x00;
-     TRISC = 0x80; 
+     TRISC = 0x80;
      PORTA = 0x00;
      PORTB = 0x00;
      PORTC = 0x40;
 }
 
-// 10msウェイトルーチン
-void Wait_1ms(int num) {
+/// Method
+/*
+ *  wait 1ms.
+ *	arg      :   void
+ *	return   :   void
+ *	TODO     :   not yet
+ *	FIXME    :   not yet
+ *	XXX      :   not yet
+*/
+void wait1ms(UINT num) {
     do {
         __delay_ms(1);
     } while (--num > 0);
     return;
 }
 
-void Wait_1us(int num){
+/// Method
+/*
+ *  wait 1us. not correct for few micro second.
+ *	arg      :   void
+ *	return   :   void
+ *	TODO     :   not yet
+ *	FIXME    :   not yet
+ *	XXX      :   not yet
+*/
+void wait1us(UINT num){
     do {
         __delay_us(1);
     } while (--num > 0);
     return;
 }
 
-void all_init(){
-    pic_int();
-    InitI2C_Master(1) ;          // Ｉ２Ｃの初期化処理(I2C速度400KHz)
+/// Method
+/*
+ *  initialise all device on MDC board
+ *	arg      :   void
+ *	return   :   void
+ *	TODO     :   avoid double declation
+ *	FIXME    :   not yet
+ *	XXX      :   avoid hardcoding, reduce init method for here
+*/
+void initAll(void){
+    initPic();
+    InitI2C_Master(1) ;
     CAN_int();
-    interrupt_init();             //カウントに使用
-    acceler_Init() ;             // センサーの初期化を行う(10bit,±2G,OutRate=200Hz)
+    initInterrupt();
+    acceler_Init();
     magnet_Init();
     gyro_Init();
     initAD();

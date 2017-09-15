@@ -14,8 +14,9 @@
 #include "interrupt.h"
 #include "I2cR.h"
 #include "PWM_LED.h"
+#include "OrigamiTypeDefine.h"
+#include "CommonDefine.h"
 
-#define _XTAL_FREQ    16000000   // 使用するPIC等により動作周波数値を設定する
 
 #pragma config RETEN = OFF      // VREG Sleep Enable bit (Ultra low-power regulator is Disabled (Controlled by REGSLP bit))
 #pragma config INTOSCSEL = HIGH // LF-INTOSC Low-power Enable bit (LF-INTOSC in High-power mode during Sleep)
@@ -74,31 +75,22 @@
 #define __delay_ms(x)    _delay((unsigned long)((x)*(_XTAL_FREQ/4000UL)))
 #define __delay_us(x) _delay((unsigned long)((x)*(_XTAL_FREQ/4000000.0)))
 
-#define UINT_TRUE       1
-#define UINT_FALSE      0
-#define TRIS_IN         1
-#define TRIS_OUT        0
-#define ANSEL_ANALOG    1
-#define ANSEL_DIGITAL   0
-#define DIGITAL_HIGH    1
-#define DIGITAL_LOW     0
-
 //  メインの処理
 void main()
 {
-    unsigned int time ; // unsigned int time
-    unsigned int SamplingCounter = 0; //max value = 65536. if sampling count > 65536, this may cause error without reproducibility
+    UINT time ; // unsigned int time
+    UINT SamplingCounter = 0; //max value = 65536. if sampling count > 65536, this may cause error without reproducibility
     int fail;
     //CAN送信データ
-    unsigned char Tx_Data[16];
+    UINT Tx_Data[16];
     //CAN受信データ
-    unsigned char Rx_Data[16];
+    UINT Rx_Data[16];
     char EEPROMH;
     char EEPROML;
 
-    all_init();
+    initAll();
 
-    Wait_1ms(3000);           // ３秒後に開始
+    wait1ms(3000);           // ３秒後に開始
 
     //maybe this is not necesarry
     for(unsigned int i=0;i<16;i++){
@@ -123,10 +115,10 @@ void main()
         }
 
         CAN_read(Rx_Data);
-        Wait_1ms(1000);
+        wait1ms(1000);
         CAN_send(Rx_Data);
 
-        cnt = 0;
+        globalCount = 0;
 
         if(Rx_Data[0] == 0x01){
             readAD(*Tx_Data);
@@ -147,10 +139,10 @@ void main()
             //unsigned int clock = 0;
             //rLED_ON();
             //244count → 1s
-            time = cnt;
+            time = globalCount;
             rLED_ON();
             SamplingCounter = 0;
-            while(cnt-time <= 310){
+            while(globalCount-time <= 310){
 
                 //while((cnt-time) > clock);
                 //clock = cnt-time;
@@ -186,9 +178,9 @@ void main()
             for(unsigned int i=0;i<16;i++){
                 Rx_Data[i]=0x00;
             }
-            Wait_1ms(500);
+            wait1ms(500);
             CAN_send(Rx_Data);
-            Wait_1ms(500);
+            wait1ms(500);
             EEPROMH = 0x00;
             EEPROML = 0x00;
             // Gyro data send
@@ -237,13 +229,13 @@ void main()
 
         if(Rx_Data[0] == 0x03){
             rLED_ON();
-            Wait_1ms(3000);
+            wait1ms(3000);
             rLED_OFF();
         }
 
         if(Rx_Data[0] == 0x04){
             SW_ON;
-            Wait_1ms(3000);
+            wait1ms(3000);
             SW_OFF;
         }
 
@@ -253,7 +245,7 @@ void main()
 
         //CAN_send(Tx_Data);
 
-        Wait_1ms(3000);
+        wait1ms(3000);
 
      }
 }

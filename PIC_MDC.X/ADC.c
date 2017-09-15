@@ -9,7 +9,6 @@
 #include "ADC.h"
 #include "OrigamiTypeDefine.h"
 
-
 /// Global data
 /// Method
 /*
