@@ -4,7 +4,6 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>ADtest.h</itemPath>
       <itemPath>CAN.h</itemPath>
       <itemPath>HMC.h</itemPath>
       <itemPath>I2Clib.h</itemPath>
@@ -16,6 +15,9 @@
       <itemPath>interrupt.h</itemPath>
       <itemPath>skADXL345I2C.h</itemPath>
       <itemPath>I2C.h</itemPath>
+      <itemPath>CommonDefine.h</itemPath>
+      <itemPath>OrigamiTypeDefine.h</itemPath>
+      <itemPath>ADC.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -25,7 +27,6 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>ADXL345I2C.c</itemPath>
-      <itemPath>ADtest.c</itemPath>
       <itemPath>CAN.c</itemPath>
       <itemPath>HMC.c</itemPath>
       <itemPath>I2Clib.c</itemPath>
@@ -37,11 +38,13 @@
       <itemPath>interrupt.c</itemPath>
       <itemPath>all_test.c</itemPath>
       <itemPath>I2C.c</itemPath>
+      <itemPath>ADC.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
                    projectFiles="false">
       <itemPath>Makefile</itemPath>
+      <itemPath>OrigamiTypeDefine.h</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>

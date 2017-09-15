@@ -7,7 +7,7 @@
 #include "HMC.h"
 #include "PSITG.h"
 #include "interrupt.h"
-#include "ADtest.h"
+#include "ADC.h"
 #include "PWM_LED.h"
 
 void pic_int(){

@@ -1,16 +1,12 @@
 /* 
- * File:   ADtest.h
- * Author: ティンダル
+ * File:   ADC.h
+ * Author: Tesla
  *
- * Created on 2016/11/30, 21:52
+ * Created on 2017/09/15, 15:26
  */
 
-#ifndef ADTEST_H
-#define	ADTEST_H
-
-#ifndef _XTAL_FREQ
- #define _XTAL_FREQ 16000000       // 使用するPIC等により動作周波数値を設定する
-#endif
+#ifndef ADC_H
+#define	ADC_H
 
 #define AN0  ADCON0 = 0b00000001
 #define AN1  ADCON0 = 0b00000101
@@ -23,5 +19,5 @@
 void AD_init();
 int AD_read(unsigned char *data);
 
-#endif	/* ADTEST_H */
+#endif	/* ADC_H */
 
