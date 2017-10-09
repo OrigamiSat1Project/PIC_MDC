@@ -3,7 +3,7 @@
     <type>com.microchip.mplab.nbide.embedded.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>MDC_Project</name>
+            <name>IMU_TEST</name>
             <creation-uuid>64e21e54-3538-42ef-9879-5346b307ddc4</creation-uuid>
             <make-project-type>0</make-project-type>
             <c-extensions>c</c-extensions>
