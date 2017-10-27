@@ -4,13 +4,11 @@
 #include <stdlib.h>
 #include <math.h>
 #include "I2Clib.h"
-#include "skADXL345I2C.h"
 #include "CAN.h"
 #include "ADC.h"
 #include "init.h"
 #include "eepromI2C.h"
-#include "HMC.h"
-#include "PSITG.h"
+#include "MPU9250.h"
 #include "interrupt.h"
 #include "I2cR.h"
 #include "PWM_LED.h"
@@ -82,9 +80,9 @@ void main()
     UINT SamplingCounter = 0; //max value = 65536. if sampling count > 65536, this may cause error without reproducibility
     int fail;
     //CAN送信データ
-    UINT Tx_Data[16];
+    UINT bufTx[16];
     //CAN受信データ
-    UINT Rx_Data[16];
+    UINT bufRx[16];
     char EEPROMH;
     char EEPROML;
 
@@ -94,13 +92,13 @@ void main()
 
     //maybe this is not necesarry
     for(unsigned int i=0;i<16;i++){
-        Tx_Data[i]=0x00;
-        Rx_Data[i]=0x00;
+        bufTx[i]=0x00;
+        bufRx[i]=0x00;
     }
 
     /*fail = changeR();
     if(fail == -1){
-        Tx_Data[1] = 0xFF;
+        bufTx[1] = 0xFF;
     }*/
 
     while(1) {
@@ -110,22 +108,22 @@ void main()
         Wait_1ms(1000);*/
 
         for(unsigned int i=0;i<16;i++){
-            Tx_Data[i]=0x00;
-            Rx_Data[i]=0x00;
+            bufTx[i]=0x00;
+            bufRx[i]=0x00;
         }
 
-        readCanData(Rx_Data);
+        readCanData(bufRx);
         wait1ms(1000);
-        sendCanData(Rx_Data);
+        sendCanData(bufRx);
 
         globalCount = 0;
 
-        if(Rx_Data[0] == 0x01){
-            readAD(*Tx_Data);
-            sendCanData(Tx_Data);
+        if(bufRx[0] == 0x01){
+            readAD(*bufTx);
+            sendCanData(bufTx);
         }
 
-        if(Rx_Data[0] == 0x02){
+        if(bufRx[0] == 0x02){
 
             EEPROMH = 0x00;
             EEPROML = 0x00;
@@ -133,9 +131,9 @@ void main()
 
             fail = 0;
             for(unsigned int i=0;i<16;i++){
-                Rx_Data[i]=0x00;
+                bufRx[i]=0x00;
             }
-            sendCanData(Rx_Data);
+            sendCanData(bufRx);
             //unsigned int clock = 0;
             //rLED_ON();
             //244count → 1s
@@ -148,20 +146,16 @@ void main()
                 //clock = cnt-time;
                 /*fail = 0;
                 for(i=0;i<16;i++){
-                    Rx_Data[i]=0x00;
+                    bufRx[i]=0x00;
                 }*/
-                fail = gyro_Read(Rx_Data, 0) ;
-                //sendCanData(Rx_Data);
-                __delay_us(5);
-                fail = acceler_Read(Rx_Data, 8) ;
-                //sendCanData(Rx_Data);
-                __delay_us(5);
-                fail = eep_send(EE_P0_0, EEPROMH, EEPROML, Rx_Data, 16);
+                fail = readIMU(bufRx,0);
+                __delay_us(10);
+                fail = eep_send(EE_P0_0, EEPROMH, EEPROML, bufRx, 16);
                 SamplingCounter ++;
                 __delay_us(1750);   //Wait_1ms(1);
                 if(fail == -1){
-                    Tx_Data[0] = 0xFF;
-                    sendCanData(Tx_Data);
+                    bufTx[0] = 0xFF;
+                    sendCanData(bufTx);
                 }
                 if(EEPROML == 0xF0){
                     EEPROMH +=  0x01;
@@ -176,25 +170,25 @@ void main()
            // rLED_OFF();
 
             for(unsigned int i=0;i<16;i++){
-                Rx_Data[i]=0x00;
+                bufRx[i]=0x00;
             }
             wait1ms(500);
-            sendCanData(Rx_Data);
+            sendCanData(bufRx);
             wait1ms(500);
             EEPROMH = 0x00;
             EEPROML = 0x00;
             // Gyro data send
             for(unsigned int k=0;k<=SamplingCounter;k++){
                 fail = 0;
-                fail = eep_read(EE_P0_0, EEPROMH ,EEPROML ,Tx_Data ,8);
+                fail = eep_read(EE_P0_0, EEPROMH ,EEPROML ,bufTx ,8);
                 __delay_us(3000);
                 /*for(unsigned int i=0;i<16;i++){
-                    Tx_Data[i]=Rx_Data[i];
+                    bufTx[i]=bufRx[i];
                 }*/
-                sendCanData(Tx_Data);
+                sendCanData(bufTx);
                 /*if(fail == -1){
-                    Tx_Data[0] = 0xFF;
-                    sendCanData(Tx_Data);
+                    bufTx[0] = 0xFF;
+                    sendCanData(bufTx);
                 }*/
                 if(EEPROML==0xF0){
                     EEPROMH +=  0x01;      //EEPROMH = EEPROMH+1;
@@ -207,12 +201,12 @@ void main()
             EEPROML = 0x08;
             //  Accel data send
             for(unsigned int k=0;k<=SamplingCounter;k++){
-                eep_read(EE_P0_0, EEPROMH ,EEPROML ,Tx_Data ,8);
+                eep_read(EE_P0_0, EEPROMH ,EEPROML ,bufTx ,8);
                 __delay_us(3000);
-                sendCanData(Tx_Data);
+                sendCanData(bufTx);
                 /*if(fail == -1){
-                    Tx_Data[0] = 0xFF;
-                    sendCanData(Tx_Data);
+                    bufTx[0] = 0xFF;
+                    sendCanData(bufTx);
                 }*/
                 if(EEPROML==0xF8){
                     EEPROMH +=  0x01;      //EEPROMH = EEPROMH+1;
@@ -220,30 +214,30 @@ void main()
                 EEPROML += 0x10;   //(char)(16))
             }
             for(unsigned int i=0;i<16;i++){
-                Rx_Data[i]=0xFF;
+                bufRx[i]=0xFF;
             }
             for(unsigned int i=0;i<SamplingCounter;i++){
-                sendCanData(Rx_Data);
+                sendCanData(bufRx);
             }
         }
 
-        if(Rx_Data[0] == 0x03){
+        if(bufRx[0] == 0x03){
             rLED_ON();
             wait1ms(3000);
             rLED_OFF();
         }
 
-        if(Rx_Data[0] == 0x04){
+        if(bufRx[0] == 0x04){
             SW_ON;
             wait1ms(3000);
             SW_OFF;
         }
 
         for(unsigned int i=0;i<16;i++){
-            Tx_Data[i]=0xFF;
+            bufTx[i]=0xFF;
         }
 
-        //sendCanData(Tx_Data);
+        //sendCanData(bufTx);
 
         wait1ms(3000);
 

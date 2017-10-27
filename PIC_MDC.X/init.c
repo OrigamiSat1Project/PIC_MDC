@@ -7,11 +7,9 @@
 #include <xc.h>
 #include "init.h"
 #include "I2Clib.h"
-#include "skADXL345I2C.h"
 #include "CAN.h"
 #include "eepromI2C.h"
-#include "HMC.h"
-#include "PSITG.h"
+#include "MPU9250.h"
 #include "interrupt.h"
 #include "ADC.h"
 #include "PWM_LED.h"
@@ -90,9 +88,7 @@ void initAll(void){
     InitI2C_Master(1) ;
     initCan();
     initInterrupt();
-    acceler_Init();
-    magnet_Init();
-    gyro_Init();
+    initIMU();
     initAD();
     PWM_init();
 }
