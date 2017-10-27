@@ -127,8 +127,6 @@ void main()
 
             EEPROMH = 0x00;
             EEPROML = 0x00;
-
-
             fail = 0;
             for(unsigned int i=0;i<16;i++){
                 bufRx[i]=0x00;

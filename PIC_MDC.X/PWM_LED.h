@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   PWM_LED.h
  * Author: ティンダル
  *
@@ -12,10 +12,9 @@
  #define _XTAL_FREQ 16000000       // 使用するPIC等により動作周波数値を設定する
 #endif
 
-int PWM_init(void);
-int PWM_LED(int lux);
+int initPWM(void);
+int pwmLED_ON(int, int);
 void rLED_ON(void);
 void rLED_OFF(void);
 
 #endif	/* PWM_LED_H */
-

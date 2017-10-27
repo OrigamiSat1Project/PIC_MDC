@@ -90,5 +90,5 @@ void initAll(void){
     initInterrupt();
     initIMU();
     initAD();
-    PWM_init();
+    initPWM();
 }
