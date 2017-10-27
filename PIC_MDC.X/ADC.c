@@ -1,6 +1,6 @@
 /// Prolougue
 
-//  AD setting initialise, read Analog vlotage for get SMA antenna dBm
+//  AD setting initialise, read Analog voltage for get SMA antenna dBm
 //  Author      :   reo kashiyama
 
 /// Include files

@@ -17,9 +17,9 @@
 #define CAN_EID_L  0xFF
 #define CAN_EID_H  0xFF
 
-void CAN_int();
-void CAN_read(char *read_data);
-void CAN_send(char *send_data);
+void initCan();
+void readCanData(char *read_data);
+void sendCanData(char *send_data);
 
 #endif	/* CAN_H */
 

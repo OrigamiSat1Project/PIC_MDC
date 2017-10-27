@@ -88,7 +88,7 @@ void wait1us(UINT num){
 void initAll(void){
     initPic();
     InitI2C_Master(1) ;
-    CAN_int();
+    initCan();
     initInterrupt();
     acceler_Init();
     magnet_Init();

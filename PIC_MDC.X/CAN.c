@@ -1,8 +1,26 @@
+/// Prolougue
+
+//  CAN setting initialise, read Can data from OBC, send Can data to OBC
+//  Author      :   reo kashiyama
+
+/// Include files
 #include <xc.h>
 #include "CAN.h"
+#include "CommonDefine.h"
+#include "OrigamiTypeDefine.h"
 
-//CAN初期化
-void CAN_int(){
+/// Global data
+
+/// Method
+/*
+ *  initialise PIC CAN setting
+ *	arg      :   void
+ *	return   :   void
+ *	TODO     :   nothing
+ *	FIXME    :   not yet
+ *	XXX      :   avoid hardcoding
+ */
+void initCan(){
     //TRISCbits.TRISC6 = 0;  //Can設定　RC6=0、RC7=1
     //TRISCbits.TRISC7 = 1;
     CANCON = 0x80; //configモードON
@@ -43,15 +61,23 @@ void CAN_int(){
     CANSTAT =0x00;
     CANCON = 0x00; //ノーマルモード
     return;
-} 
+}
 
-//CAN受信
-void CAN_read(char *read_data){
+
+/*
+ *  read received Can buffer
+ *	arg      :   address of char array (size:8)
+ *	return   :   void
+ *	TODO     :   nothing
+ *	FIXME    :   not yet
+ *	XXX      :   wait for RXFUL forever. need received interrupt
+*/
+void readCanData(char *read_data){
     RXF0SIDH = CAN_ID_H;
     RXF0SIDL = CAN_ID_L;
     RXF0EIDH = CAN_EID_H;
     RXF0EIDL = CAN_EID_L;
-    
+
     while(RXB0CONbits.RXFUL==0){}//データが受信できているか確認
     read_data[0] = RXB0D0;//受信したデータを格納
     read_data[1] = RXB0D1;
@@ -65,9 +91,17 @@ void CAN_read(char *read_data){
     return;
 }
 
-//CAN送信
-void CAN_send(char *send_data){
-    TXB0D0 = send_data[0];//送信データを定義
+/*
+ *  send Can buffer
+ *	arg      :   address of char array (size:8)
+ *	return   :   void
+ *	TODO     :   nothing
+ *	FIXME    :   not yet
+ *	XXX      :   wait for RXFUL forever. need received interrupt
+ */
+void sendCanData(char *send_data){
+    //  set data to buffer for sending
+    TXB0D0 = send_data[0];
     TXB0D1 = send_data[1];
     TXB0D2 = send_data[2];
     TXB0D3 = send_data[3];
@@ -75,12 +109,13 @@ void CAN_send(char *send_data){
     TXB0D5 = send_data[5];
     TXB0D6 = send_data[6];
     TXB0D7 = send_data[7];
-    TXB0SIDL = CAN_ID_L;//IDを格納
+    //  set buffer for standarf identifier registers
+    TXB0SIDL = CAN_ID_L;
     TXB0SIDH = CAN_ID_H;
     TXB0EIDL = CAN_EID_L;
     TXB0EIDH = CAN_EID_H;
-    TXB0DLC = 0x08;
-    TXB0CON = 0x0B;//送信
-    while(TXB0CONbits.TXREQ){}
+    TXB0DLC = 0x08;     //  DataLength = 8 bytes
+    TXB0CON = 0x0B;     //  set TXREQ, set priority level
+    while(TXB0CONbits.TXREQ){}  //  TXREQ cleared when message is successfully sent
     return;
 }

@@ -114,15 +114,15 @@ void main()
             Rx_Data[i]=0x00;
         }
 
-        CAN_read(Rx_Data);
+        readCanData(Rx_Data);
         wait1ms(1000);
-        CAN_send(Rx_Data);
+        sendCanData(Rx_Data);
 
         globalCount = 0;
 
         if(Rx_Data[0] == 0x01){
             readAD(*Tx_Data);
-            CAN_send(Tx_Data);
+            sendCanData(Tx_Data);
         }
 
         if(Rx_Data[0] == 0x02){
@@ -135,7 +135,7 @@ void main()
             for(unsigned int i=0;i<16;i++){
                 Rx_Data[i]=0x00;
             }
-            CAN_send(Rx_Data);
+            sendCanData(Rx_Data);
             //unsigned int clock = 0;
             //rLED_ON();
             //244count ¨ 1s
@@ -151,17 +151,17 @@ void main()
                     Rx_Data[i]=0x00;
                 }*/
                 fail = gyro_Read(Rx_Data, 0) ;
-                //CAN_send(Rx_Data);
+                //sendCanData(Rx_Data);
                 __delay_us(5);
                 fail = acceler_Read(Rx_Data, 8) ;
-                //CAN_send(Rx_Data);
+                //sendCanData(Rx_Data);
                 __delay_us(5);
                 fail = eep_send(EE_P0_0, EEPROMH, EEPROML, Rx_Data, 16);
                 SamplingCounter ++;
                 __delay_us(1750);   //Wait_1ms(1);
                 if(fail == -1){
                     Tx_Data[0] = 0xFF;
-                    CAN_send(Tx_Data);
+                    sendCanData(Tx_Data);
                 }
                 if(EEPROML == 0xF0){
                     EEPROMH +=  0x01;
@@ -179,7 +179,7 @@ void main()
                 Rx_Data[i]=0x00;
             }
             wait1ms(500);
-            CAN_send(Rx_Data);
+            sendCanData(Rx_Data);
             wait1ms(500);
             EEPROMH = 0x00;
             EEPROML = 0x00;
@@ -191,10 +191,10 @@ void main()
                 /*for(unsigned int i=0;i<16;i++){
                     Tx_Data[i]=Rx_Data[i];
                 }*/
-                CAN_send(Tx_Data);
+                sendCanData(Tx_Data);
                 /*if(fail == -1){
                     Tx_Data[0] = 0xFF;
-                    CAN_send(Tx_Data);
+                    sendCanData(Tx_Data);
                 }*/
                 if(EEPROML==0xF0){
                     EEPROMH +=  0x01;      //EEPROMH = EEPROMH+1;
@@ -209,10 +209,10 @@ void main()
             for(unsigned int k=0;k<=SamplingCounter;k++){
                 eep_read(EE_P0_0, EEPROMH ,EEPROML ,Tx_Data ,8);
                 __delay_us(3000);
-                CAN_send(Tx_Data);
+                sendCanData(Tx_Data);
                 /*if(fail == -1){
                     Tx_Data[0] = 0xFF;
-                    CAN_send(Tx_Data);
+                    sendCanData(Tx_Data);
                 }*/
                 if(EEPROML==0xF8){
                     EEPROMH +=  0x01;      //EEPROMH = EEPROMH+1;
@@ -223,7 +223,7 @@ void main()
                 Rx_Data[i]=0xFF;
             }
             for(unsigned int i=0;i<SamplingCounter;i++){
-                CAN_send(Rx_Data);
+                sendCanData(Rx_Data);
             }
         }
 
@@ -243,7 +243,7 @@ void main()
             Tx_Data[i]=0xFF;
         }
 
-        //CAN_send(Tx_Data);
+        //sendCanData(Tx_Data);
 
         wait1ms(3000);
 
