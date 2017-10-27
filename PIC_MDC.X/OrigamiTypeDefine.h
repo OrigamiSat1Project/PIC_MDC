@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Type_define.h
  * Author: Curie
  *
@@ -29,4 +29,3 @@ typedef unsigned long UDWORD;
 #endif
 
 #endif	/* TYPE_DEFINE_H */
-

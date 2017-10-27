@@ -36,7 +36,7 @@ void initAD(void){
 
 /*
  *  AD Read Me
- *	arg      :   void
+ *	arg      :   store buffer
  *	return   :   void
  *	TODO     :   understand this method
  *	FIXME    :   not yet
@@ -44,84 +44,72 @@ void initAD(void){
                  avoid AN0,AN1,,,,
  */
  void readAD(UBYTE *_data){
-
-     //AD読み取り
-     AN0; //ADpin_con AN10
+     ADCON0 = 0x01;
      //ADCON1 = 0x10; //外部電圧参�?�設�?
      //ADCON2 = 0x2D; //
      ADCON0bits.GO = 1;
      while(ADCON0bits.GO);
      _data[0] = ADRESH;
 
-     //AD変換クリア
-     AN4;
+     ADCON0 = 0x11;
      //ADCON1 = 0x10;
      //ADCON2 = 0x2D;
      ADCON0bits.GO = 1;
      while(ADCON0bits.GO);
 
-     //AD読み取り
-     AN1; //ADpin_con AN10
+     ADCON0 = 0x05;
      //ADCON1 = 0x10; //外部電圧参�?�設�?
      //ADCON2 = 0x2D; //
      ADCON0bits.GO = 1;
      while(ADCON0bits.GO);
      _data[1] = ADRESH;
 
-     //AD変換クリア
-     AN4;
+     ADCON0 = 0x11;
      //ADCON1 = 0x10;
      //ADCON2 = 0x2D;
      ADCON0bits.GO = 1;
      while(ADCON0bits.GO);
 
-     //AD読み取り
-     AN2; //ADpin_con AN10
+     ADCON0 = 0x05;
      //ADCON1 = 0x10; //外部電圧参�?�設�?
      //ADCON2 = 0x2D; //
      ADCON0bits.GO = 1;
      while(ADCON0bits.GO);
      _data[2] = ADRESH;
 
-     //AD変換クリア
-     AN4;
+     ADCON0 = 0x11;
      //ADCON1 = 0x10;
      //ADCON2 = 0x2D;
      ADCON0bits.GO = 1;
      while(ADCON0bits.GO);
 
-     //AD読み取り
-     AN8; //ADpin_con AN10
+     ADCON0 = 0x21;
      //ADCON1 = 0x10; //外部電圧参�?�設�?
      //ADCON2 = 0x2D; //
      ADCON0bits.GO = 1;
      while(ADCON0bits.GO);
      _data[3] = ADRESH;
 
-     //AD変換クリア
-     AN4;
+     ADCON0 = 0x11;
      //ADCON1 = 0x10;
      //ADCON2 = 0x2D;
      ADCON0bits.GO = 1;
      while(ADCON0bits.GO);
 
-     //AD読み取り
-     AN9; //ADpin_con AN10
+     ADCON0 = 0x25;
      //ADCON1 = 0x10; //外部電圧参�?�設�?
      //ADCON2 = 0x2D; //
      ADCON0bits.GO = 1;
      while(ADCON0bits.GO);
      _data[4] = ADRESH;
 
-     //AD変換クリア
-     AN4;
+     ADCON0 = 0x11;
      //ADCON1 = 0x10;
      //ADCON2 = 0x2D;
      ADCON0bits.GO = 1;
      while(ADCON0bits.GO);
 
-     //AD読み取り
-     AN10; //ADpin_con AN10
+     ADCON0 = 0x25;
      //ADCON1 = 0x10; //外部電圧参�?�設�?
      //ADCON2 = 0x2D; //
      ADCON0bits.GO = 1;

@@ -10,7 +10,10 @@
 #include "OrigamiTypeDefine.h"
 
 /// Global data
-
+UBYTE CAN_ID_L   = 0xEB;
+UBYTE CAN_ID_H   = 0xFF;
+UBYTE CAN_EID_L  = 0xFF;
+UBYTE CAN_EID_H  = 0xFF;
 /// Method
 /*
  *  initialise PIC CAN setting

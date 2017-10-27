@@ -7,4 +7,9 @@
 #define DIGITAL_HIGH    1
 #define DIGITAL_LOW     0
 
+#define LED_ON PORTBbits.RB7 = DIGITAL_HIGH
+#define LED_OFF PORTBbits.RB7 = DIGITAL_LOW
+#define SW_ON PORTCbits.RC0 = DIGITAL_HIGH
+#define SW_OFF PORTCbits.RC0 = DIGITAL_LOW
+
 #define _XTAL_FREQ    16000000

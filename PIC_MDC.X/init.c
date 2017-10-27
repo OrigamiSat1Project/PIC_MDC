@@ -8,11 +8,11 @@
 #include "init.h"
 #include "I2Clib.h"
 #include "CAN.h"
-#include "eepromI2C.h"
+#include "EEPROM.h"
 #include "MPU9250.h"
 #include "interrupt.h"
 #include "ADC.h"
-#include "PWM_LED.h"
+#include "PWM.h"
 #include "OrigamiTypeDefine.h"
 #include "CommonDefine.h"
 

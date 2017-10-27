@@ -11,7 +11,7 @@
 #define	INTERRUPT_H
 
 //  XXX     :   this is not good timer declation is here
-UINT globalCount;
+UDWORD globalCount;
 
 void initInterrupt(void);
 void interrupt incrementTimer(void);

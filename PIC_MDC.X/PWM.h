@@ -1,15 +1,15 @@
 /*
  * File:   PWM_LED.h
- * Author: ƒeƒBƒ“ƒ_ƒ‹
+ * Author: ï¿½eï¿½Bï¿½ï¿½ï¿½_ï¿½ï¿½
  *
  * Created on 2016/12/05, 14:36
  */
 
-#ifndef PWM_LED_H
-#define	PWM_LED_H
+#ifndef PWM_H
+#define	PWM_H
 
 #ifndef _XTAL_FREQ
- #define _XTAL_FREQ 16000000       // g—p‚·‚éPIC“™‚É‚æ‚è“®ìü”g”’l‚ğİ’è‚·‚é
+ #define _XTAL_FREQ 16000000       // ï¿½gï¿½pï¿½ï¿½ï¿½ï¿½PICï¿½ï¿½ï¿½É‚ï¿½ï¿½è“®ï¿½ï¿½ï¿½ï¿½ï¿½gï¿½ï¿½ï¿½lï¿½ï¿½ï¿½İ’è‚·ï¿½ï¿½
 #endif
 
 int initPWM(void);

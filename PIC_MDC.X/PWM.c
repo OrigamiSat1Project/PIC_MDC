@@ -3,7 +3,7 @@
 //  control infrated LED, debugger LED
 //  Author      :   reo kashiyama
 
-#include "PWM_LED.h"
+#include "PWM.h"
 #include "init.h"
 #include <xc.h>
 

@@ -7,11 +7,11 @@
 #include "CAN.h"
 #include "ADC.h"
 #include "init.h"
-#include "eepromI2C.h"
+#include "EEPROM.h"
 #include "MPU9250.h"
 #include "interrupt.h"
 #include "I2cR.h"
-#include "PWM_LED.h"
+#include "PWM.h"
 #include "OrigamiTypeDefine.h"
 #include "CommonDefine.h"
 
@@ -148,7 +148,7 @@ void main()
                 }*/
                 fail = readIMU(bufRx,0);
                 __delay_us(10);
-                fail = eep_send(EE_P0_0, EEPROMH, EEPROML, bufRx, 16);
+                fail = writeEEPROM(EE_P0_0, EEPROMH, EEPROML, bufRx, 16);
                 SamplingCounter ++;
                 __delay_us(1750);   //Wait_1ms(1);
                 if(fail == -1){
@@ -178,7 +178,7 @@ void main()
             // Gyro data send
             for(unsigned int k=0;k<=SamplingCounter;k++){
                 fail = 0;
-                fail = eep_read(EE_P0_0, EEPROMH ,EEPROML ,bufTx ,8);
+                fail = readEEPROM(EE_P0_0, EEPROMH ,EEPROML ,bufTx ,8);
                 __delay_us(3000);
                 /*for(unsigned int i=0;i<16;i++){
                     bufTx[i]=bufRx[i];
@@ -199,7 +199,7 @@ void main()
             EEPROML = 0x08;
             //  Accel data send
             for(unsigned int k=0;k<=SamplingCounter;k++){
-                eep_read(EE_P0_0, EEPROMH ,EEPROML ,bufTx ,8);
+                readEEPROM(EE_P0_0, EEPROMH ,EEPROML ,bufTx ,8);
                 __delay_us(3000);
                 sendCanData(bufTx);
                 /*if(fail == -1){

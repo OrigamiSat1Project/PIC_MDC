@@ -14,8 +14,6 @@
  #define _XTAL_FREQ 16000000       // g—p‚·‚éPIC“™‚É‚æ‚è“®ìü”g”’l‚ğİ’è‚·‚é
 #endif
 
-
-
 int initIMU();
 int readIMU(unsigned char *, int);
 
