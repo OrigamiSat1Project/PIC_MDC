@@ -70,8 +70,8 @@
 #pragma config EBTR3 = OFF      // Table Read Protect 06000-07FFF (Disabled)
 // CONFIG7H
 #pragma config EBTRB = OFF      // Table Read Protect Boot (Disabled)
-#define __delay_ms(x)    _delay((unsigned long)((x)*(_XTAL_FREQ/4000UL)))
-#define __delay_us(x) _delay((unsigned long)((x)*(_XTAL_FREQ/4000000.0)))
+#define __delay_ms(x)    _delay((UDWORD)((x)*(_XTAL_FREQ/4000UL)))
+#define __delay_us(x) _delay((UDWORD)((x)*(_XTAL_FREQ/4000000.0)))
 
 //  ÉÅÉCÉìÇÃèàóù
 void main()
