@@ -1,14 +1,7 @@
-/*
- * File:   eepromI2C.h
- * Author: ティンダル
- *
- * Created on 2016/10/25, 3:10
- */
-
 #ifndef EEPROM_H
 #define	EEPROM_H
 
-#define eeprom_ADDR 0x50 //デバイスアドレス>>1
+#define eeprom_ADDR 0x50
 #define EE_P0_0 0x00
 #define EE_P0_1 0x01
 

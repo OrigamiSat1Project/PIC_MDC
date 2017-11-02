@@ -1,5 +1,3 @@
-// 16F1827で加速度センサー(ADXL345)のテスト:センサー出力値を表示する(I2Cバージョン)
-// 1.10    2015-10-10  きむ茶工房(きむしげ)  MPLAB X・XC8 V1.32用に書換え
 #include <xc.h>
 #include <stdlib.h>
 #include <math.h>
@@ -10,7 +8,6 @@
 #include "EEPROM.h"
 #include "MPU9250.h"
 #include "interrupt.h"
-#include "I2cR.h"
 #include "PWM.h"
 #include "OrigamiTypeDefine.h"
 #include "CommonDefine.h"

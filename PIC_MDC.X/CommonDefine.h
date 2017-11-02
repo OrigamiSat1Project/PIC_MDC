@@ -6,6 +6,10 @@
 #define ANSEL_DIGITAL   0
 #define DIGITAL_HIGH    1
 #define DIGITAL_LOW     0
+#define ACK   0
+#define NOACK 1
+#define RW_0  0
+#define RW_1  1
 
 #define LED_ON PORTBbits.RB7 = DIGITAL_HIGH
 #define LED_OFF PORTBbits.RB7 = DIGITAL_LOW

@@ -32,14 +32,17 @@ void initPic(void){
      OSCCONbits.IRCF0 = 1;
      OSCCONbits.IRCF1 = 1;
      OSCCONbits.IRCF2 = 1;
+     // A/D setting
      ANCON0 = 0x00;
      ANCON1 = 0x00;
+     // I/O setting
      TRISA = 0x00;
      TRISB = 0x00;
-     TRISC = 0x80;
+     TRISC = 0x00;
+     // H/L setting
      PORTA = 0x00;
      PORTB = 0x00;
-     PORTC = 0x40;
+     PORTC = 0x00;
 }
 
 /// Method
@@ -85,7 +88,7 @@ void wait1us(UINT num){
 */
 void initAll(void){
     initPic();
-    InitI2C_Master(1) ;
+    changeMSSPModeToI2C(1) ;
     initCan();
     initInterrupt();
     initIMU();

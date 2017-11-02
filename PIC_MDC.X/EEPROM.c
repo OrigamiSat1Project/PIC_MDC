@@ -6,6 +6,9 @@
 #include <xc.h>
 #include "EEPROM.h"
 #include "I2Clib.h"
+#include "CommonDefine.h"
+#include "OrigamiTypeDefine.h"
+
 
 /// Method
 /*
