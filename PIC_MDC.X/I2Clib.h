@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   I2Clib.h
  * Author: ティンダル
  *
@@ -32,15 +32,12 @@
 #define I2C_SSPCON2_ACKDT   SSPCON2bits.ACKDT
 #define I2C_SSPCON2_ACKEN   SSPCON2bits.ACKEN
 
-
-// 関数のプロトタイプ宣言
 void InterI2C( void ) ;
-void InitI2C_Master(int speed) ;
-int  I2C_Start(int adrs,int rw) ;
-int  I2C_rStart(int adrs,int rw) ;
+void changeMSSPModeToI2C(int) ;
+int  I2C_Start(int ,int ) ;
+int  I2C_rStart(int ,int ) ;
 int  I2C_Stop( void ) ;
-int  I2C_Send(char dt) ;
-int  I2C_Receive(int ack) ;
+int  I2C_Send(char ) ;
+int  I2C_Receive(int ) ;
 
 #endif	/* I2CLIB_H */
-
