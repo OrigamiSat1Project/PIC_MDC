@@ -5,10 +5,10 @@
 
 #include <xc.h>
 #include "I2Clib.h"
+#include "SMA.h"
 #include "CommonDefine.h"
 #include "OrigamiTypeDefine.h"
 
-#define SS PORTAbits.RA5
 /// Method
 /*
  *  change MSSP Mode for read SMA antenna dBm
