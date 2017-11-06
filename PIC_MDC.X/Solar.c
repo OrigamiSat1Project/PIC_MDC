@@ -20,6 +20,7 @@
 */
 UBYTE readSolar1Voltage(void){
     Solar1SW = DIGITAL_HIGH;
+    __delay_ms(10);
     //  AN0, AN1 -> solar, AN 2 -> thermister
     UBYTE a;
     return a;
@@ -34,6 +35,7 @@ UBYTE readSolar1Voltage(void){
 */
 UBYTE readSolar1Current(void){
     Solar1SW = DIGITAL_LOW;
+    __delay_ms(10);
     //  AN0, AN1 -> solar, AN 2 -> thermister
     UBYTE a;
     return a;
@@ -62,6 +64,7 @@ UBYTE readSolar1Thermistor(void){
 */
 UBYTE readSolar2Voltage(void){
     Solar2SW = DIGITAL_HIGH;
+    __delay_ms(10);
     //  AN0, AN1 -> solar, AN 2 -> thermister
     UBYTE a;
     return a;
@@ -77,6 +80,7 @@ UBYTE readSolar2Voltage(void){
 */
 UBYTE readSolar2Current(void){
     Solar2SW = DIGITAL_LOW;
+    __delay_ms(10);
     //  AN0, AN1 -> solar, AN 2 -> thermister
     UBYTE a;
     return a;
