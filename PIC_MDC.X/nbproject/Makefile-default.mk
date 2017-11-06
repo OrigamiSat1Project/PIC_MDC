@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=CAN.c I2Clib.c init.c interrupt.c ADC.c MPU9250.c PWM.c EEPROM.c SMA.c PIC_MDC.c
+SOURCEFILES_QUOTED_IF_SPACED=CAN.c I2Clib.c init.c interrupt.c ADC.c MPU9250.c PWM.c EEPROM.c SMA.c PIC_MDC.c Solar.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/CAN.p1 ${OBJECTDIR}/I2Clib.p1 ${OBJECTDIR}/init.p1 ${OBJECTDIR}/interrupt.p1 ${OBJECTDIR}/ADC.p1 ${OBJECTDIR}/MPU9250.p1 ${OBJECTDIR}/PWM.p1 ${OBJECTDIR}/EEPROM.p1 ${OBJECTDIR}/SMA.p1 ${OBJECTDIR}/PIC_MDC.p1
-POSSIBLE_DEPFILES=${OBJECTDIR}/CAN.p1.d ${OBJECTDIR}/I2Clib.p1.d ${OBJECTDIR}/init.p1.d ${OBJECTDIR}/interrupt.p1.d ${OBJECTDIR}/ADC.p1.d ${OBJECTDIR}/MPU9250.p1.d ${OBJECTDIR}/PWM.p1.d ${OBJECTDIR}/EEPROM.p1.d ${OBJECTDIR}/SMA.p1.d ${OBJECTDIR}/PIC_MDC.p1.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/CAN.p1 ${OBJECTDIR}/I2Clib.p1 ${OBJECTDIR}/init.p1 ${OBJECTDIR}/interrupt.p1 ${OBJECTDIR}/ADC.p1 ${OBJECTDIR}/MPU9250.p1 ${OBJECTDIR}/PWM.p1 ${OBJECTDIR}/EEPROM.p1 ${OBJECTDIR}/SMA.p1 ${OBJECTDIR}/PIC_MDC.p1 ${OBJECTDIR}/Solar.p1
+POSSIBLE_DEPFILES=${OBJECTDIR}/CAN.p1.d ${OBJECTDIR}/I2Clib.p1.d ${OBJECTDIR}/init.p1.d ${OBJECTDIR}/interrupt.p1.d ${OBJECTDIR}/ADC.p1.d ${OBJECTDIR}/MPU9250.p1.d ${OBJECTDIR}/PWM.p1.d ${OBJECTDIR}/EEPROM.p1.d ${OBJECTDIR}/SMA.p1.d ${OBJECTDIR}/PIC_MDC.p1.d ${OBJECTDIR}/Solar.p1.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/CAN.p1 ${OBJECTDIR}/I2Clib.p1 ${OBJECTDIR}/init.p1 ${OBJECTDIR}/interrupt.p1 ${OBJECTDIR}/ADC.p1 ${OBJECTDIR}/MPU9250.p1 ${OBJECTDIR}/PWM.p1 ${OBJECTDIR}/EEPROM.p1 ${OBJECTDIR}/SMA.p1 ${OBJECTDIR}/PIC_MDC.p1
+OBJECTFILES=${OBJECTDIR}/CAN.p1 ${OBJECTDIR}/I2Clib.p1 ${OBJECTDIR}/init.p1 ${OBJECTDIR}/interrupt.p1 ${OBJECTDIR}/ADC.p1 ${OBJECTDIR}/MPU9250.p1 ${OBJECTDIR}/PWM.p1 ${OBJECTDIR}/EEPROM.p1 ${OBJECTDIR}/SMA.p1 ${OBJECTDIR}/PIC_MDC.p1 ${OBJECTDIR}/Solar.p1
 
 # Source Files
-SOURCEFILES=CAN.c I2Clib.c init.c interrupt.c ADC.c MPU9250.c PWM.c EEPROM.c SMA.c PIC_MDC.c
+SOURCEFILES=CAN.c I2Clib.c init.c interrupt.c ADC.c MPU9250.c PWM.c EEPROM.c SMA.c PIC_MDC.c Solar.c
 
 
 CFLAGS=
@@ -167,6 +167,14 @@ ${OBJECTDIR}/PIC_MDC.p1: PIC_MDC.c  nbproject/Makefile-${CND_CONF}.mk
 	@-${MV} ${OBJECTDIR}/PIC_MDC.d ${OBJECTDIR}/PIC_MDC.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/PIC_MDC.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
+${OBJECTDIR}/Solar.p1: Solar.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/Solar.p1.d 
+	@${RM} ${OBJECTDIR}/Solar.p1 
+	${MP_CC} --pass1 $(MP_EXTRA_CC_PRE) --chip=$(MP_PROCESSOR_OPTION) -Q -G  -D__DEBUG=1 --debugger=icd3  --double=24 --float=24 --emi=wordwrite --opt=+asm,+asmfile,-speed,+space,-debug,-local --addrqual=ignore --mode=free -P -N255 --warn=-3 --asmlist -DXPRJ_default=$(CND_CONF)  --summary=default,-psect,-class,+mem,-hex,-file --output=default,-inhx032 --runtime=default,+clear,+init,-keep,-no_startup,-download,+config,+clib,-plib $(COMPARISON_BUILD)  --output=-mcof,+elf:multilocs --stack=compiled:auto:auto:auto "--errformat=%f:%l: error: (%n) %s" "--warnformat=%f:%l: warning: (%n) %s" "--msgformat=%f:%l: advisory: (%n) %s"    -o${OBJECTDIR}/Solar.p1  Solar.c 
+	@-${MV} ${OBJECTDIR}/Solar.d ${OBJECTDIR}/Solar.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/Solar.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
 else
 ${OBJECTDIR}/CAN.p1: CAN.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
@@ -247,6 +255,14 @@ ${OBJECTDIR}/PIC_MDC.p1: PIC_MDC.c  nbproject/Makefile-${CND_CONF}.mk
 	${MP_CC} --pass1 $(MP_EXTRA_CC_PRE) --chip=$(MP_PROCESSOR_OPTION) -Q -G  --double=24 --float=24 --emi=wordwrite --opt=+asm,+asmfile,-speed,+space,-debug,-local --addrqual=ignore --mode=free -P -N255 --warn=-3 --asmlist -DXPRJ_default=$(CND_CONF)  --summary=default,-psect,-class,+mem,-hex,-file --output=default,-inhx032 --runtime=default,+clear,+init,-keep,-no_startup,-download,+config,+clib,-plib $(COMPARISON_BUILD)  --output=-mcof,+elf:multilocs --stack=compiled:auto:auto:auto "--errformat=%f:%l: error: (%n) %s" "--warnformat=%f:%l: warning: (%n) %s" "--msgformat=%f:%l: advisory: (%n) %s"    -o${OBJECTDIR}/PIC_MDC.p1  PIC_MDC.c 
 	@-${MV} ${OBJECTDIR}/PIC_MDC.d ${OBJECTDIR}/PIC_MDC.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/PIC_MDC.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/Solar.p1: Solar.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/Solar.p1.d 
+	@${RM} ${OBJECTDIR}/Solar.p1 
+	${MP_CC} --pass1 $(MP_EXTRA_CC_PRE) --chip=$(MP_PROCESSOR_OPTION) -Q -G  --double=24 --float=24 --emi=wordwrite --opt=+asm,+asmfile,-speed,+space,-debug,-local --addrqual=ignore --mode=free -P -N255 --warn=-3 --asmlist -DXPRJ_default=$(CND_CONF)  --summary=default,-psect,-class,+mem,-hex,-file --output=default,-inhx032 --runtime=default,+clear,+init,-keep,-no_startup,-download,+config,+clib,-plib $(COMPARISON_BUILD)  --output=-mcof,+elf:multilocs --stack=compiled:auto:auto:auto "--errformat=%f:%l: error: (%n) %s" "--warnformat=%f:%l: warning: (%n) %s" "--msgformat=%f:%l: advisory: (%n) %s"    -o${OBJECTDIR}/Solar.p1  Solar.c 
+	@-${MV} ${OBJECTDIR}/Solar.d ${OBJECTDIR}/Solar.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/Solar.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
 endif
 
