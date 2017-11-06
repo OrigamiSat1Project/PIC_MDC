@@ -50,9 +50,9 @@
       while(!SSPSTATbits.BF);
   }
  /*
-  * get SPI data
-  *	arg      :
-  *	return   :   void
+  * read SPI data
+  *	arg      :  slave address
+  *	return   :  SPI data
   *	TODO     :
   *	FIXME    :
   *	XXX      :
@@ -71,6 +71,29 @@
        SS = DIGITAL_HIGH;
        return SSPBUF;
   }
+  /*
+   * read SPI data
+   *	arg      :  slave address, data for send
+   *	return   :   void
+   *	TODO     :
+   *	FIXME    :
+   *	XXX      :
+   */
+   void sendSPIData(UBYTE slave_address, UBYTE data)
+   {
+        UBYTE data_from_slave;
+
+        SS = DIGITAL_LOW;
+        data_from_slave = SSPBUF;        //  dummy
+        SSPBUF = slave_address;          //  send address data
+        waitSPIIdle();
+        data_from_slave = SSPBUF;        //  dummy
+        SSPBUF = data;                      //  send dummy data
+        waitSPIIdle();
+        data_from_slave = SSPBUF;
+        SS = DIGITAL_HIGH;
+        return ;
+   }
  /*
   * read SMA antenna Gain (dBm)
   *	arg      :
@@ -82,7 +105,7 @@
  void readSMAAntennaGain(int SPIspeed, int I2Cspeed, UBYTE *gains, UINT offset){
      changeMSSPModeToSPI(SPIspeed);
      for (UINT i = 0; i < 16; i++) {
-         UBYTE gain = readSPIData(0x60);
+         UBYTE gain = readSPIData(0x00);
          gains[offset + i] = gain;
      }
      changeMSSPModeToI2C(I2Cspeed);

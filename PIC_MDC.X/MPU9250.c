@@ -24,21 +24,19 @@ const UBYTE PWR_MGMT_1      = 0x6B;
 int readAddr(char address)
 {
      int ans ;
-
      ans = startI2C(MPU9250_ADDR,RW_0);
      if (ans == 0) {
-          sendI2CData(address) ;       
-          restartI2C(MPU9250_ADDR,RW_1) ;
-          ans = readI2CData(NOACK);      
-     } else ans = -1 ;
-     stopI2C() ;                         
-     return ans ;
+          sendI2CData(address);
+          restartI2C(MPU9250_ADDR,RW_1);
+          ans = readI2CData(NOACK); 
+     } else ans = -1;
+     stopI2C();
+     return ans;
 }
 
 int writeAddr(char address, char val)
 {
      int ans ;
-
      ans = startI2C(MPU9250_ADDR,RW_0);  
      if (ans == 0) {
           sendI2CData(address) ;         

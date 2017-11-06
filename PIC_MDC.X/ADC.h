@@ -1,9 +1,3 @@
-/*
- * File:   ADC.h
- * Author: Tesla
- *
- * Created on 2017/09/15, 15:26
- */
 #include "CommonDefine.h"
 #include "OrigamiTypeDefine.h"
 
