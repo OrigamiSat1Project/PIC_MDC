@@ -8,24 +8,7 @@
 #include "CommonDefine.h"
 #include "OrigamiTypeDefine.h"
 
-#define I2C_SSPCON1         SSPCON1
-#define I2C_SSPCON2         SSPCON2
-#define I2C_SSPSTAT         SSPSTAT
-#define I2C_SSPADD          SSPADD
-#define I2C_SSPBUF          SSPBUF
-#define I2C_SSPIF           PIR1bits.SSPIF
-#define I2C_SSPIE           PIE1bits.SSPIE
-#define I2C_BCLIF           PIR2bits.BCLIF
-#define I2C_BCLIE           PIE2bits.BCLIE
-#define I2C_SSPSTAT_SMP     SSPSTATbits.SMP
-#define I2C_SSPCON2_SEN     SSPCON2bits.SEN
-#define I2C_SSPCON2_RSEN    SSPCON2bits.RSEN
-#define I2C_SSPCON2_PEN     SSPCON2bits.PEN
-#define I2C_SSPCON2_RCEN    SSPCON2bits.RCEN
-#define I2C_SSPCON2_ACKSTAT SSPCON2bits.ACKSTAT
-#define I2C_SSPCON2_ACKDT   SSPCON2bits.ACKDT
-#define I2C_SSPCON2_ACKEN   SSPCON2bits.ACKEN
-
+#define SS PORTAbits.RA5
 /// Method
 /*
  *  change MSSP Mode for read SMA antenna dBm
@@ -38,6 +21,7 @@
  void changeMSSPModeToSPI(int speed_is_high){
      SSPCON1= 0x20 ;           // use RA5, RC3, 4, 5 as SPI lines (SS, SCK, SDI, SDO)
      TRISAbits.TRISA5 = UINT_FALSE;         //  SS  : out (only slave mode)
+     SS = DIGITAL_HIGH;
      TRISCbits.TRISC3 = UINT_TRUE;         //  SCK : in
      TRISCbits.TRISC4 = UINT_TRUE;         //  SDI : in
      TRISCbits.TRISC5 = UINT_FALSE;         //  SDO : out
@@ -53,4 +37,53 @@
      INTCONbits.GIE       = UINT_TRUE ;               // enbale all interrupt
      PIR1bits.SSPIF       = UINT_FALSE ;               // clear SPI interrupt flag
      PIR2bits.BCLIF       = UINT_FALSE ;               // clear SPI bus collision flag
+ }
+ /*
+  * wait complete receive (buffer full status bit is set)
+  *	arg      :
+  *	return   :   void
+  *	TODO     :
+  *	FIXME    :
+  *	XXX      :
+  */
+  void waitSPIIdle(){
+      while(!SSPSTATbits.BF);
+  }
+ /*
+  * get SPI data
+  *	arg      :
+  *	return   :   void
+  *	TODO     :
+  *	FIXME    :
+  *	XXX      :
+  */
+  UBYTE readSPIData(UBYTE slave_address)
+  {
+       UBYTE data_from_slave;
+
+       SS = DIGITAL_LOW;
+       data_from_slave = SSPBUF;        //  dummy
+       SSPBUF = slave_address;          //  send address data
+       waitSPIIdle();
+       data_from_slave = SSPBUF;        //  dummy
+       SSPBUF = 0;                      //  send dummy data
+       waitSPIIdle();
+       SS = DIGITAL_HIGH;
+       return SSPBUF;
+  }
+ /*
+  * read SMA antenna Gain (dBm)
+  *	arg      :
+  *	return   :   void
+  *	TODO     :
+  *	FIXME    :
+  *	XXX      :
+  */
+ void readSMAAntennaGain(int SPIspeed, int I2Cspeed, UBYTE *gains, UINT offset){
+     changeMSSPModeToSPI(SPIspeed);
+     for (UINT i = 0; i < 16; i++) {
+         UBYTE gain = readSPIData(0x60);
+         gains[offset + i] = gain;
+     }
+     changeMSSPModeToI2C(I2Cspeed);
  }

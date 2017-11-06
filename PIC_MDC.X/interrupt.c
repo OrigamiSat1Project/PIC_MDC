@@ -40,5 +40,5 @@ void interrupt incrementTimer(void){
         TMR0L = 0x00;
         globalCount++;
     }
-    InterI2C();
+    interruptI2C();
 }

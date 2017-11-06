@@ -12,7 +12,7 @@ int CollisionCheck ;
  *	arg      :   mask
  *	return   :   void
  */
-void I2C_IdleCheck(char mask)
+void waitI2CIdle(char mask)
 {
      while (( SSPCON2 & 0x1F ) | (SSPSTAT & mask)) ;
 }
@@ -21,7 +21,7 @@ void I2C_IdleCheck(char mask)
  *	arg      :   void
  *	return   :   void
  */
-void InterI2C(void)
+void interruptI2C(void)
 {
      if (PIR1bits.SSPIF == UINT_TRUE) {
           if (AckCheck == UINT_TRUE) {
@@ -69,12 +69,12 @@ void changeMSSPModeToI2C(int speed_is_high)
                  1 -> failed to receive from slave
                 -1 -> bus collision occured with other master
  */
-int I2C_Start(int slave_address,int rw)
+int startI2C(int slave_address,int rw)
 {
      CollisionCheck = UINT_FALSE ;
-     I2C_IdleCheck(0x5) ;
+     waitI2CIdle(0x5) ;
      SSPCON2bits.SEN = UINT_TRUE ;
-     I2C_IdleCheck(0x5) ;
+     waitI2CIdle(0x5) ;
      if (CollisionCheck == UINT_TRUE) return -1 ;
      AckCheck = UINT_TRUE ;
      SSPBUF = (char)((slave_address<<1)+rw);
@@ -90,12 +90,12 @@ int I2C_Start(int slave_address,int rw)
                  1 -> failed to receive from slave
                 -1 -> bus collision occured with other master
  */
-int I2C_rStart(int slave_address,int rw)
+int restartI2C(int slave_address,int rw)
 {
      CollisionCheck = UINT_FALSE ;
-     I2C_IdleCheck(0x5) ;
+     waitI2CIdle(0x5) ;
      SSPCON2bits.RSEN = UINT_TRUE ;
-     I2C_IdleCheck(0x5) ;
+     waitI2CIdle(0x5) ;
      if (CollisionCheck == UINT_TRUE) return -1 ;
      AckCheck = UINT_TRUE ;
      SSPBUF = (char)((slave_address<<1)+rw);
@@ -110,10 +110,10 @@ int I2C_rStart(int slave_address,int rw)
                  0 -> succeed to receive from slave
                 -1 -> bus collision occured with other master
  */
-int I2C_Stop()
+int stopI2C()
 {
      CollisionCheck = UINT_FALSE ;
-     I2C_IdleCheck(0x5) ;
+     waitI2CIdle(0x5) ;
      SSPCON2bits.PEN = UINT_TRUE ;
      if (CollisionCheck == UINT_TRUE) return -1 ;
      else                     return  UINT_FALSE ;
@@ -126,10 +126,10 @@ int I2C_Stop()
                  1 -> failed to receive from slave
                 -1 -> bus collision occured with other master
  */
-int I2C_Send(char data_to_send)
+int sendI2CData(char data_to_send)
 {
      CollisionCheck = UINT_FALSE ;
-     I2C_IdleCheck(0x5) ;
+     waitI2CIdle(0x5) ;
      if (CollisionCheck == UINT_TRUE) return -1;
      AckCheck = UINT_TRUE;
      SSPBUF = data_to_send;
@@ -147,17 +147,17 @@ int I2C_Send(char data_to_send)
                  1 -> failed to receive from slave
                 -1 -> bus collision occured with other master
  */
-int I2C_Receive(int ack_to_slave)
+int readI2CData(int ack_to_slave)
 {
      int data_from_slave ;
 
      CollisionCheck = UINT_FALSE ;
-     I2C_IdleCheck(0x5) ;
+     waitI2CIdle(0x5) ;
      SSPCON2bits.RCEN = UINT_TRUE;      //  enable receive from slave
-     I2C_IdleCheck(0x4) ;
+     waitI2CIdle(0x4) ;
      if (CollisionCheck == UINT_TRUE) return -1 ;
      data_from_slave = SSPBUF;
-     I2C_IdleCheck(0x5) ;
+     waitI2CIdle(0x5) ;
      if (CollisionCheck == UINT_TRUE) return -1 ;
      SSPCON2bits.ACKDT = ack_to_slave;
      SSPCON2bits.ACKEN = UINT_TRUE;

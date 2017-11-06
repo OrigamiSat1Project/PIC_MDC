@@ -24,18 +24,18 @@ int readEEPROM(char ee_p, char address1, char address2, char *val, int n){
     int ack;
     int i;
 
-    ans = I2C_Start(eeprom_ADDR | ee_p,RW_0);
+    ans = startI2C(eeprom_ADDR | ee_p,RW_0);
     if (ans == 0) {
-        I2C_Send(address1) ;                // レジスタアドレスの送信
-        I2C_Send(address2) ;                // レジスタアドレスの送信
-        I2C_Start(eeprom_ADDR | ee_p,RW_1);
+        sendI2CData(address1) ;
+        sendI2CData(address2) ;
+        startI2C(eeprom_ADDR | ee_p,RW_1);
         ack = ACK ;
         for(unsigned int i=0 ; i<n ; i++) {
             if (i==n-1) ack = NOACK ;
-            val[i] = I2C_Receive(ack);
+            val[i] = readI2CData(ack);
         }
     } else ans = -1 ;
-    I2C_Stop() ;                            // ストップコンディションを発行する
+    stopI2C() ;
     return ans ;
 }
 
@@ -51,14 +51,14 @@ int writeEEPROM(char ee_p, char address1,  char address2, char *val, int n){
     int ans;
     int i;
 
-    ans = I2C_Start(eeprom_ADDR | ee_p,RW_0);
+    ans = startI2C(eeprom_ADDR | ee_p,RW_0);
     if (ans == 0) {
-        I2C_Send(address1) ;                // レジスタアドレスの送信
-        I2C_Send(address2) ;                // レジスタアドレスの送信
+        sendI2CData(address1) ;
+        sendI2CData(address2) ;
         for(i=0;i<n;i++){
-            I2C_Send(val[i]) ;                    // データ内容の送信
+            sendI2CData(val[i]) ;
         }
      } else ans = -1 ;
-     I2C_Stop() ;                            // ストップコンディションを発行する
+     stopI2C() ;
      return ans ;
 }

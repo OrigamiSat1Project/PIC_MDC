@@ -25,13 +25,13 @@ int readAddr(char address)
 {
      int ans ;
 
-     ans = I2C_Start(MPU9250_ADDR,RW_0);    // スタートコンディションを発行する
+     ans = startI2C(MPU9250_ADDR,RW_0);
      if (ans == 0) {
-          I2C_Send(address) ;                // レジスタアドレスの送信
-          I2C_rStart(MPU9250_ADDR,RW_1) ;   // リピート・スタートコンディションを発行する
-          ans = I2C_Receive(NOACK);          // データ内容を受信する
+          sendI2CData(address) ;       
+          restartI2C(MPU9250_ADDR,RW_1) ;
+          ans = readI2CData(NOACK);      
      } else ans = -1 ;
-     I2C_Stop() ;                            // ストップコンディションを発行する
+     stopI2C() ;                         
      return ans ;
 }
 
@@ -39,12 +39,12 @@ int writeAddr(char address, char val)
 {
      int ans ;
 
-     ans = I2C_Start(MPU9250_ADDR,RW_0);    // スタートコンディションを発行する
+     ans = startI2C(MPU9250_ADDR,RW_0);  
      if (ans == 0) {
-          I2C_Send(address) ;                // レジスタアドレスの送信
-          I2C_Send(val) ;                    // データ内容の送信
+          sendI2CData(address) ;         
+          sendI2CData(val) ;             
      } else ans = -1 ;
-     I2C_Stop() ;                            // ストップコンディションを発行する
+     stopI2C() ;                         
      return ans ;
 }
 
@@ -52,15 +52,15 @@ int initIMU()
 {
     int ans ;
 
-     __delay_us(2000) ;                      // 立ち上がりを待つ
-     ans = readAddr(WHO) ;            // 接続ＯＫかＩＤを読みだして見る
+     __delay_us(2000) ;   
+     ans = readAddr(WHO) ;
      if (ans == WHO_VALUE) {
           writeAddr(PWR_MGMT_1,0x00);    //wake up sensor
           writeAddr(INT_PIN_CONFIG,0x02);//BYPASS:enabled, FSYNC:disabled
           writeAddr(SMPLRT_DIV,0xFF);    //divider:256, sample rate:30kHz
           writeAddr(CONFIG,0x07);        //FIFO, FSYNC:disabled, DLPF:7
-          writeAddr(GYRO_CONFIG,0x18);   //range:±2000dps, bandwidth:8800Hz
-          writeAddr(ACCEL_CONFIG,0x07);  //range:±16g
+          writeAddr(GYRO_CONFIG,0x18);   //range:ﾂｱ2000dps, bandwidth:8800Hz
+          writeAddr(ACCEL_CONFIG,0x07);  //range:ﾂｱ16g
           writeAddr(ACCEL_CONFIG2,0x35); //bandwidth:1130Hz
           writeAddr(FIFO_EN,0x00);       //FIFO:all disabled
           __delay_us(2000);
@@ -68,7 +68,7 @@ int initIMU()
      return ans ;
 }
 
-int readIMU(unsigned char *data, int offset)
+int readIMU(UBYTE *data, int offset)
 {
      int ans , i , ack ;
 
@@ -77,17 +77,17 @@ int readIMU(unsigned char *data, int offset)
          ans = ans & 0x01;
      }
 
-     ans = I2C_Start(MPU9250_ADDR,RW_0);    // スタートコンディションを発行する
+     ans = startI2C(MPU9250_ADDR,RW_0);  
      if (ans == 0) {
-          I2C_Send(IMU_DATA) ;                // レジスタアドレスの送信
-          I2C_rStart(MPU9250_ADDR,RW_1) ;   // リピート・スタートコンディションを発行する
+          sendI2CData(IMU_DATA) ;        
+          restartI2C(MPU9250_ADDR,RW_1) ;
           ack = ACK ;
           for (i=0 ; i<14 ; i++) {
                if (i==13) ack = NOACK ;
-               data[offset+i] = I2C_Receive(ack);
+               data[offset+i] = readI2CData(ack);
           }
      } else ans = -1 ;
-     I2C_Stop() ;                            // ストップコンディションを発行する
+     stopI2C() ;                         
 
      return ans ;
 }
