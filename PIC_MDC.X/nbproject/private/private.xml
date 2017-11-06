@@ -3,10 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Tesla/Documents/git_OrigamiSat1/PIC_MDC/PIC_MDC.X/I2cR.h</file>
-            <file>file:/C:/Users/Tesla/Documents/git_OrigamiSat1/PIC_MDC/PIC_MDC.X/all_test.c</file>
-            <file>file:/C:/Users/Tesla/Documents/git_OrigamiSat1/PIC_MDC/PIC_MDC.X/I2cR.c</file>
-            <file>file:/C:/Users/Tesla/Documents/git_OrigamiSat1/PIC_MDC/PIC_MDC.X/nbproject/Makefile-impl.mk</file>
+            <file>file:/C:/Users/Tesla/Documents/git_OrigamiSat1/PIC_MDC/PIC_MDC.X/EEPROM.c</file>
+            <file>file:/C:/Users/Tesla/Documents/git_OrigamiSat1/PIC_MDC/PIC_MDC.X/MPU9250.c</file>
+            <file>file:/C:/Users/Tesla/Documents/git_OrigamiSat1/PIC_MDC/PIC_MDC.X/I2Clib.c</file>
         </group>
     </open-files>
 </project-private>
