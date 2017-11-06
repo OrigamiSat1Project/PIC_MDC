@@ -104,9 +104,11 @@
   */
  void readSMAAntennaGain(int SPIspeed, int I2Cspeed, UBYTE *gains, UINT offset){
      changeMSSPModeToSPI(SPIspeed);
+     __delay_ms(1000);
      for (UINT i = 0; i < 16; i++) {
          UBYTE gain = readSPIData(0x00);
          gains[offset + i] = gain;
      }
+     __delay_ms(1000);
      changeMSSPModeToI2C(I2Cspeed);
  }
