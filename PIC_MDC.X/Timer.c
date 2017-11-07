@@ -5,7 +5,7 @@
 
 /// Include files
 #include <xc.h>
-#include "interrupt.h"
+#include "Timer.h"
 #include "I2Clib.h"
 #include "OrigamiTypeDefine.h"
 #include "CommonDefine.h"
@@ -66,6 +66,27 @@ void increment_globalClock(void){
     }
     return;
 }
+
+/*
+ *  sync with OBC
+ *	arg      :   year, month, day, hour, minute, second
+ *	return   :   void
+ *	TODO     :   not yet
+ *	FIXME    :   not yet
+ *	XXX      :   not yet
+ */
+UINT syncWithOBC(UBYTE *OBCClock){
+     if((OBCClock[4] >= 0x13) || (OBCClock[3] >= 0x32) || (OBCClock[2] >= 0x25) || (OBCClock[1] >= 0x60) || (OBCClock[0] >= 0x60)){
+         return UINT_FALSE;
+     }
+     globalClock.year = OBCClock[5];
+     globalClock.month = OBCClock[4];
+     globalClock.day = OBCClock[3];
+     globalClock.hour = OBCClock[2];
+     globalClock.minute = OBCClock[1];
+     globalClock.second = OBCClock[0];
+     return UINT_TRUE;
+ }
 
 /*
  *  TIMER0 modole method
