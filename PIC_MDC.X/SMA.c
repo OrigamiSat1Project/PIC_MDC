@@ -20,11 +20,7 @@
  */
  void changeMSSPModeToSPI(int speed_is_high){
      SSPCON1= 0x20 ;           // use RA5, RC3, 4, 5 as SPI lines (SS, SCK, SDI, SDO)
-     TRISAbits.TRISA5 = UINT_FALSE;         //  SS  : out (only slave mode)
      SS = DIGITAL_HIGH;
-     TRISCbits.TRISC3 = UINT_TRUE;         //  SCK : in
-     TRISCbits.TRISC4 = UINT_TRUE;         //  SDI : in
-     TRISCbits.TRISC5 = UINT_FALSE;         //  SDO : out
      SSPSTAT= 0xC0 ;     // sampled at the end of data, transition from active to idle
      if (speed_is_high == UINT_TRUE) {
          SSPCON1= 0x20 ;     // MSSP enable, SPI Master mode, clock : Fosc/4
