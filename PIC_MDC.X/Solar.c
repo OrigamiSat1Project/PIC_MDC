@@ -9,6 +9,8 @@
 #include "CommonDefine.h"
 #include "OrigamiTypeDefine.h"
 
+
+
 /// Method
 /*
 *  read Solar1 voltage
