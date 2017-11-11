@@ -9,12 +9,10 @@
 #define	PWM_H
 
 #ifndef _XTAL_FREQ
- #define _XTAL_FREQ 16000000       // �g�p����PIC���ɂ��蓮�����g���l���ݒ肷��
+ #define _XTAL_FREQ 16000000
 #endif
 
 int initPWM(void);
 int pwmLED_ON(int, int);
-void rLED_ON(void);
-void rLED_OFF(void);
 
 #endif	/* PWM_LED_H */

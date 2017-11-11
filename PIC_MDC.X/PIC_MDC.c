@@ -84,7 +84,12 @@ void main()
     char EEPROML;
 
     initAll();
-
+    while(1){
+        LED_SW_ON;
+        __delay_ms(1000);
+        LED_SW_OFF;
+        __delay_ms(1000);
+    }
     wait1ms(3000);           // ‚R•bŒã‚ÉŠJŽn
 
     //maybe this is not necesarry
@@ -99,10 +104,6 @@ void main()
     }*/
 
     while(1) {
-       /* rLED_ON();
-        Wait_1ms(1000);
-        rLED_OFF();
-        Wait_1ms(1000);*/
 
         for(unsigned int i=0;i<16;i++){
             bufTx[i]=0x00;
@@ -133,7 +134,7 @@ void main()
             //rLED_ON();
             //244count ¨ 1s
             time = globalCount;
-            rLED_ON();
+            LED_SW_ON;
             SamplingCounter = 0;
             while(globalCount-time <= 310){
 
@@ -161,8 +162,7 @@ void main()
                 }
                 EEPROML +=  0x10;
             }
-            rLED_OFF();
-           // rLED_OFF();
+            LED_SW_OFF;
 
             for(unsigned int i=0;i<16;i++){
                 bufRx[i]=0x00;
@@ -217,15 +217,15 @@ void main()
         }
 
         if(bufRx[0] == 0x03){
-            rLED_ON();
+            LED_SW_ON;
             wait1ms(3000);
-            rLED_OFF();
+            LED_SW_OFF;
         }
 
         if(bufRx[0] == 0x04){
-            SW_ON;
+            HRM_SW_ON;
             wait1ms(3000);
-            SW_OFF;
+            HRM_SW_OFF;
         }
 
         for(unsigned int i=0;i<16;i++){
