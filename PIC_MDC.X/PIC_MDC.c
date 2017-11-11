@@ -82,18 +82,23 @@ void main()
     char EEPROML;
 
     initAll();
-<<<<<<< HEAD
+    for(unsigned int i=0;i<16;i++){
+        bufTx[i]=0x00;
+        bufRx[i]=0x00;
+        if(i == 5){
+            bufTx[i]=0xFF;
+            bufRx[i]=0xFF;
+        }
+    }
+    
     while(1){
+        sendCanData(bufRx);
         LED_SW_ON;
         __delay_ms(1000);
         LED_SW_OFF;
         __delay_ms(1000);
     }
     wait1ms(3000);           // ‚R•bŒã‚ÉŠJŽn
-=======
-
-    wait1ms(3000);
->>>>>>> Timer_dev
 
     //maybe this is not necesarry
     for(unsigned int i=0;i<16;i++){
@@ -136,13 +141,7 @@ void main()
             //unsigned int clock = 0;
             //rLED_ON();
             //244count ¨ 1s
-<<<<<<< HEAD
-            time = globalCount;
             LED_SW_ON;
-=======
-            //time = globalCount;
-            rLED_ON();
->>>>>>> Timer_dev
             SamplingCounter = 0;
             while(1/*globalCount-time <= 310*/){
 
