@@ -7,7 +7,7 @@
 #include "init.h"
 #include "EEPROM.h"
 #include "MPU9250.h"
-#include "interrupt.h"
+#include "Timer.h"
 #include "PWM.h"
 #include "OrigamiTypeDefine.h"
 #include "CommonDefine.h"
@@ -76,14 +76,13 @@ void main()
     UINT time ; // unsigned int time
     UINT SamplingCounter = 0; //max value = 65536. if sampling count > 65536, this may cause error without reproducibility
     int fail;
-    //CAN送信データ
     UINT bufTx[16];
-    //CAN受信データ
     UINT bufRx[16];
     char EEPROMH;
     char EEPROML;
 
     initAll();
+<<<<<<< HEAD
     while(1){
         LED_SW_ON;
         __delay_ms(1000);
@@ -91,6 +90,10 @@ void main()
         __delay_ms(1000);
     }
     wait1ms(3000);           // ３秒後に開始
+=======
+
+    wait1ms(3000);
+>>>>>>> Timer_dev
 
     //maybe this is not necesarry
     for(unsigned int i=0;i<16;i++){
@@ -114,7 +117,7 @@ void main()
         wait1ms(1000);
         sendCanData(bufRx);
 
-        globalCount = 0;
+        //globalCount = 0;
 
         if(bufRx[0] == 0x01){
             readAD(*bufTx);
@@ -133,13 +136,16 @@ void main()
             //unsigned int clock = 0;
             //rLED_ON();
             //244count → 1s
+<<<<<<< HEAD
             time = globalCount;
             LED_SW_ON;
+=======
+            //time = globalCount;
+            rLED_ON();
+>>>>>>> Timer_dev
             SamplingCounter = 0;
-            while(globalCount-time <= 310){
+            while(1/*globalCount-time <= 310*/){
 
-                //while((cnt-time) > clock);
-                //clock = cnt-time;
                 /*fail = 0;
                 for(i=0;i<16;i++){
                     bufRx[i]=0x00;
@@ -148,7 +154,7 @@ void main()
                 __delay_us(10);
                 fail = writeEEPROM(EE_P0_0, EEPROMH, EEPROML, bufRx, 16);
                 SamplingCounter ++;
-                __delay_us(1750);   //Wait_1ms(1);
+                __delay_us(1750);
                 if(fail == -1){
                     bufTx[0] = 0xFF;
                     sendCanData(bufTx);
