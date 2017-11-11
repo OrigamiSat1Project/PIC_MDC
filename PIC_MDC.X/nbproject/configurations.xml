@@ -15,6 +15,7 @@
       <itemPath>PWM.h</itemPath>
       <itemPath>EEPROM.h</itemPath>
       <itemPath>SMA.h</itemPath>
+      <itemPath>Solar.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -33,6 +34,7 @@
       <itemPath>EEPROM.c</itemPath>
       <itemPath>SMA.c</itemPath>
       <itemPath>PIC_MDC.c</itemPath>
+      <itemPath>Solar.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

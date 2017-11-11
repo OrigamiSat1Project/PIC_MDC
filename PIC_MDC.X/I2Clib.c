@@ -43,8 +43,6 @@ void interruptI2C(void)
 void changeMSSPModeToI2C(int speed_is_high)
 {
     SSPCON1= 0x28 ;         //  use RC3, RC4 as I2Cline(SDA, SCL), clock :FOSC/((SSPADD + 1)*4)
-    TRISCbits.TRISC4 = UINT_TRUE;       //  SDA : in
-    TRISCbits.TRISC3 = UINT_TRUE;       //  SCL : in
     SSPSTAT= 0x00 ;
     if (speed_is_high == UINT_TRUE) {
         SSPADD = 0x09  ;     // SSPADD : 9 -> 400KHz
