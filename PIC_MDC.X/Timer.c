@@ -10,7 +10,10 @@
 #include "OrigamiTypeDefine.h"
 #include "CommonDefine.h"
 /// Global data
-
+const UBYTE UBYTE_13 = 0x0D;
+const UBYTE UBYTE_24 = 0x18;
+const UBYTE UBYTE_31 = 0x1F;
+const UBYTE UBYTE_60 = 0x3C;
 
 /// Method
 /*
@@ -44,19 +47,19 @@ void initInterrupt(void){
  */
 void increment_globalClock(void){
     globalClock.second += 0x01;
-    if(globalClock.second == 0x60){
+    if(globalClock.second == UBYTE_60){
         globalClock.second = 0x00;
         globalClock.minute += 0x01;
-        if(globalClock.minute == 0x60){
+        if(globalClock.minute == UBYTE_60){
             globalClock.minute = 0x00;
             globalClock.hour += 0x01;
-            if(globalClock.hour == 0x24){
+            if(globalClock.hour == UBYTE_24){
                 globalClock.hour = 0x00;
                 globalClock.day += 0x01;
-                if(globalClock.day == 31){
+                if(globalClock.day == UBYTE_31){
                     globalClock.day = 0x00;
                     globalClock.month += 0x01;
-                    if(globalClock.month == 0x13){
+                    if(globalClock.month == UBYTE_13){
                         globalClock.month = 0x00;
                         globalClock.year += 0x01;
                     }

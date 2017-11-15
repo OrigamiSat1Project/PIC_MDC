@@ -85,17 +85,16 @@ void main()
     for(unsigned int i=0;i<16;i++){
         bufTx[i]=0x00;
         bufRx[i]=0x00;
-        if(i == 5){
-            bufTx[i]=0xFF;
-            bufRx[i]=0xFF;
-        }
     }
-    
+
     while(1){
-        sendCanData(bufRx);
-        LED_SW_ON;
-        __delay_ms(1000);
-        LED_SW_OFF;
+        bufTx[0] = globalClock.second;
+        bufTx[1] = globalClock.minute;
+        bufTx[2] = globalClock.hour;
+        bufTx[3] = globalClock.day;
+        bufTx[4] = globalClock.month;
+        bufTx[5] = globalClock.year;
+        sendCanData(bufTx);
         __delay_ms(1000);
     }
     wait1ms(3000);           // ‚R•bŒã‚ÉŠJŽn
