@@ -10,10 +10,10 @@
 #include "OrigamiTypeDefine.h"
 
 /// Global data
-UBYTE CAN_ID_L   = 0xEB;
-UBYTE CAN_ID_H   = 0xFF;
-UBYTE CAN_EID_L  = 0xFF;
-UBYTE CAN_EID_H  = 0xFF;
+const UBYTE CAN_ID_L   = 0xEB;
+const UBYTE CAN_ID_H   = 0xFF;
+const UBYTE CAN_EID_L  = 0xFF;
+const UBYTE CAN_EID_H  = 0xFF;
 /// Method
 /*
  *  initialise PIC CAN setting
@@ -27,7 +27,7 @@ void initCan(){
     //TRISCbits.TRISC6 = 0;  //Can設定　RC6=0、RC7=1
     //TRISCbits.TRISC7 = 1;
     CANCON = 0x80; //configモードON
-    CANSTAT = 0x80; //初期化開始
+    CANSTAT = 0x80;
     //
     ECANCON = 0x00;
     BRGCON1 = 0x09; //T_Q = 2/Fosc, Sync_seg = 1 * T_Q
@@ -36,8 +36,8 @@ void initCan(){
     /***************************************************************************
      * Nominal bit time = T_Q * (Sync_seg + Prop_seg + Phase_seg1 + Phase_seg2)
      **************************************************************************/
-    RXB0CON = 0x40; //マスクON拡張フォーマット
-    RXB1CON = 0x40; //マスクON拡張フォーマット
+    RXB0CON = 0x40;
+    RXB1CON = 0x40;
     //
     TXB0D0 = 0x00;
     TXB0D1 = 0x00;
@@ -62,7 +62,7 @@ void initCan(){
     RXB0D7 = 0x00;
     //
     CANSTAT =0x00;
-    CANCON = 0x00; //ノーマルモード
+    CANCON = 0x00;
     return;
 }
 
@@ -81,8 +81,8 @@ void readCanData(char *read_data){
     RXF0EIDH = CAN_EID_H;
     RXF0EIDL = CAN_EID_L;
 
-    while(RXB0CONbits.RXFUL==0){}//データが受信できているか確認
-    read_data[0] = RXB0D0;//受信したデータを格納
+    while(RXB0CONbits.RXFUL==0){}
+    read_data[0] = RXB0D0;
     read_data[1] = RXB0D1;
     read_data[2] = RXB0D2;
     read_data[3] = RXB0D3;
@@ -90,7 +90,7 @@ void readCanData(char *read_data){
     read_data[5] = RXB0D5;
     read_data[6] = RXB0D6;
     read_data[7] = RXB0D7;
-    RXB0CONbits.RXFUL = 0;//データを空にする
+    RXB0CONbits.RXFUL = 0;
     return;
 }
 

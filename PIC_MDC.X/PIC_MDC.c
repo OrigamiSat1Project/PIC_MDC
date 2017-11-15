@@ -70,7 +70,7 @@
 #define __delay_ms(x)    _delay((UDWORD)((x)*(_XTAL_FREQ/4000UL)))
 #define __delay_us(x) _delay((UDWORD)((x)*(_XTAL_FREQ/4000000.0)))
 
-//  ƒƒCƒ“‚Ìˆ—
+
 void main()
 {
     UINT time ; // unsigned int time
@@ -83,23 +83,17 @@ void main()
 
     initAll();
     for(unsigned int i=0;i<16;i++){
-        bufTx[i]=0x00;
+        bufTx[i]=0x88;
         bufRx[i]=0x00;
-        if(i == 5){
-            bufTx[i]=0xFF;
-            bufRx[i]=0xFF;
-        }
     }
-    
     while(1){
-        sendCanData(bufRx);
+        readCanData(bufRx);
         LED_SW_ON;
-        __delay_ms(1000);
+        wait1ms(1000);
+        sendCanData(bufTx);
         LED_SW_OFF;
-        __delay_ms(1000);
     }
-    wait1ms(3000);           // ‚R•bŒã‚ÉŠJn
-
+    wait1ms(3000);
     //maybe this is not necesarry
     for(unsigned int i=0;i<16;i++){
         bufTx[i]=0x00;
