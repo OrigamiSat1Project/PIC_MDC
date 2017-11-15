@@ -7,7 +7,6 @@
       <itemPath>CAN.h</itemPath>
       <itemPath>I2Clib.h</itemPath>
       <itemPath>init.h</itemPath>
-      <itemPath>interrupt.h</itemPath>
       <itemPath>CommonDefine.h</itemPath>
       <itemPath>OrigamiTypeDefine.h</itemPath>
       <itemPath>ADC.h</itemPath>
@@ -16,6 +15,7 @@
       <itemPath>EEPROM.h</itemPath>
       <itemPath>SMA.h</itemPath>
       <itemPath>Solar.h</itemPath>
+      <itemPath>Timer.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -27,7 +27,6 @@
       <itemPath>CAN.c</itemPath>
       <itemPath>I2Clib.c</itemPath>
       <itemPath>init.c</itemPath>
-      <itemPath>interrupt.c</itemPath>
       <itemPath>ADC.c</itemPath>
       <itemPath>MPU9250.c</itemPath>
       <itemPath>PWM.c</itemPath>
@@ -35,6 +34,7 @@
       <itemPath>SMA.c</itemPath>
       <itemPath>PIC_MDC.c</itemPath>
       <itemPath>Solar.c</itemPath>
+      <itemPath>Timer.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -159,6 +159,7 @@
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="false"/>
@@ -172,7 +173,8 @@
         <property key="memories.instruction.ram.ranges"
                   value="${memories.instruction.ram.ranges}"/>
         <property key="memories.programmemory" value="true"/>
-        <property key="memories.programmemory.ranges" value="0-7fff"/>
+        <property key="memories.programmemory.ranges"
+                  value="${memories.programmemory.ranges.default}"/>
         <property key="poweroptions.powerenable" value="true"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
