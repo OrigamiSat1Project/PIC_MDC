@@ -86,12 +86,16 @@ void main()
         bufTx[i]=0x88;
         bufRx[i]=0x00;
     }
+
     while(1){
-        readCanData(bufRx);
-        LED_SW_ON;
-        wait1ms(1000);
+        bufTx[0] = globalClock.second;
+        bufTx[1] = globalClock.minute;
+        bufTx[2] = globalClock.hour;
+        bufTx[3] = globalClock.day;
+        bufTx[4] = globalClock.month;
+        bufTx[5] = globalClock.year;
         sendCanData(bufTx);
-        LED_SW_OFF;
+        __delay_ms(1000);
     }
     wait1ms(3000);
     //maybe this is not necesarry
