@@ -58,13 +58,6 @@ int pwmLED_ON(int lux, int on_seconds){
     if(lux==80){CCPR5L = 0b00011000;}//10%
     if(lux==100){CCPR5L = 0b00011000;}//10%
     //CCP5CON = 0b00111100; // set PWM mode
-    Wait_1ms(on_seconds * 1000);
+    __delay_ms(on_seconds * 1000);
     CCP5CON = 0x00;
-}
-
-void rLED_ON(void){
-    PORTBbits.RB5 = 1;
-}
-void rLED_OFF(void){
-    PORTBbits.RB5 = 0;
 }

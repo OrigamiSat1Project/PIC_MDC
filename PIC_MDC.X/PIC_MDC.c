@@ -7,7 +7,7 @@
 #include "init.h"
 #include "EEPROM.h"
 #include "MPU9250.h"
-#include "interrupt.h"
+#include "Timer.h"
 #include "PWM.h"
 #include "OrigamiTypeDefine.h"
 #include "CommonDefine.h"
@@ -76,15 +76,27 @@ void main()
     UINT time ; // unsigned int time
     UINT SamplingCounter = 0; //max value = 65536. if sampling count > 65536, this may cause error without reproducibility
     int fail;
-    //CAN送信データ
     UINT bufTx[16];
-    //CAN受信データ
     UINT bufRx[16];
     char EEPROMH;
     char EEPROML;
 
     initAll();
+    for(unsigned int i=0;i<16;i++){
+        bufTx[i]=0x00;
+        bufRx[i]=0x00;
+    }
 
+    while(1){
+        bufTx[0] = globalClock.second;
+        bufTx[1] = globalClock.minute;
+        bufTx[2] = globalClock.hour;
+        bufTx[3] = globalClock.day;
+        bufTx[4] = globalClock.month;
+        bufTx[5] = globalClock.year;
+        sendCanData(bufTx);
+        __delay_ms(1000);
+    }
     wait1ms(3000);           // ３秒後に開始
 
     //maybe this is not necesarry
@@ -99,10 +111,6 @@ void main()
     }*/
 
     while(1) {
-       /* rLED_ON();
-        Wait_1ms(1000);
-        rLED_OFF();
-        Wait_1ms(1000);*/
 
         for(unsigned int i=0;i<16;i++){
             bufTx[i]=0x00;
@@ -113,7 +121,7 @@ void main()
         wait1ms(1000);
         sendCanData(bufRx);
 
-        globalCount = 0;
+        //globalCount = 0;
 
         if(bufRx[0] == 0x01){
             readAD(*bufTx);
@@ -132,13 +140,10 @@ void main()
             //unsigned int clock = 0;
             //rLED_ON();
             //244count → 1s
-            time = globalCount;
-            rLED_ON();
+            LED_SW_ON;
             SamplingCounter = 0;
-            while(globalCount-time <= 310){
+            while(1/*globalCount-time <= 310*/){
 
-                //while((cnt-time) > clock);
-                //clock = cnt-time;
                 /*fail = 0;
                 for(i=0;i<16;i++){
                     bufRx[i]=0x00;
@@ -147,7 +152,7 @@ void main()
                 __delay_us(10);
                 fail = writeEEPROM(EE_P0_0, EEPROMH, EEPROML, bufRx, 16);
                 SamplingCounter ++;
-                __delay_us(1750);   //Wait_1ms(1);
+                __delay_us(1750);
                 if(fail == -1){
                     bufTx[0] = 0xFF;
                     sendCanData(bufTx);
@@ -161,8 +166,7 @@ void main()
                 }
                 EEPROML +=  0x10;
             }
-            rLED_OFF();
-           // rLED_OFF();
+            LED_SW_OFF;
 
             for(unsigned int i=0;i<16;i++){
                 bufRx[i]=0x00;
@@ -217,15 +221,15 @@ void main()
         }
 
         if(bufRx[0] == 0x03){
-            rLED_ON();
+            LED_SW_ON;
             wait1ms(3000);
-            rLED_OFF();
+            LED_SW_OFF;
         }
 
         if(bufRx[0] == 0x04){
-            SW_ON;
+            HRM_SW_ON;
             wait1ms(3000);
-            SW_OFF;
+            HRM_SW_OFF;
         }
 
         for(unsigned int i=0;i<16;i++){

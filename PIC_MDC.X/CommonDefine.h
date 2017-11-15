@@ -11,9 +11,9 @@
 #define RW_0  0
 #define RW_1  1
 
-#define LED_ON PORTBbits.RB7 = DIGITAL_HIGH
-#define LED_OFF PORTBbits.RB7 = DIGITAL_LOW
-#define SW_ON PORTCbits.RC0 = DIGITAL_HIGH
-#define SW_OFF PORTCbits.RC0 = DIGITAL_LOW
+#define HRM_SW_ON PORTBbits.RB7 = DIGITAL_HIGH
+#define HRM_SW_OFF PORTBbits.RB7 = DIGITAL_LOW
+#define LED_SW_ON PORTCbits.RC0 = DIGITAL_HIGH
+#define LED_SW_OFF PORTCbits.RC0 = DIGITAL_LOW
 
 #define _XTAL_FREQ    16000000

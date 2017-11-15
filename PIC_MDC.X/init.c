@@ -10,7 +10,7 @@
 #include "CAN.h"
 #include "EEPROM.h"
 #include "MPU9250.h"
-#include "interrupt.h"
+#include "Timer.h"
 #include "ADC.h"
 #include "PWM.h"
 #include "OrigamiTypeDefine.h"
@@ -45,7 +45,6 @@ void initPic(void){
      ANCON1bits.ANSEL10= ANSEL_ANALOG;
 
      // I/O setting
-     TRISC = 0x00;
      TRISAbits.TRISA0 = TRIS_IN;
      TRISAbits.TRISA1 = TRIS_IN;
      TRISAbits.TRISA2 = TRIS_IN;
