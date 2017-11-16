@@ -8,6 +8,7 @@
 #include "EEPROM.h"
 #include "MPU9250.h"
 #include "Timer.h"
+#include "Solar.h"
 #include "PWM.h"
 #include "OrigamiTypeDefine.h"
 #include "CommonDefine.h"
@@ -70,7 +71,6 @@
 #define __delay_ms(x)    _delay((UDWORD)((x)*(_XTAL_FREQ/4000UL)))
 #define __delay_us(x) _delay((UDWORD)((x)*(_XTAL_FREQ/4000000.0)))
 
-//  ÉÅÉCÉìÇÃèàóù
 void main()
 {
     UINT time ; // unsigned int time
@@ -88,16 +88,11 @@ void main()
     }
 
     while(1){
-        bufTx[0] = globalClock.second;
-        bufTx[1] = globalClock.minute;
-        bufTx[2] = globalClock.hour;
-        bufTx[3] = globalClock.day;
-        bufTx[4] = globalClock.month;
-        bufTx[5] = globalClock.year;
-        sendCanData(bufTx);
+        readSolar1(bufTx);
         __delay_ms(1000);
+        sendCanData(bufTx);
     }
-    wait1ms(3000);           // ÇRïbå„Ç…äJén
+    wait1ms(3000);
 
     //maybe this is not necesarry
     for(unsigned int i=0;i<16;i++){
