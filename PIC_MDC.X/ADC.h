@@ -6,6 +6,12 @@
 
 
 void initAD(void);
+void readAD0(UBYTE *, int);
+void readAD1(UBYTE *, int);
+void readAD2(UBYTE *, int);
+void readAD8(UBYTE *, int);
+void readAD9(UBYTE *, int);
+void readAD10(UBYTE *, int);
 void readAD(UBYTE *);
 
 #endif	/* ADC_H */

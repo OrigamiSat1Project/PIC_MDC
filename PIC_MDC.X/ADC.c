@@ -22,11 +22,18 @@
  *	XXX      :
  */
 void initAD(void){
-    //  enable ADC, GO : not in progress, CHS : AN0
+    //  enable ADC
+    //  GO : not in progress
+    //  CHS : AN0
     ADCON0 = 0x01;
-    //  TRIGSEL : ECCP1, VCFG : AVdd, VNCFG : AVss, CHSN (Analog negative channel) : AN6
+    //  TRIGSEL : ECCP1
+    //  VCFG : AVdd
+    //  VNCFG : AVss
+    //  CHSN (Analog negative channel) : AN6
     ADCON1 = 0x00;
-    //  ADFM (A/D Result Format Select bit) : Left, ACQT (A/D Acquisition Time Select bits) : 12Tad, ADCS (A/D Conversion Clock Select bits) : Fosc/16
+    //  ADFM (A/D Result Format Select bit) : Left
+    //  ACQT (A/D Acquisition Time Select bits) : 12Tad
+    //  ADCS (A/D Conversion Clock Select bits) : Fosc/16
     ADCON2 = 0x2D;
 }
 
@@ -50,7 +57,7 @@ void waitADCIdle(){
  *	FIXME    :   not yet
  *	XXX      :
  */
-void readAN0(UBYTE * buf){
+void readAN0(UBYTE * buf, int offset){
     //  CHS : 00000 (AN0)
     ADCON0bits.CHS4 = UINT_FALSE;
     ADCON0bits.CHS3 = UINT_FALSE;
@@ -60,8 +67,8 @@ void readAN0(UBYTE * buf){
     __delay_us(5);
     ADCON0bits.GO = UINT_TRUE;
     waitADCIdle();
-    buf[0] = ADRESL;
-    buf[1] = ADRESH;
+    buf[offset] = ADRESL;
+    buf[offset+1] = ADRESH;
     return;
 }
 /*
@@ -72,7 +79,7 @@ void readAN0(UBYTE * buf){
  *	FIXME    :   not yet
  *	XXX      :
  */
-void readAN1(UBYTE * buf){
+void readAN1(UBYTE * buf, int offset){
     //  CHS : 00001 (AN1)
     ADCON0bits.CHS4 = UINT_FALSE;
     ADCON0bits.CHS3 = UINT_FALSE;
@@ -82,8 +89,8 @@ void readAN1(UBYTE * buf){
     __delay_us(5);
     ADCON0bits.GO = UINT_TRUE;
     waitADCIdle();
-    buf[0] = ADRESL;
-    buf[1] = ADRESH;
+    buf[offset] = ADRESL;
+    buf[offset+1] = ADRESH;
     return;
 }
 /*
@@ -94,7 +101,7 @@ void readAN1(UBYTE * buf){
  *	FIXME    :   not yet
  *	XXX      :
  */
-void readAN2(UBYTE * buf){
+void readAN2(UBYTE * buf, int offset){
     //  CHS : 00010 (AN2)
     ADCON0bits.CHS4 = UINT_FALSE;
     ADCON0bits.CHS3 = UINT_FALSE;
@@ -104,8 +111,8 @@ void readAN2(UBYTE * buf){
     __delay_us(5);
     ADCON0bits.GO = UINT_TRUE;
     waitADCIdle();
-    buf[0] = ADRESL;
-    buf[1] = ADRESH;
+    buf[offset] = ADRESL;
+    buf[offset+1] = ADRESH;
     return;
 }
 /*
@@ -116,7 +123,7 @@ void readAN2(UBYTE * buf){
  *	FIXME    :   not yet
  *	XXX      :
  */
-void readAN8(UBYTE * buf){
+void readAN8(UBYTE * buf, int offset){
     //  CHS : 01000 (AN8)
     ADCON0bits.CHS4 = UINT_FALSE;
     ADCON0bits.CHS3 = UINT_TRUE;
@@ -126,8 +133,8 @@ void readAN8(UBYTE * buf){
     __delay_us(5);
     ADCON0bits.GO = UINT_TRUE;
     waitADCIdle();
-    buf[0] = ADRESL;
-    buf[1] = ADRESH;
+    buf[offset] = ADRESL;
+    buf[offset+1] = ADRESH;
     return;
 }
 /*
@@ -138,7 +145,7 @@ void readAN8(UBYTE * buf){
  *	FIXME    :   not yet
  *	XXX      :
  */
-void readAN9(UBYTE * buf){
+void readAN9(UBYTE * buf, int offset){
     //  CHS : 01001 (AN9)
     ADCON0bits.CHS4 = UINT_FALSE;
     ADCON0bits.CHS3 = UINT_TRUE;
@@ -148,8 +155,8 @@ void readAN9(UBYTE * buf){
     __delay_us(5);
     ADCON0bits.GO = UINT_TRUE;
     waitADCIdle();
-    buf[0] = ADRESL;
-    buf[1] = ADRESH;
+    buf[offset] = ADRESL;
+    buf[offset+1] = ADRESH;
     return;
 }
 /*
@@ -160,7 +167,7 @@ void readAN9(UBYTE * buf){
  *	FIXME    :   not yet
  *	XXX      :
  */
-void readAN10(UBYTE * buf){
+void readAN10(UBYTE * buf, int offset){
     //  CHS : 01010 (AN10)
     ADCON0bits.CHS4 = UINT_FALSE;
     ADCON0bits.CHS3 = UINT_TRUE;
@@ -170,16 +177,16 @@ void readAN10(UBYTE * buf){
     __delay_us(5);
     ADCON0bits.GO = UINT_TRUE;
     waitADCIdle();
-    buf[0] = ADRESL;
-    buf[1] = ADRESH;
+    buf[offset] = ADRESL;
+    buf[offset+1] = ADRESH;
     return;
 }
 /*
  *  AD Read Me
  *	arg      :   store buffer
  *	return   :   void
- *	TODO     :
- *	FIXME    :   not yet
+ *	TODO     :   delete this
+ *	FIXME    :   delete this
  *	XXX      :   avoid hardcoding
                  avoid AN0,AN1,,,,
  */
