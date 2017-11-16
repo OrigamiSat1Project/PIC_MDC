@@ -8,8 +8,8 @@
 #include "CommonDefine.h"
 #include "OrigamiTypeDefine.h"
 
-#define Solar1SW PORTCbits.RC2
-#define Solar2SW PORTCbits.RC1
+#define Solar1SW PORTCbits.RC2  //  DIGITAL_HIGH -> Current value, DIGITAL_LOW => Voltage value
+#define Solar2SW PORTCbits.RC1  //  DIGITAL_HIGH -> Current value, DIGITAL_LOW => Voltage value
 
 #ifndef SOLAR_H
 #define	SOLAR_H
