@@ -82,7 +82,7 @@ void main()
     char EEPROML;
 
     initAll();
-    for(unsigned int i=0;i<16;i++){
+    for(unsigned int i=0;i<8;i++){
         bufTx[i]=0x00;
         bufRx[i]=0x00;
     }
@@ -134,7 +134,7 @@ void main()
             sendCanData(bufRx);
             //unsigned int clock = 0;
             //rLED_ON();
-            //244count ¨ 1s
+            //244count ?¿½?¿½ 1s
             LED_SW_ON;
             SamplingCounter = 0;
             while(1/*globalCount-time <= 310*/){
