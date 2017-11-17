@@ -75,7 +75,7 @@ void main()
 {
     UINT time ; // unsigned int time
     UINT SamplingCounter = 0; //max value = 65536. if sampling count > 65536, this may cause error without reproducibility
-    int fail;
+    int checkFlag = 0;
     UINT bufTx[16];
     UINT bufRx[16];
     char EEPROMH;
@@ -83,157 +83,72 @@ void main()
 
     initAll();
     for(unsigned int i=0;i<16;i++){
-        bufTx[i]=0x88;
-        bufRx[i]=0x00;
-    }
-
-    while(1){
-        readSolar1(bufTx);
-        __delay_ms(1000);
-        sendCanData(bufTx);
-    }
-    wait1ms(3000);
-
-    //maybe this is not necesarry
-    for(unsigned int i=0;i<16;i++){
         bufTx[i]=0x00;
         bufRx[i]=0x00;
     }
-
-    /*fail = changeR();
-    if(fail == -1){
-        bufTx[1] = 0xFF;
-    }*/
+    LED_SW_OFF;
 
     while(1) {
-
+        EEPROMH = 0x00;
+        EEPROML = 0x00;
+        checkFlag = 0;
         for(unsigned int i=0;i<16;i++){
-            bufTx[i]=0x00;
             bufRx[i]=0x00;
         }
-
-        readCanData(bufRx);
-        wait1ms(1000);
-        sendCanData(bufRx);
-
-        //globalCount = 0;
-
-        if(bufRx[0] == 0x01){
-            readAD(*bufTx);
-            sendCanData(bufTx);
+        //244count -> 1
+        SamplingCounter = 0;
+        //while(1/*globalCount-time <= 310*/){
+        for (UINT j = 0; j < 200; j++) {
+            checkFlag = readIMU(bufRx,0);
+            __delay_us(10);
+            checkFlag = writeEEPROM(EE_P0_0, EEPROMH, EEPROML, bufRx, 16);
+            SamplingCounter ++;
+            __delay_us(2000);
+            if(EEPROML == 0xF0){
+                EEPROMH +=  0x01;
+                //EEPROML = 0x00;
+            }
+            if(EEPROMH == 0xFF && EEPROML == 0xF0){
+                break;
+            }
+            EEPROML +=  0x10;
         }
-
-        if(bufRx[0] == 0x02){
-
-            EEPROMH = 0x00;
-            EEPROML = 0x00;
-            fail = 0;
-            for(unsigned int i=0;i<16;i++){
-                bufRx[i]=0x00;
-            }
-            sendCanData(bufRx);
-            //unsigned int clock = 0;
-            //rLED_ON();
-            //244count ¨ 1s
-            LED_SW_ON;
-            SamplingCounter = 0;
-            while(1/*globalCount-time <= 310*/){
-
-                /*fail = 0;
-                for(i=0;i<16;i++){
-                    bufRx[i]=0x00;
-                }*/
-                fail = readIMU(bufRx,0);
-                __delay_us(10);
-                fail = writeEEPROM(EE_P0_0, EEPROMH, EEPROML, bufRx, 16);
-                SamplingCounter ++;
-                __delay_us(1750);
-                if(fail == -1){
-                    bufTx[0] = 0xFF;
-                    sendCanData(bufTx);
-                }
-                if(EEPROML == 0xF0){
-                    EEPROMH +=  0x01;
-                    EEPROML = 0x00;
-                }
-                if(EEPROMH == 0xFF && EEPROML == 0xF0){
-                    break;
-                }
-                EEPROML +=  0x10;
-            }
-            LED_SW_OFF;
-
-            for(unsigned int i=0;i<16;i++){
-                bufRx[i]=0x00;
-            }
-            wait1ms(500);
-            sendCanData(bufRx);
-            wait1ms(500);
-            EEPROMH = 0x00;
-            EEPROML = 0x00;
-            // Gyro data send
-            for(unsigned int k=0;k<=SamplingCounter;k++){
-                fail = 0;
-                fail = readEEPROM(EE_P0_0, EEPROMH ,EEPROML ,bufTx ,8);
-                __delay_us(3000);
-                /*for(unsigned int i=0;i<16;i++){
-                    bufTx[i]=bufRx[i];
-                }*/
-                sendCanData(bufTx);
-                /*if(fail == -1){
-                    bufTx[0] = 0xFF;
-                    sendCanData(bufTx);
-                }*/
-                if(EEPROML==0xF0){
-                    EEPROMH +=  0x01;      //EEPROMH = EEPROMH+1;
-                    //EEPROML = 0x00;
-                }
-                EEPROML += 0x10;
-            }
-
-            EEPROMH = 0x00;
-            EEPROML = 0x08;
-            //  Accel data send
-            for(unsigned int k=0;k<=SamplingCounter;k++){
-                readEEPROM(EE_P0_0, EEPROMH ,EEPROML ,bufTx ,8);
-                __delay_us(3000);
-                sendCanData(bufTx);
-                /*if(fail == -1){
-                    bufTx[0] = 0xFF;
-                    sendCanData(bufTx);
-                }*/
-                if(EEPROML==0xF8){
-                    EEPROMH +=  0x01;      //EEPROMH = EEPROMH+1;
-                }
-                EEPROML += 0x10;   //(char)(16))
-            }
-            for(unsigned int i=0;i<16;i++){
-                bufRx[i]=0xFF;
-            }
-            for(unsigned int i=0;i<SamplingCounter;i++){
-                sendCanData(bufRx);
-            }
-        }
-
-        if(bufRx[0] == 0x03){
-            LED_SW_ON;
-            wait1ms(3000);
-            LED_SW_OFF;
-        }
-
-        if(bufRx[0] == 0x04){
-            HRM_SW_ON;
-            wait1ms(3000);
-            HRM_SW_OFF;
-        }
+        LED_SW_OFF;
 
         for(unsigned int i=0;i<16;i++){
-            bufTx[i]=0xFF;
+            bufRx[i]=0x00;
+        }
+        wait1ms(500);
+        EEPROMH = 0x00;
+        EEPROML = 0x00;
+        // Gyro data send
+        for(unsigned int k=0;k<=SamplingCounter;k++){
+            checkFlag = 0;
+            checkFlag = readEEPROM(EE_P0_0, EEPROMH ,EEPROML ,bufTx ,8);
+            __delay_us(3000);
+            sendCanData(bufTx);
+            if(EEPROML==0xF0){
+                EEPROMH +=  0x01;      //EEPROMH = EEPROMH+1;
+                //EEPROML = 0x00;
+            }else{
+                EEPROML += 0x10;
+            }
         }
 
-        //sendCanData(bufTx);
-
+        EEPROMH = 0x00;
+        EEPROML = 0x08;
+        //  Accel data send
+        for(unsigned int k=0;k<=SamplingCounter;k++){
+            readEEPROM(EE_P0_0, EEPROMH ,EEPROML ,bufTx ,8);
+            __delay_us(3000);
+            sendCanData(bufTx);
+            if(EEPROML==0xF8){
+                EEPROMH +=  0x01;      //EEPROMH = EEPROMH+1;
+                EEPROML = 0x00;
+            }else{
+                EEPROML += 0x10;   //(char)(16))
+            }
+        }
         wait1ms(3000);
-
-     }
+    }
 }

@@ -51,12 +51,12 @@ void changeMSSPModeToI2C(int speed_is_high)
         SSPADD = 0x27  ;     // SSPADD : 39 -> 100KHz
         SSPSTATbits.SMP = UINT_TRUE ;    // enable slew rate control
     }
-    PIE1bits.SSPIE       = UINT_TRUE ;               // enable MSSP interrupt
-    PIE2bits.BCLIE       = UINT_TRUE ;               // enable bus collision interrupt
+    PIE1bits.SSPIE  = UINT_TRUE ;               // enable MSSP interrupt
+    PIE2bits.BCLIE  = UINT_TRUE ;               // enable bus collision interrupt
     INTCONbits.PEIE = UINT_TRUE ;               // enable around device interrupt
     INTCONbits.GIE  = UINT_TRUE ;               // enable global interrupt
-    PIR1bits.SSPIF       = UINT_FALSE ;               // clear MSSP interrupt flag
-    PIR2bits.BCLIF       = UINT_FALSE ;               // clear bus collision flag
+    PIR1bits.SSPIF  = UINT_FALSE ;               // clear MSSP interrupt flag
+    PIR2bits.BCLIF  = UINT_FALSE ;               // clear bus collision flag
 }
 
 /*

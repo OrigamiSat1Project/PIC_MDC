@@ -28,7 +28,7 @@ int readAddr(char address)
      if (ans == 0) {
           sendI2CData(address);
           restartI2C(MPU9250_ADDR,RW_1);
-          ans = readI2CData(NOACK); 
+          ans = readI2CData(NOACK);
      } else ans = -1;
      stopI2C();
      return ans;
@@ -37,20 +37,19 @@ int readAddr(char address)
 int writeAddr(char address, char val)
 {
      int ans ;
-     ans = startI2C(MPU9250_ADDR,RW_0);  
+     ans = startI2C(MPU9250_ADDR,RW_0);
      if (ans == 0) {
-          sendI2CData(address) ;         
-          sendI2CData(val) ;             
+          sendI2CData(address) ;
+          sendI2CData(val) ;
      } else ans = -1 ;
-     stopI2C() ;                         
+     stopI2C() ;
      return ans ;
 }
 
 int initIMU()
 {
     int ans ;
-
-     __delay_us(2000) ;   
+     __delay_us(2000) ;
      ans = readAddr(WHO) ;
      if (ans == WHO_VALUE) {
           writeAddr(PWR_MGMT_1,0x00);    //wake up sensor
@@ -75,9 +74,9 @@ int readIMU(UBYTE *data, int offset)
          ans = ans & 0x01;
      }
 
-     ans = startI2C(MPU9250_ADDR,RW_0);  
+     ans = startI2C(MPU9250_ADDR,RW_0);
      if (ans == 0) {
-          sendI2CData(IMU_DATA) ;        
+          sendI2CData(IMU_DATA) ;
           restartI2C(MPU9250_ADDR,RW_1) ;
           ack = ACK ;
           for (i=0 ; i<14 ; i++) {
@@ -85,7 +84,6 @@ int readIMU(UBYTE *data, int offset)
                data[offset+i] = readI2CData(ack);
           }
      } else ans = -1 ;
-     stopI2C() ;                         
-
+     stopI2C() ;
      return ans ;
 }
