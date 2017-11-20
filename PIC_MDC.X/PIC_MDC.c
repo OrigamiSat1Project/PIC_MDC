@@ -74,7 +74,7 @@
 void main()
 {
     UINT time ; // unsigned int time
-    UINT bufOBC[16];
+    UBYTE bufOBC[16];
 
     initAll();
     //  initialize buffer for communicate with OBC
@@ -84,13 +84,16 @@ void main()
 
     readCanData(bufOBC);
     wait1ms(1000);
+    //  FIXME : check command of OBC is correct format or not
     //  echoback to OBC
     sendCanData(bufOBC);
+    //  FIXME : change case syntax for command format
     switch (bufOBC[0]){
         case 0x01:
             readIMUSequence(0x00);
             break;
         case 0x02:
+            readSolarSequence();
             break;
         case 0x03:
             break;

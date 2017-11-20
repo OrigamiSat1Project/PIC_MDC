@@ -20,5 +20,6 @@
 #define	SOLAR_H
 
 UINT readSolar1(UBYTE *);
+void readSolarSequence(void);
 
 #endif	/* SOLAR_H */

@@ -6,6 +6,7 @@
 
 #include <xc.h>
 #include "ADC.h"
+#include "CAN.h"
 #include "Solar.h"
 #include "CommonDefine.h"
 #include "OrigamiTypeDefine.h"
@@ -85,4 +86,19 @@ UINT readSolar1(UBYTE *buf){
     buf[8] = ADRESL;
     buf[9] = ADRESH;
     return 10;
+}
+
+/*
+*  read Solar1 current, voltage, temperature
+*	arg      :
+*	return   :    buffer size
+*	TODO     :
+*	FIXME    :    not send, store buffer to EEPROM, not only Solar1 but also Solar2
+*	XXX      :    if need, solar select is need by argument
+*/
+void readSolarSequence(void){
+    UBYTE bufSolar[16];
+    readSolar1(bufSolar);
+    __delay_ms(1000);
+    sendCanData(bufSolar);
 }
