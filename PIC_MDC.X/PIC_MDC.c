@@ -86,12 +86,9 @@ void main()
     wait1ms(1000);
     //  echoback to OBC
     sendCanData(bufOBC);
-    while(1){
-        readIMUSequence(0x00);
-    }
-    /*
-    switch (bufRx[0]){
+    switch (bufOBC[0]){
         case 0x01:
+            readIMUSequence(0x00);
             break;
         case 0x02:
             break;
@@ -102,5 +99,5 @@ void main()
         case 0x05:
             break;
 
-    }*/
+    }
 }
