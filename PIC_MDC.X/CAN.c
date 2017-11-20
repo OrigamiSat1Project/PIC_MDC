@@ -24,9 +24,9 @@ const UBYTE CAN_EID_H  = 0xFF;
  *	XXX      :   avoid hardcoding
  */
 void initCan(){
-    //TRISCbits.TRISC6 = 0;  //Canê›íËÅ@RC6=0ÅARC7=1
+    //TRISCbits.TRISC6 = 0;  //CanÔøΩ›íÔøΩÔøΩ@RC6=0ÔøΩARC7=1
     //TRISCbits.TRISC7 = 1;
-    CANCON = 0x80; //configÉÇÅ[ÉhON
+    CANCON = 0x80; //configÔøΩÔøΩÔøΩ[ÔøΩhON
     CANSTAT = 0x80;
     //
     ECANCON = 0x00;
@@ -75,7 +75,7 @@ void initCan(){
  *	FIXME    :   not yet
  *	XXX      :   wait for RXFUL forever. need received interrupt
 */
-void readCanData(char *read_data){
+void readCanData(UBYTE *read_data){
     RXF0SIDH = CAN_ID_H;
     RXF0SIDL = CAN_ID_L;
     RXF0EIDH = CAN_EID_H;
@@ -102,7 +102,7 @@ void readCanData(char *read_data){
  *	FIXME    :   not yet
  *	XXX      :   wait for RXFUL forever. need received interrupt
  */
-void sendCanData(char *send_data){
+void sendCanData(UBYTE *send_data){
     //  set data to buffer for sending
     TXB0D0 = send_data[0];
     TXB0D1 = send_data[1];
