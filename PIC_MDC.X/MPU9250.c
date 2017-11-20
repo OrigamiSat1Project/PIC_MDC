@@ -143,70 +143,68 @@ void readIMUSequence(/*struct dateStruct IMUstarttime, */UBYTE timespan){
     for(unsigned int i=0;i<16;i++){
         bufIMU[i]=0x00;
     }
-    while(1) {
-        EEPROMH = 0x00;
-        EEPROML = 0x00;
-        checkFlag = 0;
-        for(unsigned int i=0;i<16;i++){
-            bufIMU[i]=0x00;
-        }
-        //244count -> 1
-        IMUSamplingCounter = 0;
-        //  FIXME : it must be timer loop not const loop
-        //while(1/*globalCount-time <= 310*/){
-        for (UINT j = 0; j < 200; j++) {
-            checkFlag = readIMU(bufIMU,0);
-            //  XXX : 20ms is need to be more smaller
-            __delay_us(20);
-            checkFlag = writeEEPROM(EE_P0_0, EEPROMH, EEPROML, bufIMU, 16);
-            IMUSamplingCounter ++;
-            //  XXX : 3000ms is need to be more smaller
-            __delay_us(3000);
-            EEPROML +=  0x10;
-            if(EEPROML == 0xF0){
-                EEPROMH += 0x01;
-                EEPROML = 0x00;
-            }
-            if(EEPROMH == 0xFF && EEPROML == 0xF0){
-                //  EEPROM is full. break.
-                break;
-            }
-        }
-
-        for(unsigned int i=0;i<16;i++){
-            bufIMU[i]=0x00;
-        }
-        wait1ms(500);
-        EEPROMH = 0x00;
-        EEPROML = 0x00;
-        // Gyro data send
-        for(unsigned int k=0;k<=IMUSamplingCounter;k++){
-            checkFlag = 0;
-            checkFlag = readEEPROM(EE_P0_0, EEPROMH ,EEPROML ,bufIMU ,8);
-            //  XXX : 3000ms is need to be more smaller
-            __delay_us(3000);
-            sendCanData(bufIMU);
-            EEPROML += 0x10;
-            if(EEPROML==0xF0){
-                EEPROMH += 0x01;      //EEPROMH = EEPROMH+1;
-                EEPROML = 0x00;
-            }
-        }
-
-        EEPROMH = 0x00;
-        EEPROML = 0x08;
-        //  Accel data send
-        for(unsigned int k=0;k<=IMUSamplingCounter;k++){
-            readEEPROM(EE_P0_0, EEPROMH ,EEPROML ,bufIMU ,8);
-            //  XXX : 3000ms is need to be more smaller
-            __delay_us(3000);
-            sendCanData(bufIMU);
-            EEPROML += 0x10;   //(char)(16))
-            if(EEPROML==0xF8){
-                EEPROMH += 0x01;      //EEPROMH = EEPROMH+1;
-                EEPROML = 0x00;
-            }
-        }
-        wait1ms(3000);
+    EEPROMH = 0x00;
+    EEPROML = 0x00;
+    checkFlag = 0;
+    for(unsigned int i=0;i<16;i++){
+        bufIMU[i]=0x00;
     }
+    //244count -> 1
+    IMUSamplingCounter = 0;
+    //  FIXME : it must be timer loop not const loop
+    //while(1/*globalCount-time <= 310*/){
+    for (UINT j = 0; j < 200; j++) {
+        checkFlag = readIMU(bufIMU,0);
+        //  XXX : 20ms is need to be more smaller
+        __delay_us(20);
+        checkFlag = writeEEPROM(EE_P0_0, EEPROMH, EEPROML, bufIMU, 16);
+        IMUSamplingCounter ++;
+        //  XXX : 3000ms is need to be more smaller
+        __delay_us(3000);
+        EEPROML +=  0x10;
+        if(EEPROML == 0xF0){
+            EEPROMH += 0x01;
+            EEPROML = 0x00;
+        }
+        if(EEPROMH == 0xFF && EEPROML == 0xF0){
+            //  EEPROM is full. break.
+            break;
+        }
+    }
+
+    for(unsigned int i=0;i<16;i++){
+        bufIMU[i]=0x00;
+    }
+    wait1ms(500);
+    EEPROMH = 0x00;
+    EEPROML = 0x00;
+    // Gyro data send
+    for(unsigned int k=0;k<=IMUSamplingCounter;k++){
+        checkFlag = 0;
+        checkFlag = readEEPROM(EE_P0_0, EEPROMH ,EEPROML ,bufIMU ,8);
+        //  XXX : 3000ms is need to be more smaller
+        __delay_us(3000);
+        sendCanData(bufIMU);
+        EEPROML += 0x10;
+        if(EEPROML==0xF0){
+            EEPROMH += 0x01;      //EEPROMH = EEPROMH+1;
+            EEPROML = 0x00;
+        }
+    }
+
+    EEPROMH = 0x00;
+    EEPROML = 0x08;
+    //  Accel data send
+    for(unsigned int k=0;k<=IMUSamplingCounter;k++){
+        readEEPROM(EE_P0_0, EEPROMH ,EEPROML ,bufIMU ,8);
+        //  XXX : 3000ms is need to be more smaller
+        __delay_us(3000);
+        sendCanData(bufIMU);
+        EEPROML += 0x10;   //(char)(16))
+        if(EEPROML==0xF8){
+            EEPROMH += 0x01;      //EEPROMH = EEPROMH+1;
+            EEPROML = 0x00;
+        }
+    }
+    wait1ms(3000);
 }
