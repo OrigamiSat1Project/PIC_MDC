@@ -100,18 +100,21 @@ void main()
         //while(1/*globalCount-time <= 310*/){
         for (UINT j = 0; j < 200; j++) {
             checkFlag = readIMU(bufRx,0);
-            __delay_us(10);
+            //  XXX : 20ms is need to be more smaller
+            __delay_us(20);
             checkFlag = writeEEPROM(EE_P0_0, EEPROMH, EEPROML, bufRx, 16);
             SamplingCounter ++;
-            __delay_us(2000);
+            //  XXX : 3000ms is need to be more smaller
+            __delay_us(3000);
+            EEPROML +=  0x10;
             if(EEPROML == 0xF0){
-                EEPROMH +=  0x01;
-                //EEPROML = 0x00;
+                EEPROMH += 0x01;
+                EEPROML = 0x00;
             }
             if(EEPROMH == 0xFF && EEPROML == 0xF0){
+                //  EEPROM is full. break.
                 break;
             }
-            EEPROML +=  0x10;
         }
         LED_SW_OFF;
 
@@ -125,13 +128,13 @@ void main()
         for(unsigned int k=0;k<=SamplingCounter;k++){
             checkFlag = 0;
             checkFlag = readEEPROM(EE_P0_0, EEPROMH ,EEPROML ,bufTx ,8);
+            //  XXX : 3000ms is need to be more smaller
             __delay_us(3000);
             sendCanData(bufTx);
+            EEPROML += 0x10;
             if(EEPROML==0xF0){
-                EEPROMH +=  0x01;      //EEPROMH = EEPROMH+1;
-                //EEPROML = 0x00;
-            }else{
-                EEPROML += 0x10;
+                EEPROMH += 0x01;      //EEPROMH = EEPROMH+1;
+                EEPROML = 0x00;
             }
         }
 
@@ -140,13 +143,13 @@ void main()
         //  Accel data send
         for(unsigned int k=0;k<=SamplingCounter;k++){
             readEEPROM(EE_P0_0, EEPROMH ,EEPROML ,bufTx ,8);
+            //  XXX : 3000ms is need to be more smaller
             __delay_us(3000);
             sendCanData(bufTx);
+            EEPROML += 0x10;   //(char)(16))
             if(EEPROML==0xF8){
-                EEPROMH +=  0x01;      //EEPROMH = EEPROMH+1;
+                EEPROMH += 0x01;      //EEPROMH = EEPROMH+1;
                 EEPROML = 0x00;
-            }else{
-                EEPROML += 0x10;   //(char)(16))
             }
         }
         wait1ms(3000);
