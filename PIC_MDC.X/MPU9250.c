@@ -3,6 +3,9 @@
 #include "CommonDefine.h"
 #include "MPU9250.h"
 #include "I2Clib.h"
+#include "EEPROM.h"
+#include "init.h"
+#include "CAN.h"
 
 const UBYTE MPU9250_ADDR    = 0x68;
 const UBYTE WHO             = 0x75;
@@ -21,6 +24,16 @@ const UBYTE TEMP_DATA       = 0x41;
 const UBYTE GYRO_DATA       = 0x43;
 const UBYTE PWR_MGMT_1      = 0x6B;
 
+/// Method
+
+/*
+ *  read register buffer of MPU9250
+ *	arg      :   address of register
+ *	return   :   int. result
+ *	TODO     :   nothing
+ *	FIXME    :   not yet
+ *	XXX      :
+ */
 int readAddr(char address)
 {
      int ans ;
@@ -34,6 +47,14 @@ int readAddr(char address)
      return ans;
 }
 
+/*
+ *  write register buffer of MPU9250
+ *	arg      :   address of register, buffer to write
+ *	return   :   int. result
+ *	TODO     :   nothing
+ *	FIXME    :   not yet
+ *	XXX      :
+ */
 int writeAddr(char address, char val)
 {
      int ans ;
@@ -46,6 +67,14 @@ int writeAddr(char address, char val)
      return ans ;
 }
 
+/*
+ *  initialize MPU9250
+ *	arg      :   address of register
+ *	return   :   int. result
+ *	TODO     :   nothing
+ *	FIXME    :   not yet
+ *	XXX      :
+ */
 int initIMU()
 {
     int ans ;
@@ -65,6 +94,14 @@ int initIMU()
      return ans ;
 }
 
+/*
+ *  read IMU data from MPU9250
+ *	arg      :   address of register
+ *	return   :   int. result
+ *	TODO     :   nothing
+ *	FIXME    :
+ *	XXX      :
+ */
 int readIMU(UBYTE *data, int offset)
 {
      int ans , i , ack ;
@@ -86,4 +123,90 @@ int readIMU(UBYTE *data, int offset)
      } else ans = -1 ;
      stopI2C() ;
      return ans ;
+}
+
+/*
+ *  read IMU sequence
+ *	arg      :   IMUstarttime, timespan (second)
+ *	return   :   nothing
+ *	TODO     :   nothing
+ *	FIXME    :   timer loop, dateStruct
+ *	XXX      :   wait time for eeprom memorize
+ */
+void readIMUSequence(/*struct dateStruct IMUstarttime, */UBYTE timespan){
+    int checkFlag = 0;
+    UINT bufIMU[16];
+    char EEPROMH = 0x00;
+    char EEPROML = 0x00;
+    //  FIXME : max value = 65536. if sampling count > 65536, this may cause error without reproducibility
+    UINT IMUSamplingCounter = 0;
+    for(unsigned int i=0;i<16;i++){
+        bufIMU[i]=0x00;
+    }
+    while(1) {
+        EEPROMH = 0x00;
+        EEPROML = 0x00;
+        checkFlag = 0;
+        for(unsigned int i=0;i<16;i++){
+            bufIMU[i]=0x00;
+        }
+        //244count -> 1
+        IMUSamplingCounter = 0;
+        //  FIXME : it must be timer loop not const loop
+        //while(1/*globalCount-time <= 310*/){
+        for (UINT j = 0; j < 200; j++) {
+            checkFlag = readIMU(bufIMU,0);
+            //  XXX : 20ms is need to be more smaller
+            __delay_us(20);
+            checkFlag = writeEEPROM(EE_P0_0, EEPROMH, EEPROML, bufIMU, 16);
+            IMUSamplingCounter ++;
+            //  XXX : 3000ms is need to be more smaller
+            __delay_us(3000);
+            EEPROML +=  0x10;
+            if(EEPROML == 0xF0){
+                EEPROMH += 0x01;
+                EEPROML = 0x00;
+            }
+            if(EEPROMH == 0xFF && EEPROML == 0xF0){
+                //  EEPROM is full. break.
+                break;
+            }
+        }
+
+        for(unsigned int i=0;i<16;i++){
+            bufIMU[i]=0x00;
+        }
+        wait1ms(500);
+        EEPROMH = 0x00;
+        EEPROML = 0x00;
+        // Gyro data send
+        for(unsigned int k=0;k<=IMUSamplingCounter;k++){
+            checkFlag = 0;
+            checkFlag = readEEPROM(EE_P0_0, EEPROMH ,EEPROML ,bufIMU ,8);
+            //  XXX : 3000ms is need to be more smaller
+            __delay_us(3000);
+            sendCanData(bufIMU);
+            EEPROML += 0x10;
+            if(EEPROML==0xF0){
+                EEPROMH += 0x01;      //EEPROMH = EEPROMH+1;
+                EEPROML = 0x00;
+            }
+        }
+
+        EEPROMH = 0x00;
+        EEPROML = 0x08;
+        //  Accel data send
+        for(unsigned int k=0;k<=IMUSamplingCounter;k++){
+            readEEPROM(EE_P0_0, EEPROMH ,EEPROML ,bufIMU ,8);
+            //  XXX : 3000ms is need to be more smaller
+            __delay_us(3000);
+            sendCanData(bufIMU);
+            EEPROML += 0x10;   //(char)(16))
+            if(EEPROML==0xF8){
+                EEPROMH += 0x01;      //EEPROMH = EEPROMH+1;
+                EEPROML = 0x00;
+            }
+        }
+        wait1ms(3000);
+    }
 }
