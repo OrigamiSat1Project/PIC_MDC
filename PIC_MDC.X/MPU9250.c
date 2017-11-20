@@ -135,7 +135,7 @@ int readIMU(UBYTE *data, int offset)
  */
 void readIMUSequence(/*struct dateStruct IMUstarttime, */UBYTE timespan){
     int checkFlag = 0;
-    UINT bufIMU[16];
+    UBYTE bufIMU[16];
     char EEPROMH = 0x00;
     char EEPROML = 0x00;
     //  FIXME : max value = 65536. if sampling count > 65536, this may cause error without reproducibility
