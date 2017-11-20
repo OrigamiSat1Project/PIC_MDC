@@ -74,85 +74,33 @@
 void main()
 {
     UINT time ; // unsigned int time
-    UINT SamplingCounter = 0; //max value = 65536. if sampling count > 65536, this may cause error without reproducibility
-    int checkFlag = 0;
-    UINT bufTx[16];
-    UINT bufRx[16];
-    char EEPROMH;
-    char EEPROML;
+    UINT bufOBC[16];
 
     initAll();
+    //  initialize buffer for communicate with OBC
     for(unsigned int i=0;i<16;i++){
-        bufTx[i]=0x00;
-        bufRx[i]=0x00;
+        bufOBC[i]=0x00;
     }
-    LED_SW_OFF;
 
-    while(1) {
-        EEPROMH = 0x00;
-        EEPROML = 0x00;
-        checkFlag = 0;
-        for(unsigned int i=0;i<16;i++){
-            bufRx[i]=0x00;
-        }
-        //244count -> 1
-        SamplingCounter = 0;
-        //  FIXME : it must be timer loop not const loop
-        //while(1/*globalCount-time <= 310*/){
-        for (UINT j = 0; j < 200; j++) {
-            checkFlag = readIMU(bufRx,0);
-            //  XXX : 20ms is need to be more smaller
-            __delay_us(20);
-            checkFlag = writeEEPROM(EE_P0_0, EEPROMH, EEPROML, bufRx, 16);
-            SamplingCounter ++;
-            //  XXX : 3000ms is need to be more smaller
-            __delay_us(3000);
-            EEPROML +=  0x10;
-            if(EEPROML == 0xF0){
-                EEPROMH += 0x01;
-                EEPROML = 0x00;
-            }
-            if(EEPROMH == 0xFF && EEPROML == 0xF0){
-                //  EEPROM is full. break.
-                break;
-            }
-        }
-        LED_SW_OFF;
-
-        for(unsigned int i=0;i<16;i++){
-            bufRx[i]=0x00;
-        }
-        wait1ms(500);
-        EEPROMH = 0x00;
-        EEPROML = 0x00;
-        // Gyro data send
-        for(unsigned int k=0;k<=SamplingCounter;k++){
-            checkFlag = 0;
-            checkFlag = readEEPROM(EE_P0_0, EEPROMH ,EEPROML ,bufTx ,8);
-            //  XXX : 3000ms is need to be more smaller
-            __delay_us(3000);
-            sendCanData(bufTx);
-            EEPROML += 0x10;
-            if(EEPROML==0xF0){
-                EEPROMH += 0x01;      //EEPROMH = EEPROMH+1;
-                EEPROML = 0x00;
-            }
-        }
-
-        EEPROMH = 0x00;
-        EEPROML = 0x08;
-        //  Accel data send
-        for(unsigned int k=0;k<=SamplingCounter;k++){
-            readEEPROM(EE_P0_0, EEPROMH ,EEPROML ,bufTx ,8);
-            //  XXX : 3000ms is need to be more smaller
-            __delay_us(3000);
-            sendCanData(bufTx);
-            EEPROML += 0x10;   //(char)(16))
-            if(EEPROML==0xF8){
-                EEPROMH += 0x01;      //EEPROMH = EEPROMH+1;
-                EEPROML = 0x00;
-            }
-        }
-        wait1ms(3000);
+    readCanData(bufOBC);
+    wait1ms(1000);
+    //  echoback to OBC
+    sendCanData(bufOBC);
+    while(1){
+        readIMUSequence(0x00);
     }
+    /*
+    switch (bufRx[0]){
+        case 0x01:
+            break;
+        case 0x02:
+            break;
+        case 0x03:
+            break;
+        case 0x04:
+            break;
+        case 0x05:
+            break;
+
+    }*/
 }
