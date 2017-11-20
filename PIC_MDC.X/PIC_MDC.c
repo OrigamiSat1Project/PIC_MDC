@@ -97,6 +97,7 @@ void main()
         }
         //244count -> 1
         SamplingCounter = 0;
+        //  FIXME : it must be timer loop not const loop
         //while(1/*globalCount-time <= 310*/){
         for (UINT j = 0; j < 200; j++) {
             checkFlag = readIMU(bufRx,0);
