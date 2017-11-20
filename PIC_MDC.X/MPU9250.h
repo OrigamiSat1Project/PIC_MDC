@@ -1,6 +1,6 @@
 /*
- * File:   PSITG.h
- * Author: ティンダル
+ * File:   MPU9250.h
+ * Author: reo kashiyama
  *
  * Created on October 25, 2016, 5:02 AM
  */
@@ -11,10 +11,11 @@
 #ifndef _XTAL_FREQ
  // Unless already defined assume 8MHz system frequency
  // This definition is required to calibrate __delay_us() and __delay_ms()
- #define _XTAL_FREQ 16000000       // 使用するPIC等により動作周波数値を設定する
+ #define _XTAL_FREQ 16000000       // ﾅｽg窶廃窶堋ｷ窶堙ｩPIC窶懌┐窶堙俄堙ｦ窶堙ｨ窶慊ｮﾂ催ｬﾅｽﾃｼ窶挌ﾂ絶昶冤窶堙ｰﾂ静昶凖ｨ窶堋ｷ窶堙ｩ
 #endif
 
 int initIMU();
 int readIMU(unsigned char *, int);
+void readIMUSequence(UBYTE);
 
 #endif	/* PSITG_H */
