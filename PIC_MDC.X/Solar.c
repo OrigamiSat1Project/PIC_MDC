@@ -37,7 +37,10 @@ UINT readSolar1(UBYTE *buf){
     waitADCIdle();
     buf[0] = ADRESL;
     buf[1] = ADRESH;
-    //  readAN1
+    //  MEASURE_VOLTAGE
+    MEASURE_VOLTAGE_SOLAR1;
+    __delay_ms(10);
+    //  read AN1
     ADCON0bits.CHS4 = UINT_FALSE;
     ADCON0bits.CHS3 = UINT_FALSE;
     ADCON0bits.CHS2 = UINT_FALSE;
@@ -48,31 +51,6 @@ UINT readSolar1(UBYTE *buf){
     waitADCIdle();
     buf[2] = ADRESL;
     buf[3] = ADRESH;
-    //  MEASURE_VOLTAGE
-    MEASURE_VOLTAGE_SOLAR1;
-    __delay_ms(10);
-    //  read AN0
-    ADCON0bits.CHS4 = UINT_FALSE;
-    ADCON0bits.CHS3 = UINT_FALSE;
-    ADCON0bits.CHS2 = UINT_FALSE;
-    ADCON0bits.CHS1 = UINT_FALSE;
-    ADCON0bits.CHS0 = UINT_FALSE;
-    __delay_us(5);
-    ADCON0bits.GO = UINT_TRUE;
-    waitADCIdle();
-    buf[4] = ADRESL;
-    buf[5] = ADRESH;
-    //  read AN1
-    ADCON0bits.CHS4 = UINT_FALSE;
-    ADCON0bits.CHS3 = UINT_FALSE;
-    ADCON0bits.CHS2 = UINT_FALSE;
-    ADCON0bits.CHS1 = UINT_FALSE;
-    ADCON0bits.CHS0 = UINT_TRUE;
-    __delay_us(5);
-    ADCON0bits.GO = UINT_TRUE;
-    waitADCIdle();
-    buf[6] = ADRESL;
-    buf[7] = ADRESH;
     //  MEASURE_TEMPERATURE
     //  read AN2
     ADCON0bits.CHS4 = UINT_FALSE;
@@ -83,9 +61,9 @@ UINT readSolar1(UBYTE *buf){
     __delay_us(5);
     ADCON0bits.GO = UINT_TRUE;
     waitADCIdle();
-    buf[8] = ADRESL;
-    buf[9] = ADRESH;
-    return 10;
+    buf[4] = ADRESL;
+    buf[5] = ADRESH;
+    return 6;
 }
 
 /*
