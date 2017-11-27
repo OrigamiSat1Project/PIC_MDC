@@ -14,4 +14,6 @@ void readAD9(UBYTE *, int);
 void readAD10(UBYTE *, int);
 void readAD(UBYTE *);
 
+void waitADCIdle();
+
 #endif	/* ADC_H */
