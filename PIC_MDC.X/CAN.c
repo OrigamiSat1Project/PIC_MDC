@@ -24,13 +24,10 @@ const UBYTE CAN_EID_H  = 0xFF;
  *	XXX      :   avoid hardcoding
  */
 void initCan(){
-    //TRISCbits.TRISC6 = 0;  //Can�ݒ��@RC6=0�ARC7=1
-    //TRISCbits.TRISC7 = 1;
-    CANCON = 0x80; //config���[�hON
+    CANCON = 0x80;
     CANSTAT = 0x80;
-    //
     ECANCON = 0x00;
-    BRGCON1 = 0x09; //T_Q = 2/Fosc, Sync_seg = 1 * T_Q
+    BRGCON1 = 0x00; //T_Q = 2/Fosc, Sync_seg = 1 * T_Q
     BRGCON2 = 0x91; //Phase_seg1 = 3 * T_Q, Prop_seg = 2 * T_Q;
     BRGCON3 = 0x01; //Phase_seg2 = 2 * T_Q
     /***************************************************************************
