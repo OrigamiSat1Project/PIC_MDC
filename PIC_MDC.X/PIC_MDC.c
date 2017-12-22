@@ -96,15 +96,21 @@ void main()
             readSolarSequence();
             break;
         case 0x03:
+            if(bufOBC[1] == 0x00){
+                break;
+            }
             LED_SW_ON;
             //  FIXME : wait time is need to be got by command format
-            wait1ms(1000);
+            wait1ms((int)bufOBC[1] * 1000);
             LED_SW_OFF;
             break;
         case 0x04:
+            if(bufOBC[1] == 0x00){
+                break;
+            }
             HRM_SW_ON;
             //  FIXME : wait time, and date time is need to be got by command format
-            wait1ms(1000);
+            wait1ms((int)bufOBC[1] * 1000);
             HRM_SW_OFF;
             break;
         case 0x05:
