@@ -8,6 +8,7 @@
 #include "ADC.h"
 #include "CAN.h"
 #include "Solar.h"
+#include "init.h"
 #include "CommonDefine.h"
 #include "OrigamiTypeDefine.h"
 
@@ -77,6 +78,6 @@ UINT readSolar1(UBYTE *buf){
 void readSolarSequence(void){
     UBYTE bufSolar[16];
     readSolar1(bufSolar);
-    __delay_ms(1000);
+    wait1ms(1000);
     sendCanData(bufSolar);
 }
