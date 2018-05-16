@@ -72,6 +72,7 @@ int readADXL(UBYTE *data, int offset)
         restartI2C(ADXL345_ADDR,RW_1);
         ack = ACK;
         for(i=0;i<5;i++){
+            if(i=4) ack = NOACK;
             data[offset+i] = readI2CData(ack);
         }
     }else ans = -1;
