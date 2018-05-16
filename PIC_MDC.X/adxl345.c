@@ -36,8 +36,7 @@ int writeAddr(char address, char val)
     ans = startI2C(ADXL345_ADDR,RW_0);
     if(ans == 0){
         sendI2CData(address);
-        restartI2C(ADXL345_ADDR,RW_1);
-        ans = readI2CData(NOACK);
+        sendI2CData(val);
     }else ans = -1;
     stopI2C();
     return ans;
