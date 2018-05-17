@@ -51,11 +51,11 @@ int initICM()
     ans = readAddr(WHO_AM_I);
     if(ans == 0){
             __delay_us(2000);
+            writeAddr(PWR_MGMT_1,0x01);     //clock : PLL
             writeAddr(CONFIG,0x00);         //FSYNC:disabled
             writeAddr(GYRO_CONFIG,0x00);    //FS:500 deg/sec
             writeAdde(ACCEL_CONFIG,0x00);   //FS:4g
             writeAddr(ACCEL_CONFIG2,0x00);  //averaging 4 samples, DLPF : 218Hz
-            writeAddr(PWR_MGMT_1,0x01);     //clock : PLL
             __delay_us(2000);
     }else ans == -1;
     return ans;
