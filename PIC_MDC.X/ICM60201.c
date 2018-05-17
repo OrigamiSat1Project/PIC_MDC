@@ -55,7 +55,7 @@ int initICM()
             //  TODO    : need to consider about DLPF settings
             writeAddr(CONFIG,0x00);         //FSYNC:disabled
             //  XXX     : change the range of gyro sensor to ±4000dps (degree per sec)
-            writeAddr(GYRO_CONFIG,0x00);    //FS:500 deg/sec
+            writeAddr(GYRO_CONFIG,0x18);    //FS:4000 deg/sec
             //  TODO    : need to confirm the range of accelemometer
             writeAdde(ACCEL_CONFIG,0x00);   //FS:4g
             //  TODO    : need to consider about DLPF setting
