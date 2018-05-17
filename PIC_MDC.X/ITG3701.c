@@ -51,8 +51,12 @@ int initITG()
     __delay_us(2000);
     ans = readAddr(WHO_AM_I);
     if(ans == WHO_VALUE){
-        writeAddr(FIFO_EN,0x00);
-
+        writeAddr(FIFO_EN,0x00);        //FIFO disabled
+        writeAdde(CONFIG,0x00);         //FIFO disabled , DLPF 250Hz
+        writeAddr(GYRO_CONFIG,0x18);    //FS:4000deg/sec
+        writeAddr(INT_PIN_CFG,0x08);    //FSYNC:activ low
+        writeAddr(INT_ENABLE,0x01);     //DARA Ready Interupt : Enable
+        writeAddr(PWR_MGMT_1,0x01);     //oscirator : PLL
         __delay_us(2000);
     }else ans = -1;
     return ans;
@@ -65,7 +69,7 @@ int readITG(UBYTE *data, int offset)
 
     while(ans != 0xE7){
         ans = readAddr(INT_STATUS);
-        ans = ans & 0xE7;
+        ans = ans & 0xE7;               //Data Ready Interupt generated -> break
     }
 
     ans = startI2C(ITG_ADDR,RW_0);
