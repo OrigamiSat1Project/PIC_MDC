@@ -48,10 +48,10 @@ int initADXL()
     __delay_us(2000);
     ans = readAddr(DEVID);
     if(ans == DEVID_VALUE){
+        writeAddr(POWER_CTL,0x08);      // autosleep=off,mode=measure
         writeAddr(BW_RATE,0x0B);        // rate = 200Hz
         writeAddr(DATA_FORMAT,0x00);    // proto=I2C,res=10bit,range=2g
         writeAddr(FIFO_CTL,0x00);       // FIFO=bypass
-        writeAddr(POWER_CTL,0x08);      // autosleep=off,mode=measure
         __delay_us(2000);
     }else ans = -1;
     return ans;
