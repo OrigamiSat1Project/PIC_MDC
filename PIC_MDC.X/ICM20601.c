@@ -88,4 +88,5 @@ int readICM(UBYTE *data, int offset)
         stopI2C();
         return ans;
     }
+          
 }

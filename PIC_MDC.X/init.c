@@ -10,6 +10,9 @@
 #include "CAN.h"
 #include "EEPROM.h"
 #include "MPU9250.h"
+#include "ITG3701.h"
+#include "adxl345.h"
+#include "ICM20601.h"
 #include "Timer.h"
 #include "ADC.h"
 #include "PWM.h"
@@ -122,6 +125,9 @@ void initAll(void){
     changeMSSPModeToI2C(1) ;
     initCan();
     initInterrupt();
+    //initIMU();
+    initITG();
+    initADXL();
     initIMU();
     initAD();
     initPWM();

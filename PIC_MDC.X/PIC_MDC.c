@@ -6,7 +6,9 @@
 #include "ADC.h"
 #include "init.h"
 #include "EEPROM.h"
-#include "MPU9250.h"
+#include "adxl345.h"
+#include "ITG3701.h"
+#include "ICM20601.h"
 #include "Timer.h"
 #include "Solar.h"
 #include "PWM.h"
@@ -82,6 +84,7 @@ void main()
         bufOBC[i]=0x00;
     }
 
+    /*
     readCanData(bufOBC);
     wait1ms(1000);
     //  FIXME : check command of OBC is correct format or not
@@ -117,4 +120,26 @@ void main()
             break;
 
     }
+    */
+
+    //function test code
+
+    UBYTE *test_data;
+    readCanData(bufOBC);
+    wait1ms(1000);
+    sendCanData(bufOBC);
+/*
+    switch (bufOBC[0]){
+        case 0x01:
+            readADXL(test_data,0);
+            sendCanData(test_data);
+        case 0x02:
+            readITG(test_data,0);
+            sendCanData(test_data);
+        case 0x03:
+            readICM(test_data,0);
+            sendCanData(test_data);
+            
+    }
+ */
 }

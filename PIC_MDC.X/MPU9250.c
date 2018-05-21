@@ -9,7 +9,7 @@
 
 const UBYTE MPU9250_ADDR    = 0x68;
 const UBYTE WHO             = 0x75;
-const UBYTE WHO_VALUE       = 0x71;
+const UBYTE WHO_VALUE_MPU   = 0x71;
 const UBYTE SMPLRT_DIV      = 0x19;   // Sample rate divider
 const UBYTE CONFIG          = 0x1A;
 const UBYTE GYRO_CONFIG     = 0x1B;
@@ -80,7 +80,7 @@ int initIMU()
     int ans ;
      __delay_us(2000) ;
      ans = readAddr(WHO) ;
-     if (ans == WHO_VALUE) {
+     if (ans == WHO_VALUE_MPU) {
           writeAddr(PWR_MGMT_1,0x00);    //wake up sensor
           writeAddr(INT_PIN_CONFIG,0x02);//BYPASS:enabled, FSYNC:disabled
           writeAddr(SMPLRT_DIV,0xFF);    //divider:256, sample rate:30kHz
