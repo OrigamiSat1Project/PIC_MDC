@@ -7,19 +7,19 @@
 #include "init.h"
 #include "CAN.h"
 
-const UBYTE ITG_ADDR        = 0x69;
-const UBYTE WHO_AM_I        = 0x75;
-const UBYTE WHO_VALUE       = 0x68;
-const UBYTE SMPLRT_DIV      = 0x19;
-const UBYTE CONFIG          = 0x1A;
-const UBYTE GYRO_CONFIG     = 0x1B;
-const UBYTE FIFO_EN         = 0x23;
-const UBYTE INT_PIN_CFG     = 0x37;
-const UBYTE INT_ENABLE      = 0x38;
-const UBYTE INT_STATUS      = 0x3A;
-const UBYTE ITG_DATA        = 0x41;
-const UBYTE PWR_MGMT_1      = 0x6B;
-const UBYTE PWR_MGMT_2      = 0x6C;
+const UBYTE ITG_ADDR            = 0x69;
+const UBYTE ITG_WHO_AM_I        = 0x75;
+const UBYTE ITG_WHO_VALUE       = 0x68;
+const UBYTE ITG_SMPLRT_DIV      = 0x19;
+const UBYTE ITG_CONFIG          = 0x1A;
+const UBYTE ITG_GYRO_CONFIG     = 0x1B;
+const UBYTE ITG_FIFO_EN         = 0x23;
+const UBYTE ITG_INT_PIN_CFG     = 0x37;
+const UBYTE ITG_INT_ENABLE      = 0x38;
+const UBYTE ITG_INT_STATUS      = 0x3A;
+const UBYTE ITG_DATA            = 0x41;
+const UBYTE ITG_PWR_MGMT_1      = 0x6B;
+const UBYTE ITG_PWR_MGMT_2      = 0x6C;
 
 int readAddr(char address)
 {
@@ -49,15 +49,15 @@ int writeAddr(char address, char val)
 int initITG()
 {
     __delay_us(2000);
-    ans = readAddr(WHO_AM_I);
-    if(ans == WHO_VALUE){
-        writeAddr(PWR_MGMT_1,0x00);     //oscirator : internal 20MHz oscillator
-        writeAddr(PWR_MGMT_2,0x07);     //gyro : standby mode
-        writeAddr(FIFO_EN,0x00);        //FIFO disabled
-        writeAdde(CONFIG,0x00);         //FIFO disabled , DLPF 250Hz
-        writeAddr(GYRO_CONFIG,0x18);    //FS:4000deg/sec
-        writeAddr(INT_PIN_CFG,0x08);    //FSYNC pin : activ low
-        writeAddr(INT_ENABLE,0x01);     //DARA Ready Interupt : Enable
+    ans = readAddr(ITG_WHO_AM_I);
+    if(ans == ITG_WHO_VALUE){
+        writeAddr(ITG_PWR_MGMT_1,0x00);     //oscirator : internal 20MHz oscillator
+        writeAddr(ITG_PWR_MGMT_2,0x07);     //gyro : standby mode
+        writeAddr(ITG_FIFO_EN,0x00);        //FIFO disabled
+        writeAdde(ITG_CONFIG,0x00);         //FIFO disabled , DLPF 250Hz
+        writeAddr(ITG_GYRO_CONFIG,0x18);    //FS:4000deg/sec
+        writeAddr(ITG_INT_PIN_CFG,0x08);    //FSYNC pin : activ low
+        writeAddr(ITG_INT_ENABLE,0x01);     //DARA Ready Interupt : Enable
         __delay_us(2000);
     }else ans = -1;
     return ans;
@@ -68,7 +68,7 @@ int readITG(UBYTE *data, int offset)
     int ans , i , ack ;
 
     while(ans != 0x01){
-        ans = readAddr(INT_STATUS);
+        ans = readAddr(ITG_INT_STATUS);
         ans = ans & 0x01;               //Data Ready Interupt generated -> break
     }
 
