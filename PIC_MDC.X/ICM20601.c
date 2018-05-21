@@ -9,18 +9,18 @@
 
 const UBYTE ICM_ADDR        = 0x68;
 const UBYTE ICM_DATA        = 0x3B;
-const UBYTE WHO_AM_I        = 0x75;
+const UBYTE ICM_WHO_AM_I        = 0x75;
 //const UBYTE SMPLRT_DIV      = 0x19;
-const UBYTE CONFIG          = 0x1A;
-const UBYTE GYRO_CONFIG     = 0x1B;
-const UBYTE ACCEL_CONFIG    = 0x1C;
-const UBYTE ACCEL_CONFIG2   = 0x1D;
-const UBYTE FIFO_EN         = 0x23;
-const UBYTE INT_PIN_CONFIG  = 0x37;
-const UBYTE INT_ENABLE      = 0x38;
-const UBYTE INT_STATUS      = 0x3A; 
-const UBYTE PWR_MGMT_1      = 0x6B;
-const UBYTE PWR_MGMT_2      = 0x6C;
+const UBYTE ICM_CONFIG          = 0x1A;
+const UBYTE ICM_GYRO_CONFIG     = 0x1B;
+const UBYTE ICM_ACCEL_CONFIG    = 0x1C;
+const UBYTE ICM_ACCEL_CONFIG2   = 0x1D;
+const UBYTE ICM_FIFO_EN         = 0x23;
+const UBYTE ICM_INT_PIN_CONFIG  = 0x37;
+const UBYTE ICM_INT_ENABLE      = 0x38;
+const UBYTE ICM_INT_STATUS      = 0x3A; 
+const UBYTE ICM_PWR_MGMT_1      = 0x6B;
+const UBYTE ICM_PWR_MGMT_2      = 0x6C;
 
 int readAddr(char address)
 {
@@ -48,18 +48,18 @@ int writeAddr(char address , char val)
 int initICM()
 {
     int ans;
-    ans = readAddr(WHO_AM_I);
+    ans = readAddr(ICM_WHO_AM_I);
     if(ans == 0){
             __delay_us(2000);
-            writeAddr(PWR_MGMT_1,0x01);     //clock : PLL
+            writeAddr(ICM_PWR_MGMT_1,0x01);     //clock : PLL
             //  TODO    : need to consider about DLPF settings
-            writeAddr(CONFIG,0x00);         //FSYNC:disabled
+            writeAddr(ICM_CONFIG,0x00);         //FSYNC:disabled
             //  XXX     : change the range of gyro sensor to ±4000dps (degree per sec)
-            writeAddr(GYRO_CONFIG,0x18);    //FS:4000 deg/sec
+            writeAddr(ICM_GYRO_CONFIG,0x18);    //FS:4000 deg/sec
             //  TODO    : need to confirm the range of accelemometer
-            writeAdde(ACCEL_CONFIG,0x00);   //FS:4g
+            writeAdde(ICM_ACCEL_CONFIG,0x00);   //FS:4g
             //  TODO    : need to consider about DLPF setting
-            writeAddr(ACCEL_CONFIG2,0x00);  //averaging 4 samples, DLPF : 218Hz
+            writeAddr(ICM_ACCEL_CONFIG2,0x00);  //averaging 4 samples, DLPF : 218Hz
             __delay_us(2000);
     }else ans == -1;
     return ans;
@@ -72,7 +72,7 @@ int readICM(UBYTE *data, int offset)
     //  FIXME   : read datasheet of MPU9250 (P.30 register map), and ICM20601(P.40)
     //            DATA_RDY_INT(bit0 of INT_STATUS) clears to 0 after the register has been read. 
     while(ans != 0x01){
-        ans = readAddr(INT_STATUS);
+        ans = readAddr(ICM_INT_STATUS);
         ans = ans & 0x01;
     }
 
