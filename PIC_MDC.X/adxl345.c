@@ -15,14 +15,15 @@ const UBYTE ADXL345_DATA_FORMAT     = 0x31;
 const UBYTE ADXL345_FIFO_CTL        = 0x38;
 const UBYTE ADXL345_POWER_CTL       = 0x2D;
 const UBYTE ADXL345_DATA            = 0x32;
+const UBYTE ADXL345_INT_SOURCE      = 0x30;
 
 
-int readAddr(char address)
+int readADXLAddr(char address)
 {
     int ans;
-    ans = startI2C{ADXL345_ADDR,RW_0};
-    if (ans == 0){
-        sendI2CDat(address);
+    ans = startI2C(ADXL345_ADDR,RW_0);
+    if(ans == 0){
+        sendI2CData(address);
         restartI2C(ADXL345_ADDR,RW_1);
         ans = readI2CData(NOACK);
     }else ans = -1;
@@ -30,7 +31,7 @@ int readAddr(char address)
     return ans;
 }
 
-int writeAddr(char address, char val)
+int writeADXLAddr(char address, char val)
 {
     int ans;
     ans = startI2C(ADXL345_ADDR,RW_0);
@@ -46,13 +47,13 @@ int initADXL()
 {
     int ans;
     __delay_us(2000);
-    ans = readAddr(ADXL345_DEVID);
+    ans = readADXLAddr(ADXL345_DEVID);
     if(ans == ADXL345_DEVID_VALUE){
-        writeAddr(ADXL345_POWER_CTL,0x08);      // autosleep=off,mode=measure
-        writeAddr(ADXL345_BW_RATE,0x0A);        // rate = 100Hz
-        writeAddr(ADXL345_DATA_FORMAT,0x0B);    // proto=I2C,full resolution mode,range=16g
+        writeADXLAddr(ADXL345_POWER_CTL,0x08);      // autosleep=off,mode=measure
+        writeADXLAddr(ADXL345_BW_RATE,0x0A);        // rate = 100Hz
+        writeADXLAddr(ADXL345_DATA_FORMAT,0x0B);    // proto=I2C,full resolution mode,range=16g
         //TODO check the range of accelerometer
-        writeAddr(ADXL345_FIFO_CTL,0x00);       // FIFO=bypass
+        writeADXLAddr(ADXL345_FIFO_CTL,0x00);       // FIFO=bypass
         __delay_us(2000);
     }else ans = -1;
     return ans;
@@ -63,7 +64,7 @@ int readADXL(UBYTE *data, int offset)
     int ans , i , ack;
 
     while(ans != 0x80){
-        ans = readAddr(ADXL345_INT_SOURCE);
+        ans = readADXLAddr(ADXL345_INT_SOURCE);
         ans = ans & 0x80;
     }
 

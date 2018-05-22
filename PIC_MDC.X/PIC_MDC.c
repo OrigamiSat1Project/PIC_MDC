@@ -128,7 +128,6 @@ void main()
     readCanData(bufOBC);
     wait1ms(1000);
     sendCanData(bufOBC);
-/*
     switch (bufOBC[0]){
         case 0x01:
             readADXL(test_data,0);
@@ -141,5 +140,4 @@ void main()
             sendCanData(test_data);
             
     }
- */
 }

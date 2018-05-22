@@ -9,7 +9,6 @@
 #include "I2Clib.h"
 #include "CAN.h"
 #include "EEPROM.h"
-#include "MPU9250.h"
 #include "ITG3701.h"
 #include "adxl345.h"
 #include "ICM20601.h"
@@ -127,8 +126,8 @@ void initAll(void){
     initInterrupt();
     //initIMU();
     initITG();
-    initADXL();
-    initIMU();
+    //initADXL();
+    //initICM();
     initAD();
     initPWM();
 }

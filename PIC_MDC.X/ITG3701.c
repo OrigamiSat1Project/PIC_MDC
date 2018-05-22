@@ -21,7 +21,7 @@ const UBYTE ITG_DATA            = 0x41;
 const UBYTE ITG_PWR_MGMT_1      = 0x6B;
 const UBYTE ITG_PWR_MGMT_2      = 0x6C;
 
-int readAddr(char address)
+int readITGAddr(char address)
 {
     int ans;
     ans = startI2C(ITG_ADDR,RW_0);
@@ -34,7 +34,7 @@ int readAddr(char address)
     return ans;
 }
 
-int writeAddr(char address, char val)
+int writeITGAddr(char address, char val)
 {
     int ans;
     ans = startI2C(ITG_ADDR,RW_0);
@@ -48,16 +48,18 @@ int writeAddr(char address, char val)
 
 int initITG()
 {
+    int ans;
     __delay_us(2000);
-    ans = readAddr(ITG_WHO_AM_I);
+    ans = readITGAddr(ITG_WHO_AM_I);
+    
     if(ans == ITG_WHO_VALUE){
-        writeAddr(ITG_PWR_MGMT_1,0x00);     //oscirator : internal 20MHz oscillator
-        writeAddr(ITG_PWR_MGMT_2,0x07);     //gyro : standby mode
-        writeAddr(ITG_FIFO_EN,0x00);        //FIFO disabled
-        writeAdde(ITG_CONFIG,0x00);         //FIFO disabled , DLPF 250Hz
-        writeAddr(ITG_GYRO_CONFIG,0x18);    //FS:4000deg/sec
-        writeAddr(ITG_INT_PIN_CFG,0x08);    //FSYNC pin : activ low
-        writeAddr(ITG_INT_ENABLE,0x01);     //DARA Ready Interupt : Enable
+        writeITGAddr(ITG_PWR_MGMT_1,0x00);     //oscirator : internal 20MHz oscillator
+        writeITGAddr(ITG_PWR_MGMT_2,0x07);     //gyro : standby mode
+        writeITGAddr(ITG_FIFO_EN,0x00);        //FIFO disabled
+        writeITGAddr(ITG_CONFIG,0x00);         //FIFO disabled , DLPF 250Hz
+        writeITGAddr(ITG_GYRO_CONFIG,0x18);    //FS:4000deg/sec
+        writeITGAddr(ITG_INT_PIN_CFG,0x08);    //FSYNC pin : activ low
+        writeITGAddr(ITG_INT_ENABLE,0x01);     //DARA Ready Interupt : Enable
         __delay_us(2000);
     }else ans = -1;
     return ans;
@@ -68,7 +70,7 @@ int readITG(UBYTE *data, int offset)
     int ans , i , ack ;
 
     while(ans != 0x01){
-        ans = readAddr(ITG_INT_STATUS);
+        ans = readITGAddr(ITG_INT_STATUS);
         ans = ans & 0x01;               //Data Ready Interupt generated -> break
     }
 
@@ -79,7 +81,7 @@ int readITG(UBYTE *data, int offset)
         ack = ACK;
         for(i=0;i<8;i++){
             if(i == 7) ack = NOACK;
-            dara[offset+i] = readI2CData(ack);
+            data[offset+i] = readI2CData(ack);
         }
     }else ans = -1;
     stopI2C();

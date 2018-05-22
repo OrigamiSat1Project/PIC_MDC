@@ -22,7 +22,7 @@ const UBYTE ICM_INT_STATUS      = 0x3A;
 const UBYTE ICM_PWR_MGMT_1      = 0x6B;
 const UBYTE ICM_PWR_MGMT_2      = 0x6C;
 
-int readAddr(char address)
+int readICMAddr(char address)
 {
     int ans;
     ans = startI2C(ICM_ADDR,RW_0);
@@ -35,7 +35,7 @@ int readAddr(char address)
     return ans;
 }
 
-int writeAddr(char address , char val)
+int writeICMAddr(char address , char val)
 {
     int ans;
     ans = startI2C(ICM_ADDR,RW_0);
@@ -48,18 +48,18 @@ int writeAddr(char address , char val)
 int initICM()
 {
     int ans;
-    ans = readAddr(ICM_WHO_AM_I);
+    ans = readICMAddr(ICM_WHO_AM_I);
     if(ans == 0){
             __delay_us(2000);
-            writeAddr(ICM_PWR_MGMT_1,0x01);     //clock : PLL
+            writeICMAddr(ICM_PWR_MGMT_1,0x01);     //clock : PLL
             //  TODO    : need to consider about DLPF settings
-            writeAddr(ICM_CONFIG,0x00);         //FSYNC:disabled
+            writeICMAddr(ICM_CONFIG,0x00);         //FSYNC:disabled
             //  XXX     : change the range of gyro sensor to ±4000dps (degree per sec)
-            writeAddr(ICM_GYRO_CONFIG,0x18);    //FS:4000 deg/sec
+            writeICMAddr(ICM_GYRO_CONFIG,0x18);    //FS:4000 deg/sec
             //  TODO    : need to confirm the range of accelemometer
-            writeAdde(ICM_ACCEL_CONFIG,0x00);   //FS:4g
+            writeICMAddr(ICM_ACCEL_CONFIG,0x00);   //FS:4g
             //  TODO    : need to consider about DLPF setting
-            writeAddr(ICM_ACCEL_CONFIG2,0x00);  //averaging 4 samples, DLPF : 218Hz
+            writeICMAddr(ICM_ACCEL_CONFIG2,0x00);  //averaging 4 samples, DLPF : 218Hz
             __delay_us(2000);
     }else ans == -1;
     return ans;
@@ -72,7 +72,7 @@ int readICM(UBYTE *data, int offset)
     //  FIXME   : read datasheet of MPU9250 (P.30 register map), and ICM20601(P.40)
     //            DATA_RDY_INT(bit0 of INT_STATUS) clears to 0 after the register has been read. 
     while(ans != 0x01){
-        ans = readAddr(ICM_INT_STATUS);
+        ans = readICMAddr(ICM_INT_STATUS);
         ans = ans & 0x01;
     }
 
@@ -84,9 +84,8 @@ int readICM(UBYTE *data, int offset)
         for(i=0;i<14;i++){
             if(i==13) ack = NOACK;
             data[offset+i] = readI2CData(ack);
-        }else ans = -1;
-        stopI2C();
-        return ans;
-    }
-          
+        }
+    }else ans = -1;
+    stopI2C();
+    return ans;
 }
