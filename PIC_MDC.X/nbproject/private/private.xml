@@ -3,13 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/cavendish/Documents/PIC_MDC/PIC_MDC.X/ITG3701.h</file>
-            <file>file:/C:/Users/cavendish/Documents/PIC_MDC/PIC_MDC.X/adxl345.c</file>
-            <file>file:/C:/Users/cavendish/Documents/PIC_MDC/PIC_MDC.X/MPU9250.h</file>
+            <file>file:/C:/Users/cavendish/Documents/PIC_MDC/PIC_MDC.X/CAN.c</file>
+            <file>file:/C:/Users/cavendish/Documents/PIC_MDC/PIC_MDC.X/ICM20601.c</file>
             <file>file:/C:/Users/cavendish/Documents/PIC_MDC/PIC_MDC.X/init.c</file>
-            <file>file:/C:/Users/cavendish/Documents/PIC_MDC/PIC_MDC.X/MPU9250.c</file>
             <file>file:/C:/Users/cavendish/Documents/PIC_MDC/PIC_MDC.X/PIC_MDC.c</file>
-            <file>file:/C:/Users/cavendish/Documents/PIC_MDC/PIC_MDC.X/ITG3701.c</file>
         </group>
     </open-files>
 </project-private>

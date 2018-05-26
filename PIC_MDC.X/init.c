@@ -125,7 +125,7 @@ void initAll(void){
     initCan();
     initInterrupt();
     //initIMU();
-    initITG();
+    //initITG();
     //initADXL();
     //initICM();
     initAD();

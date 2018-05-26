@@ -132,12 +132,15 @@ void main()
         case 0x01:
             readADXL(test_data,0);
             sendCanData(test_data);
+            break;
         case 0x02:
             readITG(test_data,0);
             sendCanData(test_data);
+            break;
         case 0x03:
             readICM(test_data,0);
             sendCanData(test_data);
+            break;
             
     }
 }

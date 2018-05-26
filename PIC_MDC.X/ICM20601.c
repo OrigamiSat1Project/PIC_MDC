@@ -7,8 +7,8 @@
 #include "init.h"
 #include "CAN.h"
 
-const UBYTE ICM_ADDR        = 0x68;
-const UBYTE ICM_DATA        = 0x3B;
+const UBYTE ICM_ADDR            = 0x68;
+const UBYTE ICM_DATA            = 0x3B;
 const UBYTE ICM_WHO_AM_I        = 0x75;
 //const UBYTE SMPLRT_DIV      = 0x19;
 const UBYTE ICM_CONFIG          = 0x1A;
