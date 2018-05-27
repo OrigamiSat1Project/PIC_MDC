@@ -83,6 +83,7 @@ void main()
     for(unsigned int i=0;i<16;i++){
         bufOBC[i]=0x00;
     }
+    
 
     /*
     readCanData(bufOBC);
@@ -131,15 +132,15 @@ void main()
     switch (bufOBC[0]){
         case 0x01:
             readADXL(test_data,0);
-            sendCanData(test_data);
+            sendCanData(test_data);     //6byte : x-axis m, x-axis l, y-axis m, y-axis l, z-axis m, z-axis l
             break;
         case 0x02:
             readITG(test_data,0);
-            sendCanData(test_data);
+            sendCanData(test_data);     //8byte : temp m, temp l, gyro-x m, gyro-x l, gyro-y m, gyro-y l, gyro-z m, gyro-z l
             break;
         case 0x03:
             readICM(test_data,0);
-            sendCanData(test_data);
+            sendCanData(test_data);     //14byte : ax-H, ax-L, ay-H, ay-L, az-H, az-L, temp-H, temp-L, gyrox-H, gyrox-L, gyroy-H, gyroy-L, gyroz-H, gyroz-L
             break;
             
     }

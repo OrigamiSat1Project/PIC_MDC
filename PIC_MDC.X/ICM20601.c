@@ -10,6 +10,7 @@
 const UBYTE ICM_ADDR            = 0x68;
 const UBYTE ICM_DATA            = 0x3B;
 const UBYTE ICM_WHO_AM_I        = 0x75;
+const UBYTE ICM_WHO_VALUE       = 0xAC;
 //const UBYTE SMPLRT_DIV      = 0x19;
 const UBYTE ICM_CONFIG          = 0x1A;
 const UBYTE ICM_GYRO_CONFIG     = 0x1B;
@@ -49,7 +50,7 @@ int initICM()
 {
     int ans;
     ans = readICMAddr(ICM_WHO_AM_I);
-    if(ans == 0){
+    if(ans == ICM_WHO_VALUE){
             __delay_us(2000);
             writeICMAddr(ICM_PWR_MGMT_1,0x01);     //clock : PLL
             //  TODO    : need to consider about DLPF settings
