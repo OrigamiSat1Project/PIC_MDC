@@ -125,23 +125,88 @@ void main()
 
     //function test code
 
-    UBYTE *test_data;
+    UBYTE zero_data[24] = {};
+    //UBYTE ADXL_data[8] = {};
+    UBYTE *ADXL_data;
+    UBYTE ITG_data[8] = {};
+    UBYTE ICM_data[16] = {};
+    UBYTE dummy_data[8] = {};
+    UBYTE ADXL_ROM_data[8] = {};
+    UBYTE ITG_ROM_data[8] = {};
+    UBYTE ICM_ROM_data[16] = {};
+    UBYTE dummy_ROM_data[8] = {};
     readCanData(bufOBC);
     wait1ms(1000);
     sendCanData(bufOBC);
+    __delay_us(3000);
     switch (bufOBC[0]){
         case 0x01:
-            readADXL(test_data,0);
-            sendCanData(test_data);     //6byte : x-axis m, x-axis l, y-axis m, y-axis l, z-axis m, z-axis l
+            writeEEPROM(EE_P0_0,0x00,0x00,zero_data,24);
+            __delay_us(3000);
+            writeEEPROM(EE_P0_1,0x00,0x00,zero_data,24);
+            __delay_us(3000);
+            writeEEPROM(EE_P0_2,0x00,0x00,zero_data,24);
+            __delay_us(3000);
+            writeEEPROM(EE_P0_3,0x00,0x00,zero_data,24);
+            __delay_us(3000);
             break;
         case 0x02:
-            readITG(test_data,0);
-            sendCanData(test_data);     //8byte : temp m, temp l, gyro-x m, gyro-x l, gyro-y m, gyro-y l, gyro-z m, gyro-z l
+            readADXL(ADXL_data,0);
+            sendCanData(ADXL_data[0]);     //6byte : x-axis m, x-axis l, y-axis m, y-axis l, z-axis m, z-axis l
+            //writeEEPROM(EE_P0_0,0x00,0x00,ADXL_data,8);
             break;
         case 0x03:
-            readICM(test_data,0);
-            sendCanData(test_data);     //14byte : ax-H, ax-L, ay-H, ay-L, az-H, az-L, temp-H, temp-L, gyrox-H, gyrox-L, gyroy-H, gyroy-L, gyroz-H, gyroz-L
+            readITG(ITG_data,0);
+            __delay_us(3000);
+            sendCanData(ITG_data);     //8byte : temp m, temp l, gyro-x m, gyro-x l, gyro-y m, gyro-y l, gyro-z m, gyro-z l
+            __delay_us(3000);
+            writeEEPROM(EE_P0_1,0x00,0x00,ITG_data,8);
+            __delay_us(3000);
             break;
-            
+        case 0x04:
+            readICM(ICM_data,0);
+            __delay_us(3000);
+            sendCanData(ICM_data[0]);
+            __delay_us(3000);
+            sendCanData(ICM_data[8]);  //14byte : ax-H, ax-L, ay-H, ay-L, az-H, az-L, temp-H, temp-L, gyrox-H, gyrox-L, gyroy-H, gyroy-L, gyroz-H, gyroz-L
+            __delay_us(3000);
+            writeEEPROM(EE_P0_2,0x00,0x00,ICM_data,16);
+            __delay_us(3000);
+            break;
+        case 0x05:
+            dummy_data[0] = 0x99;
+            dummy_data[1] = 0xAA;
+            dummy_data[2] = 0xBB;
+            dummy_data[3] = 0xCC;
+            dummy_data[4] = 0xDD;
+            dummy_data[5] = 0xEE;
+            dummy_data[6] = 0x88;
+            dummy_data[7] = 0x77;
+            __delay_us(3000);
+            sendCanData(dummy_data);
+            __delay_us(3000);
+            writeEEPROM(EE_P0_3,0x00,0x00,dummy_data,8);
+            __delay_us(3000);
+            break;
+        case 0x06:
+            readEEPROM(EE_P0_0,0x00,0x00,ADXL_ROM_data,8);
+            __delay_us(3000);
+            sendCanData(ADXL_ROM_data);
+            __delay_us(3000);
+            readEEPROM(EE_P0_1,0x00,0x00,ITG_ROM_data,8);
+            __delay_us(3000);
+            sendCanData(ITG_ROM_data);
+            __delay_us(3000);
+            readEEPROM(EE_P0_2,0x00,0x00,ICM_ROM_data,16);
+            __delay_us(3000);
+            sendCanData(ICM_ROM_data);
+            __delay_us(3000);
+            sendCanData(ICM_ROM_data[8]);
+            __delay_us(3000);
+            readEEPROM(EE_P0_3,0x00,0x00,dummy_ROM_data,8);
+            __delay_us(3000);
+            sendCanData(dummy_ROM_data);
+            __delay_us(3000);
+            break;
     }
 }

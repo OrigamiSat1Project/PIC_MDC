@@ -28,7 +28,7 @@ int readEEPROM(char ee_p, char address1, char address2, char *val, int n){
     if (ans == 0) {
         sendI2CData(address1) ;
         sendI2CData(address2) ;
-        startI2C(eeprom_ADDR | ee_p,RW_1);
+        restartI2C(eeprom_ADDR | ee_p,RW_1);
         ack = ACK ;
         for(unsigned int i=0 ; i<n ; i++) {
             if (i==n-1) ack = NOACK ;

@@ -54,7 +54,7 @@ int initITG()
     
     if(ans == ITG_WHO_VALUE){
         writeITGAddr(ITG_PWR_MGMT_1,0x00);     //oscirator : internal 20MHz oscillator
-        writeITGAddr(ITG_PWR_MGMT_2,0x07);     //gyro : standby mode
+        writeITGAddr(ITG_PWR_MGMT_2,0x00);     //gyro : not standby mode
         writeITGAddr(ITG_FIFO_EN,0x00);        //FIFO disabled
         writeITGAddr(ITG_CONFIG,0x00);         //FIFO disabled , DLPF 250Hz
         writeITGAddr(ITG_GYRO_CONFIG,0x18);    //FS:4000deg/sec

@@ -51,7 +51,7 @@ int initADXL()
     if(ans == ADXL345_DEVID_VALUE){
         writeADXLAddr(ADXL345_POWER_CTL,0x08);      // autosleep=off,mode=measure
         writeADXLAddr(ADXL345_BW_RATE,0x0A);        // rate = 100Hz
-        writeADXLAddr(ADXL345_DATA_FORMAT,0x0B);    // proto=I2C,full resolution mode,range=16g
+        writeADXLAddr(ADXL345_DATA_FORMAT,0x8B);    // proto=I2C,full resolution mode,range=16g
         //TODO check the range of accelerometer
         writeADXLAddr(ADXL345_FIFO_CTL,0x00);       // FIFO=bypass
         __delay_us(2000);
