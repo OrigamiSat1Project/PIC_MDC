@@ -52,15 +52,16 @@ int initICM()
     ans = readICMAddr(ICM_WHO_AM_I);
     if(ans == ICM_WHO_VALUE){
             __delay_us(2000);
-            writeICMAddr(ICM_PWR_MGMT_1,0x01);     //clock : PLL
+            writeICMAddr(ICM_PWR_MGMT_1,0x00);      //clock : PLL
             //  TODO    : need to consider about DLPF settings
-            writeICMAddr(ICM_CONFIG,0x00);         //FSYNC:disabled
+            writeICMAddr(ICM_INT_ENABLE,0x05);      //interupt enable
+            writeICMAddr(ICM_CONFIG,0x03);          //FSYNC:disabled
             //  XXX     : change the range of gyro sensor to ±4000dps (degree per sec)
-            writeICMAddr(ICM_GYRO_CONFIG,0x18);    //FS:4000 deg/sec
+            writeICMAddr(ICM_GYRO_CONFIG,0x18);     //FS:4000 deg/sec
             //  TODO    : need to confirm the range of accelemometer
-            writeICMAddr(ICM_ACCEL_CONFIG,0x00);   //FS:4g
+            writeICMAddr(ICM_ACCEL_CONFIG,0x00);    //FS:4g
             //  TODO    : need to consider about DLPF setting
-            writeICMAddr(ICM_ACCEL_CONFIG2,0x00);  //averaging 4 samples, DLPF : 218Hz
+            //writeICMAddr(ICM_ACCEL_CONFIG2,0x00);   //averaging 4 samples, DLPF : 218Hz
             __delay_us(2000);
     }else ans == -1;
     return ans;

@@ -16,6 +16,7 @@ const UBYTE ADXL345_FIFO_CTL        = 0x38;
 const UBYTE ADXL345_POWER_CTL       = 0x2D;
 const UBYTE ADXL345_DATA            = 0x32;
 const UBYTE ADXL345_INT_SOURCE      = 0x30;
+const UBYTE ADXL345_INT_ENABLE      = 0x2E;
 
 
 int readADXLAddr(char address)
@@ -46,15 +47,24 @@ int writeADXLAddr(char address, char val)
 int initADXL()
 {
     int ans;
+    UBYTE test[8] = {};
     __delay_us(2000);
     ans = readADXLAddr(ADXL345_DEVID);
     if(ans == ADXL345_DEVID_VALUE){
         writeADXLAddr(ADXL345_POWER_CTL,0x08);      // autosleep=off,mode=measure
-        writeADXLAddr(ADXL345_BW_RATE,0x0A);        // rate = 100Hz
-        writeADXLAddr(ADXL345_DATA_FORMAT,0x8B);    // proto=I2C,full resolution mode,range=16g
-        //TODO check the range of accelerometer
+        writeADXLAddr(ADXL345_INT_ENABLE,0x81);     // interupe enable
+        writeADXLAddr(ADXL345_BW_RATE,0x0B);        // rate = 200Hz
+        writeADXLAddr(ADXL345_DATA_FORMAT,0x00);    // proto=I2C,full resolution mode,range=16g
         writeADXLAddr(ADXL345_FIFO_CTL,0x00);       // FIFO=bypass
         __delay_us(2000);
+        test[0] = readADXLAddr(ADXL345_POWER_CTL);      // autosleep=off,mode=measure
+        test[1] = readADXLAddr(ADXL345_BW_RATE);        // rate = 200Hz
+        test[2] = readADXLAddr(ADXL345_DATA_FORMAT);    // proto=I2C,full resolution mode,range=16g
+        test[3] = readADXLAddr(ADXL345_FIFO_CTL);       // FIFO=bypass
+        test[4] = readADXLAddr(ADXL345_INT_ENABLE);     // interupe enable
+        __delay_us(2000);
+        sendCanData(test);
+        __delay_us(3000);
     }else ans = -1;
     return ans;
 }
@@ -62,19 +72,25 @@ int initADXL()
 int readADXL(UBYTE *data, int offset)
 {
     int ans , i , ack;
+    ans = 0x00;
+    //UBYTE who[8] = {};
 
-    while(ans != 0x80){
+    while(ans != 0x81){
         ans = readADXLAddr(ADXL345_INT_SOURCE);
-        ans = ans & 0x80;
+        ans = ans & 0x81;
     }
 
+    //who[0] = readADXLAddr(ADXL345_DEVID);
+    //sendCanData(who);
+    //__delay_us(3000);
+    
     ans = startI2C(ADXL345_ADDR,RW_0);
     if(ans == 0){
         sendI2CData(ADXL345_DATA);
         restartI2C(ADXL345_ADDR,RW_1);
         ack = ACK;
-        for(i=0;i<5;i++){
-            if(i=4) ack = NOACK;
+        for(i=0;i<6;i++){
+            if(i=5) ack = NOACK;
             data[offset+i] = readI2CData(ack);
         }
     }else ans = -1;

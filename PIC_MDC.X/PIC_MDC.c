@@ -76,11 +76,11 @@
 void main()
 {
     UINT time ; // unsigned int time
-    UBYTE bufOBC[16];
+    UBYTE bufOBC[8];
 
     initAll();
     //  initialize buffer for communicate with OBC
-    for(unsigned int i=0;i<16;i++){
+    for(unsigned int i=0;i<8;i++){
         bufOBC[i]=0x00;
     }
     
@@ -125,21 +125,29 @@ void main()
 
     //function test code
 
+   
     UBYTE zero_data[24] = {};
     //UBYTE ADXL_data[8] = {};
     UBYTE *ADXL_data;
     UBYTE ITG_data[8] = {};
-    UBYTE ICM_data[16] = {};
+    UBYTE *ICM_data;
     UBYTE dummy_data[8] = {};
+    
     UBYTE ADXL_ROM_data[8] = {};
     UBYTE ITG_ROM_data[8] = {};
     UBYTE ICM_ROM_data[16] = {};
     UBYTE dummy_ROM_data[8] = {};
+    
+    for(UINT i=0;i<8;i++){
+        ADXL_data[i] = 0x00;
+    }
     readCanData(bufOBC);
     wait1ms(1000);
     sendCanData(bufOBC);
     __delay_us(3000);
     switch (bufOBC[0]){
+        case 0x99:
+            initAll();
         case 0x01:
             writeEEPROM(EE_P0_0,0x00,0x00,zero_data,24);
             __delay_us(3000);
@@ -152,8 +160,10 @@ void main()
             break;
         case 0x02:
             readADXL(ADXL_data,0);
-            sendCanData(ADXL_data[0]);     //6byte : x-axis m, x-axis l, y-axis m, y-axis l, z-axis m, z-axis l
-            //writeEEPROM(EE_P0_0,0x00,0x00,ADXL_data,8);
+            //__delay_us(3000);
+            sendCanData(ADXL_data);     //6byte : x-axis m, x-axis l, y-axis m, y-a-=xis l, z-axis m, z-axis l
+            __delay_us(3000);
+            writeEEPROM(EE_P0_0,0x00,0x00,ADXL_data,6);
             break;
         case 0x03:
             readITG(ITG_data,0);
@@ -166,11 +176,11 @@ void main()
         case 0x04:
             readICM(ICM_data,0);
             __delay_us(3000);
-            sendCanData(ICM_data[0]);
+            sendCanData(&ICM_data[0]);
             __delay_us(3000);
-            sendCanData(ICM_data[8]);  //14byte : ax-H, ax-L, ay-H, ay-L, az-H, az-L, temp-H, temp-L, gyrox-H, gyrox-L, gyroy-H, gyroy-L, gyroz-H, gyroz-L
+            sendCanData(&ICM_data[8]);  //14byte : ax-H, ax-L, ay-H, ay-L, az-H, az-L, temp-H, temp-L, gyrox-H, gyrox-L, gyroy-H, gyroy-L, gyroz-H, gyroz-L
             __delay_us(3000);
-            writeEEPROM(EE_P0_2,0x00,0x00,ICM_data,16);
+            writeEEPROM(EE_P0_2,0x00,0x00,ICM_data,14);
             __delay_us(3000);
             break;
         case 0x05:
@@ -201,7 +211,7 @@ void main()
             __delay_us(3000);
             sendCanData(ICM_ROM_data);
             __delay_us(3000);
-            sendCanData(ICM_ROM_data[8]);
+            sendCanData(&ICM_ROM_data[8]);
             __delay_us(3000);
             readEEPROM(EE_P0_3,0x00,0x00,dummy_ROM_data,8);
             __delay_us(3000);
