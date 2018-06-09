@@ -3,15 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/cavendish/Documents/PIC_MDC/PIC_MDC.X/CAN.c</file>
-            <file>file:/C:/Users/cavendish/Documents/PIC_MDC/PIC_MDC.X/ICM20601.c</file>
+            <file>file:/C:/Users/cavendish/Documents/PIC_MDC/PIC_MDC.X/OrigamiTypeDefine.h</file>
             <file>file:/C:/Users/cavendish/Documents/PIC_MDC/PIC_MDC.X/EEPROM.h</file>
-            <file>file:/C:/Users/cavendish/Documents/PIC_MDC/PIC_MDC.X/I2Clib.c</file>
-            <file>file:/C:/Users/cavendish/Documents/PIC_MDC/PIC_MDC.X/init.c</file>
-            <file>file:/C:/Users/cavendish/Documents/PIC_MDC/PIC_MDC.X/MPU9250.c</file>
+            <file>file:/C:/Users/cavendish/Documents/PIC_MDC/PIC_MDC.X/adxl345.c</file>
+            <file>file:/C:/Users/cavendish/Documents/PIC_MDC/PIC_MDC.X/IMU.c</file>
             <file>file:/C:/Users/cavendish/Documents/PIC_MDC/PIC_MDC.X/PIC_MDC.c</file>
             <file>file:/C:/Users/cavendish/Documents/PIC_MDC/PIC_MDC.X/EEPROM.c</file>
-            <file>file:/C:/Users/cavendish/Documents/PIC_MDC/PIC_MDC.X/ITG3701.c</file>
+            <file>file:/C:/Users/cavendish/Documents/PIC_MDC/PIC_MDC.X/IMU.h</file>
         </group>
     </open-files>
 </project-private>

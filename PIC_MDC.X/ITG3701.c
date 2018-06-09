@@ -53,12 +53,12 @@ int initITG()
     ans = readITGAddr(ITG_WHO_AM_I);
     
     if(ans == ITG_WHO_VALUE){
-        writeITGAddr(ITG_PWR_MGMT_1,0x00);     //oscirator : internal 20MHz oscillator
+        writeITGAddr(ITG_PWR_MGMT_1,0x01);     //oscirator : PLL
         writeITGAddr(ITG_PWR_MGMT_2,0x00);     //gyro : not standby mode
         writeITGAddr(ITG_FIFO_EN,0x00);        //FIFO disabled
         writeITGAddr(ITG_CONFIG,0x00);         //FIFO disabled , DLPF 250Hz
         writeITGAddr(ITG_GYRO_CONFIG,0x18);    //FS:4000deg/sec
-        writeITGAddr(ITG_INT_PIN_CFG,0x08);    //FSYNC pin : activ low
+        //writeITGAddr(ITG_INT_PIN_CFG,0x00);    //FSYNC pin : activ low
         writeITGAddr(ITG_INT_ENABLE,0x01);     //DARA Ready Interupt : Enable
         __delay_us(2000);
     }else ans = -1;

@@ -1,6 +1,7 @@
 #include <xc.h>
 #include <stdlib.h>
 #include <math.h>
+#include <pic18f25k80.h>
 #include "I2Clib.h"
 #include "CAN.h"
 #include "ADC.h"
@@ -14,6 +15,7 @@
 #include "PWM.h"
 #include "OrigamiTypeDefine.h"
 #include "CommonDefine.h"
+#include "IMU.h"
 
 
 #pragma config RETEN = OFF      // VREG Sleep Enable bit (Ultra low-power regulator is Disabled (Controlled by REGSLP bit))
@@ -73,17 +75,17 @@
 #define __delay_ms(x)    _delay((UDWORD)((x)*(_XTAL_FREQ/4000UL)))
 #define __delay_us(x) _delay((UDWORD)((x)*(_XTAL_FREQ/4000000.0)))
 
+
 void main()
 {
     UINT time ; // unsigned int time
-    UBYTE bufOBC[8];
+    UBYTE bufOBC[16]={};
+    UBYTE OBCClock[6] = {0x1D,0x05,0x0F,0x09,0x06,0x12};
+    
+    
+    syncWithOBC(&OBCClock[0]);
 
     initAll();
-    //  initialize buffer for communicate with OBC
-    for(unsigned int i=0;i<8;i++){
-        bufOBC[i]=0x00;
-    }
-    
 
     /*
     readCanData(bufOBC);
@@ -124,30 +126,30 @@ void main()
     */
 
     //function test code
-
-   
+    
     UBYTE zero_data[24] = {};
     //UBYTE ADXL_data[8] = {};
     UBYTE *ADXL_data;
     UBYTE ITG_data[8] = {};
-    UBYTE *ICM_data;
-    UBYTE dummy_data[8] = {};
+    UBYTE ICM_data[16] = {};
+    UBYTE dummy_data[8];
+    UBYTE dummy_data1[16] = {0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0A,0x0B,0x0C,0x0D,0x0E,0x0F};    
+    UBYTE dummy_data2[16] = {0xAA,0xBB,0xCC,0xDD,0xEE,0xFF,0xAB,0xBC,0xCD,0xDE,0xEF,0xAC,0xBD,0xCE,0xDF};
+    UBYTE dummy_ROM_data1[8] = {};
+    UBYTE dummy_ROM_data2[8] = {};
+    
+
     
     UBYTE ADXL_ROM_data[8] = {};
     UBYTE ITG_ROM_data[8] = {};
     UBYTE ICM_ROM_data[16] = {};
     UBYTE dummy_ROM_data[8] = {};
     
-    for(UINT i=0;i<8;i++){
-        ADXL_data[i] = 0x00;
-    }
     readCanData(bufOBC);
     wait1ms(1000);
     sendCanData(bufOBC);
     __delay_us(3000);
     switch (bufOBC[0]){
-        case 0x99:
-            initAll();
         case 0x01:
             writeEEPROM(EE_P0_0,0x00,0x00,zero_data,24);
             __delay_us(3000);
@@ -160,10 +162,12 @@ void main()
             break;
         case 0x02:
             readADXL(ADXL_data,0);
-            //__delay_us(3000);
+            sendCanData(&globalClock);
+            __delay_us(3000);
             sendCanData(ADXL_data);     //6byte : x-axis m, x-axis l, y-axis m, y-a-=xis l, z-axis m, z-axis l
             __delay_us(3000);
-            writeEEPROM(EE_P0_0,0x00,0x00,ADXL_data,6);
+            writeEEPROM(EE_P0_0,0x00,0x00,ADXL_data,16);
+            __delay_us(3000);
             break;
         case 0x03:
             readITG(ITG_data,0);
@@ -174,18 +178,18 @@ void main()
             __delay_us(3000);
             break;
         case 0x04:
-            readICM(ICM_data,0);
+            readICM(&ICM_data[0],0);
             __delay_us(3000);
             sendCanData(&ICM_data[0]);
             __delay_us(3000);
             sendCanData(&ICM_data[8]);  //14byte : ax-H, ax-L, ay-H, ay-L, az-H, az-L, temp-H, temp-L, gyrox-H, gyrox-L, gyroy-H, gyroy-L, gyroz-H, gyroz-L
             __delay_us(3000);
-            writeEEPROM(EE_P0_2,0x00,0x00,ICM_data,14);
+            writeEEPROM(EE_P0_2,0x00,0x00,&ICM_data[0],14);
             __delay_us(3000);
             break;
         case 0x05:
-            dummy_data[0] = 0x99;
-            dummy_data[1] = 0xAA;
+            dummy_data[0] = 12;
+            dummy_data[1] = 15;
             dummy_data[2] = 0xBB;
             dummy_data[3] = 0xCC;
             dummy_data[4] = 0xDD;
@@ -218,5 +222,58 @@ void main()
             sendCanData(dummy_ROM_data);
             __delay_us(3000);
             break;
+        case 0x07:
+            HRM_SW_ON;
+            wait1ms(4000);
+            HRM_SW_OFF;
+            break;
+        case 0x08:
+            initTimer();
+            break;
+        case 0x09:
+            sendCanData(&globalClock);
+            __delay_us(3000);
+            break;
+            
+        case 0x11:
+            readIMUsequence(EE_P0_0,0x00,0x00,3);
+            __delay_ms(1000);
+            sendEEPROMdata(EE_P0_0,0x00,0x00,0x00,0x90);
+            break;
+            
+        case 0x12:
+            writeEEPROM(EE_P0_1,0x00,0x00,dummy_data1,16);
+            __delay_us(5000);
+            writeEEPROM(EE_P0_1,0x01,0x01,dummy_data2,16);
+            __delay_us(5000);
+            readEEPROM(EE_P0_1,0x00,0x00,dummy_ROM_data1,16);
+            __delay_us(5000);
+            sendCanData(dummy_ROM_data1);
+            __delay_us(3000);
+            sendCanData(&dummy_ROM_data1[8]);
+            __delay_us(3000);
+            readEEPROM(EE_P0_1,0x01,0x01,dummy_ROM_data2,16);
+            __delay_us(5000);
+            sendCanData(dummy_ROM_data2);
+            __delay_us(3000);
+            sendCanData(&dummy_ROM_data2[8]);
+            __delay_us(3000);
+            break;
     }
+}
+
+
+void interrupt timer(void){
+    if(INTCONbits.TMR0IF){
+        INTCONbits.TMR0IF = 0;
+        TMR0L = 0x00;
+        timer_counter++;
+    }
+    if(timer_counter >= 62){
+        //  past 1 second
+        increment_globalClock();
+        timer_counter = 0;
+        //sendCanData(&globalClock);
+    }
+    interruptI2C();
 }

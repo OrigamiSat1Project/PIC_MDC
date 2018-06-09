@@ -25,16 +25,19 @@ const UBYTE UBYTE_60 = 0x3C;
  *	XXX      :   avoid hardcoding
  */
 void initInterrupt(void){
+    INTCON = 0xE0;
+    T0CON = 0xC7;
+    TMR0H = 0x00;
+    TMR0L = 0x00;
+}
+
+void initTimer(void){
     globalClock.year = 0x00;
     globalClock.month = 0x00;
     globalClock.day = 0x00;
     globalClock.hour = 0x00;
     globalClock.minute = 0x00;
     globalClock.second = 0x00;
-    INTCON = 0xE0;
-    T0CON = 0xC7;
-    TMR0H = 0x00;
-    TMR0L = 0x00;
 }
 
 /*
@@ -99,16 +102,20 @@ UINT syncWithOBC(UBYTE *OBCClock){
  *	FIXME    :   not yet
  *	XXX      :   not yet
  */
+
+/*
 void interrupt incrementTimer(void){
     if(INTCONbits.TMR0IF){
         INTCONbits.TMR0IF = 0;
         TMR0L = 0x00;
         timer_counter++;
     }
-    if(timer_counter >= 62){
+    if(timer_counter >= 31){
         //  past 1 second
         increment_globalClock();
         timer_counter = 0;
+        sendCanData(&globalClock);
     }
     interruptI2C();
 }
+*/

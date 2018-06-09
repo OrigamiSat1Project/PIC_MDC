@@ -9,5 +9,6 @@
 
 int readEEPROM(char ee_p,char address1, char address2, char *val, int n);
 int writeEEPROM(char ee_p,char address1, char address2, char *val, int n);
+void sendEEPROMdata(char ee_p, char address1, char address2, char address3, char address4);
 
 #endif	/* EEPROMI2C_H */

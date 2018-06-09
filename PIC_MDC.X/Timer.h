@@ -23,7 +23,10 @@ struct dateStruct{
 };
 struct dateStruct globalClock;
 
+void initTimer(void);
+UINT syncWithOBC(UBYTE *OBCClock);
+void increment_globalClock(void);
 void initInterrupt(void);
-void interrupt incrementTimer(void);
+//void interrupt incrementTimer(void);
 
 #endif	/* INTERRUPT_H */

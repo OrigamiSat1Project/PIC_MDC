@@ -8,6 +8,7 @@
 #include "I2Clib.h"
 #include "CommonDefine.h"
 #include "OrigamiTypeDefine.h"
+#include "CAN.h"
 
 
 /// Method
@@ -61,4 +62,24 @@ int writeEEPROM(char ee_p, char address1,  char address2, char *val, int n){
      } else ans = -1 ;
      stopI2C() ;
      return ans ;
+}
+
+
+void sendEEPROMdata(char ee_p, char address1, char address2, char address3, char address4){
+    while(((address1 << 8 ) + address2) != ((address3 << 8) + address4)){
+        UBYTE val[8] = {};
+        readEEPROM(ee_p,address1,address2,val,8);
+        __delay_us(5000);
+        sendCanData(val);
+        __delay_us(3000);
+        address2 += 0x08;
+        if(address2 == 0xF0){
+            address1 += 0x01;
+            address2 = 0x00; 
+        }
+        if(address1 == 0xF0){
+            break;
+        }
+    }
+    return;
 }
