@@ -62,7 +62,7 @@
        SSPBUF = slave_address;          //  send address data
        waitSPIIdle();
        data_from_slave = SSPBUF;        //  dummy
-       SSPBUF = 0;                      //  send dummy data
+       SSPBUF = 0x00;                      //  send dummy data
        waitSPIIdle();
        SS = DIGITAL_HIGH;
        return SSPBUF;
@@ -100,7 +100,7 @@
   */
  void readSMAAntennaGain(int SPIspeed, int I2Cspeed, UBYTE *gains, UINT offset){
      changeMSSPModeToSPI(SPIspeed);
-     for (UINT i = 0; i < 16; i++) {
+     for (UINT i = 0; i < 2; i++) {
          UBYTE gain = readSPIData(0x00);
          gains[offset + i] = gain;
      }

@@ -36,15 +36,16 @@ void readIMUsequence(UBYTE ee_p, UBYTE EEPROMH, UBYTE EEPROML, int measuring_tim
     }
     */
    int sampling_counter = 0;
-   UBYTE zeros[10] = {};
+   UBYTE zeros[10] = {0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11};
 
    //syncWithOBC(OBCClock);
+   /*
    writeEEPROM(ee_p, EEPROMH, EEPROML, &globalClock,6);
    __delay_us(5000);
    writeEEPROM(ee_p, EEPROMH, EEPROML+0x06, zeros,10);
    __delay_us(5000);
    EEPROML += 0x10;
-   
+   */
     while(sampling_counter < measuring_time){
         
         UBYTE IMUdata[32] = {};

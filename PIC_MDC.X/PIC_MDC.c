@@ -16,6 +16,7 @@
 #include "OrigamiTypeDefine.h"
 #include "CommonDefine.h"
 #include "IMU.h"
+#include "SMA.h"
 
 
 #pragma config RETEN = OFF      // VREG Sleep Enable bit (Ultra low-power regulator is Disabled (Controlled by REGSLP bit))
@@ -127,7 +128,7 @@ void main()
 
     //function test code
     
-    UBYTE zero_data[24] = {};
+    UBYTE zero_data[8] = {0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11};
     //UBYTE ADXL_data[8] = {};
     UBYTE *ADXL_data;
     UBYTE ITG_data[8] = {};
@@ -137,6 +138,8 @@ void main()
     UBYTE dummy_data2[16] = {0xAA,0xBB,0xCC,0xDD,0xEE,0xFF,0xAB,0xBC,0xCD,0xDE,0xEF,0xAC,0xBD,0xCE,0xDF};
     UBYTE dummy_ROM_data1[8] = {};
     UBYTE dummy_ROM_data2[8] = {};
+    
+    UBYTE SMA_data[16] = {};
     
 
     
@@ -160,105 +163,69 @@ void main()
             writeEEPROM(EE_P0_3,0x00,0x00,zero_data,24);
             __delay_us(3000);
             break;
-        case 0x02:
-            readADXL(ADXL_data,0);
-            sendCanData(&globalClock);
-            __delay_us(3000);
-            sendCanData(ADXL_data);     //6byte : x-axis m, x-axis l, y-axis m, y-a-=xis l, z-axis m, z-axis l
-            __delay_us(3000);
-            writeEEPROM(EE_P0_0,0x00,0x00,ADXL_data,16);
-            __delay_us(3000);
-            break;
-        case 0x03:
-            readITG(ITG_data,0);
-            __delay_us(3000);
-            sendCanData(ITG_data);     //8byte : temp m, temp l, gyro-x m, gyro-x l, gyro-y m, gyro-y l, gyro-z m, gyro-z l
-            __delay_us(3000);
-            writeEEPROM(EE_P0_1,0x00,0x00,ITG_data,8);
-            __delay_us(3000);
-            break;
-        case 0x04:
-            readICM(&ICM_data[0],0);
-            __delay_us(3000);
-            sendCanData(&ICM_data[0]);
-            __delay_us(3000);
-            sendCanData(&ICM_data[8]);  //14byte : ax-H, ax-L, ay-H, ay-L, az-H, az-L, temp-H, temp-L, gyrox-H, gyrox-L, gyroy-H, gyroy-L, gyroz-H, gyroz-L
-            __delay_us(3000);
-            writeEEPROM(EE_P0_2,0x00,0x00,&ICM_data[0],14);
-            __delay_us(3000);
-            break;
         case 0x05:
-            dummy_data[0] = 12;
-            dummy_data[1] = 15;
-            dummy_data[2] = 0xBB;
-            dummy_data[3] = 0xCC;
-            dummy_data[4] = 0xDD;
-            dummy_data[5] = 0xEE;
-            dummy_data[6] = 0x88;
-            dummy_data[7] = 0x77;
+            readADXL(ADXL_data,0);
             __delay_us(3000);
-            sendCanData(dummy_data);
-            __delay_us(3000);
-            writeEEPROM(EE_P0_3,0x00,0x00,dummy_data,8);
+            sendCanData(ADXL_data);
             __delay_us(3000);
             break;
-        case 0x06:
-            readEEPROM(EE_P0_0,0x00,0x00,ADXL_ROM_data,8);
-            __delay_us(3000);
-            sendCanData(ADXL_ROM_data);
-            __delay_us(3000);
-            readEEPROM(EE_P0_1,0x00,0x00,ITG_ROM_data,8);
-            __delay_us(3000);
-            sendCanData(ITG_ROM_data);
-            __delay_us(3000);
-            readEEPROM(EE_P0_2,0x00,0x00,ICM_ROM_data,16);
-            __delay_us(3000);
-            sendCanData(ICM_ROM_data);
-            __delay_us(3000);
-            sendCanData(&ICM_ROM_data[8]);
-            __delay_us(3000);
-            readEEPROM(EE_P0_3,0x00,0x00,dummy_ROM_data,8);
-            __delay_us(3000);
-            sendCanData(dummy_ROM_data);
-            __delay_us(3000);
-            break;
+            /*
         case 0x07:
             HRM_SW_ON;
-            wait1ms(4000);
+            wait1ms(1000);
             HRM_SW_OFF;
             break;
         case 0x08:
-            initTimer();
+            HRM_SW_ON;
+            wait1ms(1000);
+            HRM_SW_OFF;
             break;
+             */
         case 0x09:
             sendCanData(&globalClock);
             __delay_us(3000);
             break;
+        
+        case 0x31:
+            //readADXL(ADXL_data,0);
+            //sendCanData(ADXL_data);
             
-        case 0x11:
-            readIMUsequence(EE_P0_0,0x00,0x00,3);
+            sendCanData(bufOBC);
+            __delay_us(3000);
+            readIMUsequence(EE_P0_0,0x00,0x00,1);
             __delay_ms(1000);
-            sendEEPROMdata(EE_P0_0,0x00,0x00,0x00,0x90);
-            break;
+            sendEEPROMdata(EE_P0_0,0x00,0x00,0x00,0x20);
             
-        case 0x12:
-            writeEEPROM(EE_P0_1,0x00,0x00,dummy_data1,16);
-            __delay_us(5000);
-            writeEEPROM(EE_P0_1,0x01,0x01,dummy_data2,16);
-            __delay_us(5000);
-            readEEPROM(EE_P0_1,0x00,0x00,dummy_ROM_data1,16);
-            __delay_us(5000);
-            sendCanData(dummy_ROM_data1);
-            __delay_us(3000);
-            sendCanData(&dummy_ROM_data1[8]);
-            __delay_us(3000);
-            readEEPROM(EE_P0_1,0x01,0x01,dummy_ROM_data2,16);
-            __delay_us(5000);
-            sendCanData(dummy_ROM_data2);
-            __delay_us(3000);
-            sendCanData(&dummy_ROM_data2[8]);
-            __delay_us(3000);
+             /*
+            for(int i=0;i<6;i++){
+                sendCanData(zero_data);
+                __delay_us(5000);
+               
+                for(int k=0;k<8;k++){
+                zero_data[k] += 0x11;
+                }
+              
+            }*/
             break;
+        case 0x13:
+            readSolarSequence();
+            break;
+        case 0x14:
+            while(1){
+                if(PORTBbits.RB5 != DIGITAL_HIGH){
+                    sendCanData(zero_data);
+                }
+            }
+            break;
+        case 0x11:
+            LED_SW_ON;
+            __delay_ms(1000);
+            break;
+        case 0x12:
+            LED_SW_OFF;
+            __delay_ms(1000);
+            break;
+          
     }
 }
 
