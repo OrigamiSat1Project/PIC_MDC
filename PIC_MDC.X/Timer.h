@@ -10,6 +10,7 @@
 #ifndef INTERRUPT_H
 #define	INTERRUPT_H
 int timer_counter = 0;
+int constant_timer_counter = 0;
 
 //  XXX     :   this is not good timer declation is here
 //UDWORD globalCount;

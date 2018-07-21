@@ -9,6 +9,7 @@
 #include "ITG3701.h"
 #include "ICM20601.h"
 #include "Timer.h"
+#include "IMU.h"
 
 void readIMU(UBYTE *data, int i){
     data[0] = i;
@@ -22,7 +23,7 @@ void readIMU(UBYTE *data, int i){
 
 void readIMUsequence(UBYTE ee_p, UBYTE EEPROMH, UBYTE EEPROML, int measuring_time){
 
-   int sampling_counter = 1;
+   sampling_counter = 0;
    //UBYTE zeros[26] = {0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11};
    UBYTE zeros[26] = {};
    UBYTE IMUdata[32] = {};
@@ -37,10 +38,12 @@ void readIMUsequence(UBYTE ee_p, UBYTE EEPROMH, UBYTE EEPROML, int measuring_tim
    __delay_us(5000);
    EEPROML += 0x1A;
    
-    while(timer_counter <= measuring_time){
+   constant_timer_counter = 0;
+    while(constant_timer_counter <= measuring_time){
         
         
 
+        sampling_counter += 1;
 
         IMUdata[0] = sampling_counter;
         IMUdata[1] = 0;
@@ -54,7 +57,7 @@ void readIMUsequence(UBYTE ee_p, UBYTE EEPROMH, UBYTE EEPROML, int measuring_tim
         IMUdata[31] = 0;
         //__delay_us(3000);
         writeEEPROM(ee_p, EEPROMH, EEPROML, IMUdata, 32);
-        __delay_us(5000);
+        __delay_us(3000);
         if(EEPROML == 0xE0){
             EEPROMH = EEPROMH + 0x01;
             EEPROML = 0x00;
@@ -65,7 +68,7 @@ void readIMUsequence(UBYTE ee_p, UBYTE EEPROMH, UBYTE EEPROML, int measuring_tim
         if(EEPROMH >= 0xF0){
             break;  //EEPROM full
         }
-        sampling_counter += 1;
+        
     }
    // ending 
    __delay_us(3000);

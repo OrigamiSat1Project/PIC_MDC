@@ -82,11 +82,11 @@ void main()
     UINT time ; // unsigned int time
     UBYTE bufOBC[16]={};
     UBYTE OBCClock[6] = {0x1D,0x05,0x0F,0x09,0x06,0x12};
-    
-    
-    syncWithOBC(&OBCClock[0]);
-
     initAll();
+    
+    
+
+    
 
     /*
     readCanData(bufOBC);
@@ -143,6 +143,9 @@ void main()
     UBYTE eEEPROML = 0x00;
     int measuring_time;
     
+    while(1){
+    syncWithOBC(&OBCClock[0]);
+    
 
     
     readCanData(bufOBC);
@@ -151,18 +154,8 @@ void main()
     __delay_us(3000);
     switch (bufOBC[0]){
         case 0x01:
-            readEEPROM(EE_P0_0, 0x00, 0x00, dummy_romdata, 16);
-            __delay_us(5000);
-            sendCanData(dummy_romdata);
-            __delay_us(5000);
-            writeEEPROM(EE_P0_0, 0x00, 0x90, dummy_data, 16);
-            __delay_us(5000);
+            dummy_data[0] = sampling_counter;
             sendCanData(dummy_data);
-            __delay_us(5000);
-            readEEPROM(EE_P0_0, 0x00, 0x90, dummy_romdata, 16);
-            __delay_us(5000);
-            sendCanData(dummy_romdata);
-            __delay_us(5000);
             break;
         case 0x05:
             readADXL(ADXL_data,0);
@@ -188,13 +181,17 @@ void main()
         case 0x31:
             sEEPROMH = 0x00;
             sEEPROML = 0x00;
-            measuring_time = 190;
-            eEEPROMH = (measuring_time + 2) / 8;
-            eEEPROML = ((measuring_time + 2) % 8) * 0x20;
+            measuring_time = 62;
             
             readIMUsequence(EE_P0_0,sEEPROMH,sEEPROML,measuring_time);
             __delay_ms(1000);
+            eEEPROMH = (sampling_counter + 2) / 8;
+            eEEPROML = ((sampling_counter + 2) % 8) * 0x20;
             sendEEPROMdata(EE_P0_0,sEEPROMH,sEEPROML,eEEPROMH,eEEPROML);
+            __delay_us(3000);
+            //dummy_data[0] = sampling_counter;
+            //sendCanData(dummy_data);
+            __delay_us(3000);
             break;
         case 0x13:
             readSolarSequence();
@@ -209,6 +206,7 @@ void main()
             break;
           
     }
+    }
 }
 
 
@@ -217,6 +215,7 @@ void interrupt timer(void){
         INTCONbits.TMR0IF = 0;
         TMR0L = 0x00;
         timer_counter++;
+        constant_timer_counter++;
     }
     if(timer_counter >= 62){
         //  past 1 second
