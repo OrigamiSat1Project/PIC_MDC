@@ -20,7 +20,7 @@
  *	FIXME    :   not yet
  *	XXX      :   avoid hardcoding
  */
-int readEEPROM(char ee_p, char address1, char address2, char *val, int n){
+int readEEPROM(UBYTE ee_p, UBYTE address1, UBYTE address2, UBYTE *val, int n){
     int ans;
     int ack;
     int i;
@@ -48,7 +48,7 @@ int readEEPROM(char ee_p, char address1, char address2, char *val, int n){
  *	FIXME    :   not yet
  *	XXX      :   avoid hardcoding
  */
-int writeEEPROM(char ee_p, char address1,  char address2, char *val, int n){
+int writeEEPROM(UBYTE ee_p, UBYTE address1,  UBYTE address2, UBYTE *val, int n){
     int ans;
     int i;
 
@@ -65,21 +65,22 @@ int writeEEPROM(char ee_p, char address1,  char address2, char *val, int n){
 }
 
 
-void sendEEPROMdata(char ee_p, char address1, char address2, char address3, char address4){
+void sendEEPROMdata(UBYTE ee_p, UBYTE address1, UBYTE address2, UBYTE address3, UBYTE address4){
     while(((address1 << 8 ) + address2) != ((address3 << 8) + address4)){
         UBYTE val[8] = {};
         readEEPROM(ee_p,address1,address2,val,8);
         __delay_us(5000);
         sendCanData(val);
         __delay_us(3000);
-        address2 += 0x08;
-        if(address2 == 0xF0){
-            address1 += 0x01;
-            address2 = 0x00; 
-        }
-        if(address1 == 0xF0){
+        if(address2 == 0xF8){
+           address1 += 0x01; 
+           address2 = 0x00; 
+        }else if(address1 == 0xF8){
             break;
+        }else{
+            address2 += 0x08;
         }
+        
     }
     return;
 }

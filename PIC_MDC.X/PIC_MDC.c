@@ -128,25 +128,22 @@ void main()
 
     //function test code
     
-    UBYTE zero_data[8] = {0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11};
     //UBYTE ADXL_data[8] = {};
     UBYTE *ADXL_data;
     UBYTE ITG_data[8] = {};
     UBYTE ICM_data[16] = {};
-    UBYTE dummy_data[8];
-    UBYTE dummy_data1[16] = {0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0A,0x0B,0x0C,0x0D,0x0E,0x0F};    
-    UBYTE dummy_data2[16] = {0xAA,0xBB,0xCC,0xDD,0xEE,0xFF,0xAB,0xBC,0xCD,0xDE,0xEF,0xAC,0xBD,0xCE,0xDF};
-    UBYTE dummy_ROM_data1[8] = {};
-    UBYTE dummy_ROM_data2[8] = {};
+    UBYTE dummy_data[16] = {0xAA,0xAA,0xAA,0xAA,0xAA,0xAA,0xAA,0xAA,0xAA,0xAA,0xAA,0xAA,0xAA,0xAA,0xAA,0xAA};
+    UBYTE dummy_romdata[16] = {};
     
     UBYTE SMA_data[16] = {};
     
-
+    UBYTE sEEPROMH = 0x00;
+    UBYTE sEEPROML = 0x00;
+    UBYTE eEEPROMH = 0x00;
+    UBYTE eEEPROML = 0x00;
+    int measuring_time;
     
-    UBYTE ADXL_ROM_data[8] = {};
-    UBYTE ITG_ROM_data[8] = {};
-    UBYTE ICM_ROM_data[16] = {};
-    UBYTE dummy_ROM_data[8] = {};
+
     
     readCanData(bufOBC);
     wait1ms(1000);
@@ -154,14 +151,18 @@ void main()
     __delay_us(3000);
     switch (bufOBC[0]){
         case 0x01:
-            writeEEPROM(EE_P0_0,0x00,0x00,zero_data,24);
-            __delay_us(3000);
-            writeEEPROM(EE_P0_1,0x00,0x00,zero_data,24);
-            __delay_us(3000);
-            writeEEPROM(EE_P0_2,0x00,0x00,zero_data,24);
-            __delay_us(3000);
-            writeEEPROM(EE_P0_3,0x00,0x00,zero_data,24);
-            __delay_us(3000);
+            readEEPROM(EE_P0_0, 0x00, 0x00, dummy_romdata, 16);
+            __delay_us(5000);
+            sendCanData(dummy_romdata);
+            __delay_us(5000);
+            writeEEPROM(EE_P0_0, 0x00, 0x90, dummy_data, 16);
+            __delay_us(5000);
+            sendCanData(dummy_data);
+            __delay_us(5000);
+            readEEPROM(EE_P0_0, 0x00, 0x90, dummy_romdata, 16);
+            __delay_us(5000);
+            sendCanData(dummy_romdata);
+            __delay_us(5000);
             break;
         case 0x05:
             readADXL(ADXL_data,0);
@@ -169,53 +170,34 @@ void main()
             sendCanData(ADXL_data);
             __delay_us(3000);
             break;
-            /*
-        case 0x07:
-            HRM_SW_ON;
-            wait1ms(1000);
-            HRM_SW_OFF;
-            break;
+            
         case 0x08:
             HRM_SW_ON;
             wait1ms(1000);
             HRM_SW_OFF;
             break;
-             */
+             
         case 0x09:
+            while(1){
             sendCanData(&globalClock);
-            __delay_us(3000);
+            //__delay_us(3000);
+            __delay_ms(1000);
+            }
             break;
         
         case 0x31:
-            //readADXL(ADXL_data,0);
-            //sendCanData(ADXL_data);
+            sEEPROMH = 0x00;
+            sEEPROML = 0x00;
+            measuring_time = 190;
+            eEEPROMH = (measuring_time + 2) / 8;
+            eEEPROML = ((measuring_time + 2) % 8) * 0x20;
             
-            sendCanData(bufOBC);
-            __delay_us(3000);
-            readIMUsequence(EE_P0_0,0x00,0x00,1);
+            readIMUsequence(EE_P0_0,sEEPROMH,sEEPROML,measuring_time);
             __delay_ms(1000);
-            sendEEPROMdata(EE_P0_0,0x00,0x00,0x00,0x20);
-            
-             /*
-            for(int i=0;i<6;i++){
-                sendCanData(zero_data);
-                __delay_us(5000);
-               
-                for(int k=0;k<8;k++){
-                zero_data[k] += 0x11;
-                }
-              
-            }*/
+            sendEEPROMdata(EE_P0_0,sEEPROMH,sEEPROML,eEEPROMH,eEEPROML);
             break;
         case 0x13:
             readSolarSequence();
-            break;
-        case 0x14:
-            while(1){
-                if(PORTBbits.RB5 != DIGITAL_HIGH){
-                    sendCanData(zero_data);
-                }
-            }
             break;
         case 0x11:
             LED_SW_ON;

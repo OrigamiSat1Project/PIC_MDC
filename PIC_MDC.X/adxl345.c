@@ -71,8 +71,6 @@ int readADXL(UBYTE *data, int offset)
         ans = ans & 0x80;
     }
     
-    //sendCanData(&globalClock);
-    __delay_us(3000);
     ans = startI2C(ADXL345_ADDR,RW_0);
     if(ans == 0){
         sendI2CData(ADXL345_DATA);
@@ -82,8 +80,6 @@ int readADXL(UBYTE *data, int offset)
             if(i==5) ack = NOACK;
             data[offset+i] = readI2CData(ack);
         }
-        //sendCanData(data);
-        __delay_us(3000);
     }else ans = -1;
     stopI2C();
     return ans;
