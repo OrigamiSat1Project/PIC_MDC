@@ -67,6 +67,50 @@ UINT readSolar1(UBYTE *buf){
     return 6;
 }
 
+UINT readSolar2(UBYTE *buf){
+    //  MEASURE_CURRENT
+    MEASURE_CURRENT_SOLAR2;
+    __delay_ms(10);
+    //  readAN8
+    ADCON0bits.CHS4 = UINT_FALSE;
+    ADCON0bits.CHS3 = UINT_TRUE;
+    ADCON0bits.CHS2 = UINT_FALSE;
+    ADCON0bits.CHS1 = UINT_FALSE;
+    ADCON0bits.CHS0 = UINT_FALSE;
+    __delay_us(5);
+    ADCON0bits.GO = UINT_TRUE;
+    waitADCIdle();
+    buf[0] = ADRESL;
+    buf[1] = ADRESH;
+    //  MEASURE_VOLTAGE
+    MEASURE_VOLTAGE_SOLAR2;
+    __delay_ms(10);
+    //  read AN10
+    ADCON0bits.CHS4 = UINT_FALSE;
+    ADCON0bits.CHS3 = UINT_TRUE;
+    ADCON0bits.CHS2 = UINT_FALSE;
+    ADCON0bits.CHS1 = UINT_TRUE;
+    ADCON0bits.CHS0 = UINT_FALSE;
+    __delay_us(5);
+    ADCON0bits.GO = UINT_TRUE;
+    waitADCIdle();
+    buf[2] = ADRESL;
+    buf[3] = ADRESH;
+    //  MEASURE_TEMPERATURE
+    //  read AN9
+    ADCON0bits.CHS4 = UINT_FALSE;
+    ADCON0bits.CHS3 = UINT_TRUE;
+    ADCON0bits.CHS2 = UINT_FALSE;
+    ADCON0bits.CHS1 = UINT_FALSE;
+    ADCON0bits.CHS0 = UINT_TRUE;
+    __delay_us(5);
+    ADCON0bits.GO = UINT_TRUE;
+    waitADCIdle();
+    buf[4] = ADRESL;
+    buf[5] = ADRESH;
+    return 6;
+}
+
 /*
 *  read Solar1 current, voltage, temperature
 *	arg      :
@@ -76,7 +120,7 @@ UINT readSolar1(UBYTE *buf){
 *	XXX      :    if need, solar select is need by argument
 */
 void readSolarSequence(void){
-    UBYTE bufSolar[16];
+    UBYTE bufSolar[8] = {};
     readSolar1(bufSolar);
     wait1ms(1000);
     sendCanData(bufSolar);

@@ -71,8 +71,6 @@ int readICM(UBYTE *data, int offset)
 {
     int ans , i , ack ;
     
-    //  FIXME   : read datasheet of MPU9250 (P.30 register map), and ICM20601(P.40)
-    //            DATA_RDY_INT(bit0 of INT_STATUS) clears to 0 after the register has been read. 
     while(ans != 0x01){
         ans = readICMAddr(ICM_INT_STATUS);
         ans = ans & 0x01;

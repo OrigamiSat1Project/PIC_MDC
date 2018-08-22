@@ -23,7 +23,6 @@
 int readEEPROM(UBYTE ee_p, UBYTE address1, UBYTE address2, UBYTE *val, int n){
     int ans;
     int ack;
-    int i;
 
     ans = startI2C(eeprom_ADDR | ee_p,RW_0);
     if (ans == 0) {
@@ -75,12 +74,15 @@ void sendEEPROMdata(UBYTE ee_p, UBYTE address1, UBYTE address2, UBYTE address3, 
         if(address2 == 0xF8){
            address1 += 0x01; 
            address2 = 0x00; 
-        }else if(address1 == 0xF8){
-            break;
         }else{
             address2 += 0x08;
         }
-        
+        if(address1 == 0xF8){
+            ee_p += 1;
+            if(ee_p == 4){
+                break;
+            }
+        }
     }
     return;
 }
