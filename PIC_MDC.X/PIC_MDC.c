@@ -88,6 +88,7 @@ void main()
     UBYTE eEEPROMH = 0x00;
     UBYTE eEEPROML = 0x00;
     UBYTE selEEP;
+    UBYTE data_length[2] = {};
     UBYTE LEDstatus[8] = {};
     UBYTE solar1[8] = {};
     UBYTE solar2[8] = {};
@@ -154,6 +155,10 @@ void main()
             sEEPROML = bufOBC[5];
             
             readIMUsequence_ICM(selEEP,sEEPROMH,sEEPROML,measuring_time);
+            
+            data_length[1] = (sampling_counter[0] + sampling_counter[1] * 255 + 2) / 16;
+            data_length[0] = ((sampling_counter[0] + sampling_counter[1] * 255 + 2) % 16) * 0x10;
+            sendCanData(data_length);
             break;
         case 'C':
             measuring_time = bufOBC[2] * 62;
@@ -185,32 +190,52 @@ void main()
         case 0xE0:
             sEEPROMH = bufOBC[2];
             sEEPROML = bufOBC[3];
-            eEEPROMH = bufOBC[4];
-            eEEPROML = bufOBC[5];
+            data_length[1] = bufOBC[4];
+            data_length[0] = bufOBC[5];
+            eEEPROMH = sEEPROMH + data_length[1];
+            eEEPROML = sEEPROML + data_length[0];
+            if((eEEPROML % 8) != 0){
+                eEEPROML = data_length[0] + 8 * (1 - data_length[0]);
+            }
             
             sendEEPROMdata(EE_P0_0,sEEPROMH,sEEPROML,eEEPROMH,eEEPROML);
             break;
         case 0xE1:
             sEEPROMH = bufOBC[2];
             sEEPROML = bufOBC[3];
-            eEEPROMH = bufOBC[4];
-            eEEPROML = bufOBC[5];
+            data_length[1] = bufOBC[4];
+            data_length[0] = bufOBC[5];
+            eEEPROMH = sEEPROMH + data_length[1];
+            eEEPROML = sEEPROML + data_length[0];
+            if((eEEPROML % 8) != 0){
+                eEEPROML = data_length[0] + 8 * (1 - data_length[0]);
+            }
             
             sendEEPROMdata(EE_P0_1,sEEPROMH,sEEPROML,eEEPROMH,eEEPROML);
             break;
         case 0xE2:
             sEEPROMH = bufOBC[2];
             sEEPROML = bufOBC[3];
-            eEEPROMH = bufOBC[4];
-            eEEPROML = bufOBC[5];
+            data_length[1] = bufOBC[4];
+            data_length[0] = bufOBC[5];
+            eEEPROMH = sEEPROMH + data_length[1];
+            eEEPROML = sEEPROML + data_length[0];
+            if((eEEPROML % 8) != 0){
+                eEEPROML = data_length[0] + 8 * (1 - data_length[0]);
+            }
             
             sendEEPROMdata(EE_P0_2,sEEPROMH,sEEPROML,eEEPROMH,eEEPROML);
             break;
         case 0xE3:
             sEEPROMH = bufOBC[2];
             sEEPROML = bufOBC[3];
-            eEEPROMH = bufOBC[4];
-            eEEPROML = bufOBC[5];
+            data_length[1] = bufOBC[4];
+            data_length[0] = bufOBC[5];
+            eEEPROMH = sEEPROMH + data_length[1];
+            eEEPROML = sEEPROML + data_length[0];
+            if((eEEPROML % 8) != 0){
+                eEEPROML = data_length[0] + 8 * (1 - data_length[0]);
+            }
             
             sendEEPROMdata(EE_P0_3,sEEPROMH,sEEPROML,eEEPROMH,eEEPROML);
             break;
