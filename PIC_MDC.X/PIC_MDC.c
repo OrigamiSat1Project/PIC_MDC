@@ -81,44 +81,46 @@ void main()
 {
     UBYTE bufOBC[8]={};
     UBYTE OBCClock[6] = {0x1D,0x05,0x0F,0x09,0x06,0x12};
-    UBYTE *ADXL_data;
+    UBYTE ADXL_data[8] = {};
+    UBYTE ITG_data[8] = {};
+    UBYTE ICM_data[16] = {};
     UBYTE SMA_data[16] = {};
     UBYTE sEEPROMH = 0x00;
     UBYTE sEEPROML = 0x00;
     UBYTE eEEPROMH = 0x00;
     UBYTE eEEPROML = 0x00;
+    UWORD eEEPROM = 0x0000;
     UBYTE selEEP;
-    UBYTE data_length[2] = {};
+    UBYTE data_length[8] = {};
     UBYTE LEDstatus[8] = {};
     UBYTE solar1[8] = {};
     UBYTE solar2[8] = {};
+    UBYTE EEPROMwritetest[8];
+    UBYTE EEPROMreadtest[8];
     int measuring_time;
     
     initAll();
     
     while(1){
-    syncWithOBC(&OBCClock[0]);
     readCanData(bufOBC);
     wait1ms(1000);
-    sendCanData(bufOBC);
-    __delay_us(3000);
-    switch (bufOBC[1]){
+    switch (bufOBC[0]){
         case 0x01:
             initAll();
             break;
-        case 'L':   //LED
-            switch(bufOBC[2]){
-                case 'S':
+        case '0x10':   //LED
+            switch(bufOBC[1]){
+                case '0x10':
                     LED_SW_ON;
                     LEDstatus[0] = LED_Status;
                     sendCanData(LEDstatus);
                     break;
-                case 'E':
+                case '0x11':
                     LED_SW_OFF;
                     LEDstatus[0] = LED_Status;
                     sendCanData(LEDstatus);
                     break;
-                case 'T':
+                case '0x12':
                     LED_SW_ON;
                     wait1ms(bufOBC[2]*1000);
                     LEDstatus[0] = LED_Status;
@@ -128,19 +130,19 @@ void main()
                 default:
                     break;
             }
-        case 'H':   //HRM
-            switch(bufOBC[2]){
-                case '1':
+        case '0x21':   //HRM
+            switch(bufOBC[1]){
+                case '0x21':
                     HRM_SW_ON;
                     wait1ms(1);
                     HRM_SW_OFF;
                     break;
-                case 'T':
+                case '0x22':
                     HRM_SW_ON;
-                    wait1ms(bufOBC[3]*1000);
+                    wait1ms(bufOBC[2]*1000);
                     HRM_SW_OFF;
                     break;
-                case 'M':
+                case '0x23':
                     HRM_SW_ON;
                     while(MSW == 0);
                     HRM_SW_OFF;
@@ -148,23 +150,35 @@ void main()
                 default:
                     break;
             }
-        case 'I':
+        case '0x31':
+            switch(bufOBC[1]){
+                case 0x31:
+                    break;
+            }
             measuring_time = bufOBC[2] * 62;
             selEEP   = bufOBC[3];
             sEEPROMH = bufOBC[4];
             sEEPROML = bufOBC[5];
             
-            readIMUsequence_ICM(selEEP,sEEPROMH,sEEPROML,measuring_time);
+            //readIMUsequence_ICM(selEEP,sEEPROMH,sEEPROML,measuring_time);
+            //readIMUsequence_adxl_ITG(selEEP,sEEPROMH,sEEPROML,measuring_time);
+            readIMUsequence(selEEP,sEEPROMH,sEEPROML,measuring_time);
             
-            data_length[1] = (sampling_counter[0] + sampling_counter[1] * 255 + 2) / 16;
-            data_length[0] = ((sampling_counter[0] + sampling_counter[1] * 255 + 2) % 16) * 0x10;
+            data_length[0] = (sampling_counter[0] + sampling_counter[1] * 255 + 2) / 16;
+            data_length[1] = ((sampling_counter[0] + sampling_counter[1] * 255 + 2) % 16) * 0x10;
             sendCanData(data_length);
             break;
+        case 0x0E:
+            sEEPROMH = bufOBC[1];
+            sEEPROML = bufOBC[2];
+            
+            
+            break;
         case 'C':
-            measuring_time = bufOBC[2] * 62;
-            selEEP   = bufOBC[3];
-            sEEPROMH = bufOBC[4];
-            sEEPROML = bufOBC[5];
+            measuring_time = bufOBC[1] * 62;
+            selEEP   = bufOBC[2];
+            sEEPROMH = bufOBC[3];
+            sEEPROML = bufOBC[4];
             
             readIMUsequence_ICM(selEEP,sEEPROMH,sEEPROML,measuring_time);
             
@@ -173,7 +187,7 @@ void main()
             sendEEPROMdata(selEEP,sEEPROMH,sEEPROML,eEEPROMH,eEEPROML);
             break;
         case 'S':
-            switch(bufOBC[2]){
+            switch(bufOBC[1]){
                 case '1':
                     readSolar1(solar1);
                     wait1ms(1000);
@@ -188,108 +202,120 @@ void main()
                     break;
             }
         case 0xE0:
+            selEEP = bufOBC[1];
             sEEPROMH = bufOBC[2];
             sEEPROML = bufOBC[3];
             data_length[1] = bufOBC[4];
             data_length[0] = bufOBC[5];
-            eEEPROMH = sEEPROMH + data_length[1];
-            eEEPROML = sEEPROML + data_length[0];
+            eEEPROM = sEEPROML + (sEEPROMH << 8) + (data_length[1] << 8) + data_length[0];
+            eEEPROMH = eEEPROM >> 8;
+            eEEPROML = eEEPROM;
+            
             if((eEEPROML % 8) != 0){
                 eEEPROML = data_length[0] + 8 * (1 - data_length[0]);
             }
             
-            sendEEPROMdata(EE_P0_0,sEEPROMH,sEEPROML,eEEPROMH,eEEPROML);
-            break;
-        case 0xE1:
-            sEEPROMH = bufOBC[2];
-            sEEPROML = bufOBC[3];
-            data_length[1] = bufOBC[4];
-            data_length[0] = bufOBC[5];
-            eEEPROMH = sEEPROMH + data_length[1];
-            eEEPROML = sEEPROML + data_length[0];
-            if((eEEPROML % 8) != 0){
-                eEEPROML = data_length[0] + 8 * (1 - data_length[0]);
-            }
-            
-            sendEEPROMdata(EE_P0_1,sEEPROMH,sEEPROML,eEEPROMH,eEEPROML);
-            break;
-        case 0xE2:
-            sEEPROMH = bufOBC[2];
-            sEEPROML = bufOBC[3];
-            data_length[1] = bufOBC[4];
-            data_length[0] = bufOBC[5];
-            eEEPROMH = sEEPROMH + data_length[1];
-            eEEPROML = sEEPROML + data_length[0];
-            if((eEEPROML % 8) != 0){
-                eEEPROML = data_length[0] + 8 * (1 - data_length[0]);
-            }
-            
-            sendEEPROMdata(EE_P0_2,sEEPROMH,sEEPROML,eEEPROMH,eEEPROML);
-            break;
-        case 0xE3:
-            sEEPROMH = bufOBC[2];
-            sEEPROML = bufOBC[3];
-            data_length[1] = bufOBC[4];
-            data_length[0] = bufOBC[5];
-            eEEPROMH = sEEPROMH + data_length[1];
-            eEEPROML = sEEPROML + data_length[0];
-            if((eEEPROML % 8) != 0){
-                eEEPROML = data_length[0] + 8 * (1 - data_length[0]);
-            }
-            
-            sendEEPROMdata(EE_P0_3,sEEPROMH,sEEPROML,eEEPROMH,eEEPROML);
+            sendEEPROMdata(selEEP,sEEPROMH,sEEPROML,eEEPROMH,eEEPROML);
             break;
         case 'T':
-            switch(bufOBC[2]){
+            switch(bufOBC[1]){
                 case 'H':
-                    globalClock.year = bufOBC[3];
-                    globalClock.month = bufOBC[4];
-                    globalClock.day = bufOBC[5];
+                    globalClock.year = bufOBC[2];
+                    globalClock.month = bufOBC[3];
+                    globalClock.day = bufOBC[4];
                     break;
                 case 'L':
-                    globalClock.hour = bufOBC[3];
-                    globalClock.minute = bufOBC[4];
-                    globalClock.second = bufOBC[5];
+                    globalClock.hour = bufOBC[2];
+                    globalClock.minute = bufOBC[3];
+                    globalClock.second = bufOBC[4];
                     break;
                 default:
                     break;
             }
             
         //function test
-        case 0x75:
-            readADXL(ADXL_data,0);
+        case 0x80:
+            sendCanData(bufOBC);
             __delay_us(3000);
+            break;
+        case 0x81:
+            readADXL(ADXL_data,0);
+            __delay_us(20);
             sendCanData(ADXL_data);
             __delay_us(3000);
             break;
-        case 0x78:
-            HRM_SW_ON;
-            wait1ms(1000);
-            HRM_SW_OFF;
-            break;
-        case 0x79:
-            while(1){
-            sendCanData(&globalClock);
-            //__delay_us(3000);
-            __delay_ms(1000);
-            }
-            break;
-        case 0x73:
-            readSolarSequence();
-            break;
-        case 0x81:
-            selEEP   = 0x01;
-            sEEPROMH = 0x00;
-            sEEPROML = 0x00;
-            measuring_time = 62;
-            
-            readIMUsequence_ICM(selEEP,sEEPROMH,sEEPROML,measuring_time);
-            //__delay_ms(1000);
-            eEEPROMH = (sampling_counter[0] + sampling_counter[1] * 255 + 2) / 16;
-            eEEPROML = ((sampling_counter[0] + sampling_counter[1] * 255 + 2) % 16) * 0x10;
-            sendEEPROMdata(0x00,sEEPROMH,sEEPROML,eEEPROMH,eEEPROML);
+        case 0x82:
+            readITG(ITG_data,0);
+            __delay_us(20);
+            sendCanData(ITG_data);
             __delay_us(3000);
             break;
+        case 0x83:
+            readICM(ICM_data,0);
+            __delay_us(20);
+            sendCanData(ICM_data);
+            __delay_us(3000);
+            sendCanData(ICM_data[8]);
+            __delay_us(3000);
+            break;
+            
+        case 0x91:
+            for(int i=0;i<8;i++) EEPROMwritetest[i] = 0x11;
+            writeEEPROM(EE_P0_0,0x00,0x00,EEPROMwritetest,8);
+            __delay_us(5000);
+            readEEPROM(EE_P0_0,0x00,0x00,EEPROMreadtest,8);
+            __delay_us(5000);
+            sendCanData(EEPROMreadtest);
+            __delay_us(3000);
+            break;
+        case 0x92:
+            for(int i=0;i<8;i++) EEPROMwritetest[i] = 0x22;
+            writeEEPROM(EE_P0_1,0x00,0x00,EEPROMwritetest,8);
+            __delay_us(5000);
+            readEEPROM(EE_P0_1,0x00,0x00,EEPROMreadtest,8);
+            __delay_us(5000);
+            sendCanData(EEPROMreadtest);
+            __delay_us(3000);
+            break;
+        case 0x93:
+            for(int i=0;i<8;i++) EEPROMwritetest[i] = 0x33;
+            writeEEPROM(EE_P0_2,0x00,0x00,EEPROMwritetest,8);
+            __delay_us(5000);
+            readEEPROM(EE_P0_2,0x00,0x00,EEPROMreadtest,8);
+            __delay_us(5000);
+            sendCanData(EEPROMreadtest);
+            __delay_us(3000);
+            break;
+        case 0x94:
+            for(int i=0;i<8;i++) EEPROMwritetest[i] = 0x44;
+            writeEEPROM(EE_P0_3,0x00,0x00,EEPROMwritetest,8);
+            __delay_us(5000);
+            readEEPROM(EE_P0_3,0x00,0x00,EEPROMreadtest,8);
+            __delay_us(5000);
+            sendCanData(EEPROMreadtest);
+            __delay_us(3000);
+            break;
+            
+        case 0xA1:
+            readSolar1(solar1);
+            __delay_us(3000);   //tekitou
+            sendCanData(solar1);
+            __delay_us(3000);
+            break;
+        case 0xA2:
+            readSolar2(solar2);
+            __delay_us(3000);   //tekitou
+            sendCanData(solar2);
+            __delay_us(3000);
+            break;
+            
+        case 0xB1:
+            sendCanData(&globalClock);
+            wait1ms(3000);
+            sendCanData(&globalClock);
+            __delay_us(3000);
+            break;
+            
         default:
             break;
           

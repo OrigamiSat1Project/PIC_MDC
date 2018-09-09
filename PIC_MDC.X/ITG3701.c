@@ -17,7 +17,8 @@ const UBYTE ITG_FIFO_EN         = 0x23;
 const UBYTE ITG_INT_PIN_CFG     = 0x37;
 const UBYTE ITG_INT_ENABLE      = 0x38;
 const UBYTE ITG_INT_STATUS      = 0x3A;
-const UBYTE ITG_DATA            = 0x41;
+//const UBYTE ITG_DATA            = 0x41;
+const UBYTE ITG_DATA            = 0x43;
 const UBYTE ITG_PWR_MGMT_1      = 0x6B;
 const UBYTE ITG_PWR_MGMT_2      = 0x6C;
 
@@ -79,10 +80,17 @@ int readITG(UBYTE *data, int offset)
         sendI2CData(ITG_DATA);
         restartI2C(ITG_ADDR,RW_1);
         ack = ACK;
+        
+        for(i=0;i<6;i++){
+            if(i == 5) ack = NOACK;
+            data[offset+i] = readI2CData(ack);
+        }
+        /* 
         for(i=0;i<8;i++){
             if(i == 7) ack = NOACK;
             data[offset+i] = readI2CData(ack);
         }
+        */
     }else ans = -1;
     stopI2C();
     return ans;

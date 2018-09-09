@@ -1,0 +1,10 @@
+diff a/PIC_MDC.X/IMU.h b/PIC_MDC.X/IMU.h	(rejected hunks)
+@@ -6,7 +6,7 @@
+  // This definition is required to calibrate __delay_us() and __delay_ms()
+  #define _XTAL_FREQ 16000000       // Žg—p‚·‚éPIC“™‚É�?�æ‚è“®ìŽü”g�?��?�l‚ðÝ�?�è‚·‚é
+ #endif
+-UBYTE sampling_counter[2] = {};
++UBYTE sampling_counter[8] = {};
+ 
+ void readIMUsequence_ICM(unsigned char, unsigned char, unsigned char, int);
+ void readIMUsequence_adxl_ITG(unsigned char, unsigned char, unsigned char, int);
