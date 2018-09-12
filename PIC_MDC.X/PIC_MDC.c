@@ -97,6 +97,7 @@ void main()
     UBYTE solar2[8] = {};
     UBYTE EEPROMwritetest[8];
     UBYTE EEPROMreadtest[8];
+    UBYTE testboarder[8] = {0xAA,0xAA,0xAA,0xAA,0xAA,0xAA,0xAA,0xAA};
     int measuring_time;
     
     initAll();
@@ -108,19 +109,19 @@ void main()
         case 0x01:
             initAll();
             break;
-        case '0x10':   //LED
+        case 0x10:   //LED
             switch(bufOBC[1]){
-                case '0x10':
+                case 0x10:
                     LED_SW_ON;
                     LEDstatus[0] = LED_Status;
                     sendCanData(LEDstatus);
                     break;
-                case '0x11':
+                case 0x11:
                     LED_SW_OFF;
                     LEDstatus[0] = LED_Status;
                     sendCanData(LEDstatus);
                     break;
-                case '0x12':
+                case 0x12:
                     LED_SW_ON;
                     wait1ms(bufOBC[2]*1000);
                     LEDstatus[0] = LED_Status;
@@ -130,19 +131,19 @@ void main()
                 default:
                     break;
             }
-        case '0x21':   //HRM
+        case 0x21:   //HRM
             switch(bufOBC[1]){
-                case '0x21':
+                case 0x21:
                     HRM_SW_ON;
                     wait1ms(1);
                     HRM_SW_OFF;
                     break;
-                case '0x22':
+                case 0x22:
                     HRM_SW_ON;
                     wait1ms(bufOBC[2]*1000);
                     HRM_SW_OFF;
                     break;
-                case '0x23':
+                case 0x23:
                     HRM_SW_ON;
                     while(MSW == 0);
                     HRM_SW_OFF;
@@ -150,7 +151,7 @@ void main()
                 default:
                     break;
             }
-        case '0x31':
+        case 0x31:
             switch(bufOBC[1]){
                 case 0x31:
                     break;
@@ -315,7 +316,82 @@ void main()
             sendCanData(&globalClock);
             __delay_us(3000);
             break;
-            
+        case 0xC1:
+            sendCanData(bufOBC);
+            __delay_us(3000);
+            readADXL(ADXL_data,0);
+            __delay_us(20);
+            sendCanData(ADXL_data);
+            __delay_us(3000);
+            sendCanData(testboarder);
+            __delay_us(3000);
+            readITG(ITG_data,0);
+            __delay_us(20);
+            sendCanData(ITG_data);
+            __delay_us(3000);
+            sendCanData(testboarder);
+            __delay_us(3000);
+//            readICM(ICM_data,0);
+//            __delay_us(20);
+//            sendCanData(ICM_data);
+//            __delay_us(3000);
+//            sendCanData(ICM_data[8]);
+//            __delay_us(3000);
+//            sendCanData(testboarder);
+//            __delay_us(3000);
+            for(int i=0;i<8;i++) EEPROMwritetest[i] = 0x11;
+            writeEEPROM(EE_P0_0,0x00,0x00,EEPROMwritetest,8);
+            __delay_us(5000);
+            readEEPROM(EE_P0_0,0x00,0x00,EEPROMreadtest,8);
+            __delay_us(5000);
+            sendCanData(EEPROMreadtest);
+            __delay_us(3000);
+            sendCanData(testboarder);
+            __delay_us(3000);
+            for(int i=0;i<8;i++) EEPROMwritetest[i] = 0x22;
+            writeEEPROM(EE_P0_1,0x00,0x00,EEPROMwritetest,8);
+            __delay_us(5000);
+            readEEPROM(EE_P0_1,0x00,0x00,EEPROMreadtest,8);
+            __delay_us(5000);
+            sendCanData(EEPROMreadtest);
+            __delay_us(3000);
+            sendCanData(testboarder);
+            __delay_us(3000);
+            for(int i=0;i<8;i++) EEPROMwritetest[i] = 0x33;
+            writeEEPROM(EE_P0_2,0x00,0x00,EEPROMwritetest,8);
+            __delay_us(5000);
+            readEEPROM(EE_P0_2,0x00,0x00,EEPROMreadtest,8);
+            __delay_us(5000);
+            sendCanData(EEPROMreadtest);
+            __delay_us(3000);
+            sendCanData(testboarder);
+            __delay_us(3000);
+            for(int i=0;i<8;i++) EEPROMwritetest[i] = 0x44;
+            writeEEPROM(EE_P0_3,0x00,0x00,EEPROMwritetest,8);
+            __delay_us(5000);
+            readEEPROM(EE_P0_3,0x00,0x00,EEPROMreadtest,8);
+            __delay_us(5000);
+            sendCanData(EEPROMreadtest);
+            __delay_us(3000);
+            sendCanData(testboarder);
+            __delay_us(3000);
+            readSolar1(solar1);
+            __delay_us(3000);   //tekitou
+            sendCanData(solar1);
+            __delay_us(3000);
+            sendCanData(testboarder);
+            __delay_us(3000);
+            readSolar2(solar2);
+            __delay_us(3000);   //tekitou
+            sendCanData(solar2);
+            __delay_us(3000);
+            sendCanData(testboarder);
+            __delay_us(3000);
+            sendCanData(&globalClock);
+            wait1ms(3000);
+            sendCanData(&globalClock);
+            __delay_us(3000);
+            break;
         default:
             break;
           
