@@ -111,17 +111,17 @@ void main()
             break;
         case 0x10:   //LED
             switch(bufOBC[1]){
-                case 0x10:
+                case 0x11:
                     LED_SW_ON;
                     LEDstatus[0] = LED_Status;
                     sendCanData(LEDstatus);
                     break;
-                case 0x11:
+                case 0x12:
                     LED_SW_OFF;
                     LEDstatus[0] = LED_Status;
                     sendCanData(LEDstatus);
                     break;
-                case 0x12:
+                case 0x13:
                     LED_SW_ON;
                     wait1ms(bufOBC[2]*1000);
                     LEDstatus[0] = LED_Status;
@@ -131,7 +131,7 @@ void main()
                 default:
                     break;
             }
-        case 0x21:   //HRM
+        case 0x20:   //HRM
             switch(bufOBC[1]){
                 case 0x21:
                     HRM_SW_ON;
@@ -151,50 +151,36 @@ void main()
                 default:
                     break;
             }
-        case 0x31:
+        case 0x30:
             switch(bufOBC[1]){
                 case 0x31:
+                    measuring_time = bufOBC[2] * 62;
+                    selEEP   = bufOBC[3];
+                    sEEPROMH = bufOBC[4];
+                    sEEPROML = bufOBC[5];
+
+                    readIMUsequence_ICM(selEEP,sEEPROMH,sEEPROML,measuring_time);
+
                     break;
-            }
-            measuring_time = bufOBC[2] * 62;
-            selEEP   = bufOBC[3];
-            sEEPROMH = bufOBC[4];
-            sEEPROML = bufOBC[5];
-            
-            //readIMUsequence_ICM(selEEP,sEEPROMH,sEEPROML,measuring_time);
-            //readIMUsequence_adxl_ITG(selEEP,sEEPROMH,sEEPROML,measuring_time);
-            readIMUsequence(selEEP,sEEPROMH,sEEPROML,measuring_time);
-            
-            data_length[0] = (sampling_counter[0] + sampling_counter[1] * 255 + 2) / 16;
-            data_length[1] = ((sampling_counter[0] + sampling_counter[1] * 255 + 2) % 16) * 0x10;
-            sendCanData(data_length);
-            break;
-        case 0x0E:
-            sEEPROMH = bufOBC[1];
-            sEEPROML = bufOBC[2];
-            
-            
-            break;
-        case 'C':
-            measuring_time = bufOBC[1] * 62;
-            selEEP   = bufOBC[2];
-            sEEPROMH = bufOBC[3];
-            sEEPROML = bufOBC[4];
-            
-            readIMUsequence_ICM(selEEP,sEEPROMH,sEEPROML,measuring_time);
-            
-            eEEPROMH = (sampling_counter[0] + sampling_counter[1] * 255 + 2) / 16;
-            eEEPROML = ((sampling_counter[0] + sampling_counter[1] * 255 + 2) % 16) * 0x10;
-            sendEEPROMdata(selEEP,sEEPROMH,sEEPROML,eEEPROMH,eEEPROML);
-            break;
-        case 'S':
+                case 0x32:
+                    measuring_time = bufOBC[2] * 62;
+                    selEEP = bufOBC[3];
+                    sEEPROMH = bufOBC[4];
+                    sEEPROML = bufOBC[5];
+
+                    readIMUsequenxe_adxl_ITG(selEEP,sEEPROMH,sEEPROML,measuring_time);
+
+                    break;
+                default:
+                    break;
+        case 0x40:
             switch(bufOBC[1]){
-                case '1':
+                case 0x41:
                     readSolar1(solar1);
                     wait1ms(1000);
                     sendCanData(solar1);
                     break;
-                case '2':
+                case 0x42:
                     readSolar2(solar2);
                     wait1ms(1000);
                     sendCanData(solar2);
@@ -218,20 +204,14 @@ void main()
             
             sendEEPROMdata(selEEP,sEEPROMH,sEEPROML,eEEPROMH,eEEPROML);
             break;
-        case 'T':
-            switch(bufOBC[1]){
-                case 'H':
-                    globalClock.year = bufOBC[2];
-                    globalClock.month = bufOBC[3];
-                    globalClock.day = bufOBC[4];
-                    break;
-                case 'L':
-                    globalClock.hour = bufOBC[2];
-                    globalClock.minute = bufOBC[3];
-                    globalClock.second = bufOBC[4];
-                    break;
-                default:
-                    break;
+        case 0x60:
+                globalClock.year = bufOBC[1];
+                globalClock.month = bufOBC[2];
+                globalClock.day = bufOBC[3];
+                globalClock.hour = bufOBC[4];
+                globalClock.minute = bufOBC[5];
+                globalClock.second = bufOBC[6];
+                break;
             }
             
         //function test
