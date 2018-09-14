@@ -168,7 +168,7 @@ void main()
                     sEEPROMH = bufOBC[4];
                     sEEPROML = bufOBC[5];
 
-                    readIMUsequenxe_adxl_ITG(selEEP,sEEPROMH,sEEPROML,measuring_time);
+                    readIMUsequence_adxl_ITG(selEEP,sEEPROMH,sEEPROML,measuring_time);
 
                     break;
                 default:
