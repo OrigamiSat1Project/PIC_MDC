@@ -13,8 +13,8 @@
 
 void readIMUsequence_ICM(UBYTE ee_p, UBYTE EEPROMH, UBYTE EEPROML, int measuring_time){
     
-    if(EEPROML % 0x08 != 0) break;
-   
+//    if(EEPROML % 0x08 != 0) return;
+    
    UBYTE zeros[10] = {};
    UBYTE IMUdata[16] = {};
    UBYTE selEEP = ee_p;
@@ -31,9 +31,9 @@ void readIMUsequence_ICM(UBYTE ee_p, UBYTE EEPROMH, UBYTE EEPROML, int measuring
    __delay_us(5000);
    EEPROML += 0x0A;
    
-   sampling_counter = 0;
-   sampling_counterH = 0;
-   sampling_counterL = 0;
+   sampling_counter = 0x0000;
+   sampling_counterH = 0x00;
+   sampling_counterL = 0x00;
    constant_timer_counter = 0;
 
     while(constant_timer_counter <= measuring_time){
@@ -71,10 +71,6 @@ void readIMUsequence_ICM(UBYTE ee_p, UBYTE EEPROMH, UBYTE EEPROML, int measuring
         
         
     // ending
-    IMUdata[0] = sampling_counterH;
-    IMUdata[1] = sampling_counterL;
-    writeEEPROM(selEEP,initEEPROMH,initEEPROML+0x06,IMUdata,2);
-    __delay_us(5000);
     writeEEPROM(selEEP, EEPROMH, EEPROML, &globalClock,6);
     __delay_us(5000);
     EEPROML += 0x06;
@@ -87,7 +83,7 @@ void readIMUsequence_ICM(UBYTE ee_p, UBYTE EEPROMH, UBYTE EEPROML, int measuring
 
 void readIMUsequence_adxl_ITG(UBYTE ee_p, UBYTE EEPROMH, UBYTE EEPROML, int measuring_time){
     
-    if(EEPROML % 0x08 != 0) break;
+   if(EEPROML % 0x08 != 0) return;
    
    UBYTE zeros[10] = {};
    UBYTE IMUdata[16] = {};
@@ -105,9 +101,9 @@ void readIMUsequence_adxl_ITG(UBYTE ee_p, UBYTE EEPROMH, UBYTE EEPROML, int meas
    __delay_us(5000);
    EEPROML += 0x0A;
    
-   sampling_counter = 0;
-   sampling_counterH = 0;
-   sampling_counterL = 0;
+   sampling_counter = 0x0000;
+   sampling_counterH = 0x00;
+   sampling_counterL = 0x00;
    constant_timer_counter = 0;
 
     while(constant_timer_counter <= measuring_time){
@@ -147,10 +143,6 @@ void readIMUsequence_adxl_ITG(UBYTE ee_p, UBYTE EEPROMH, UBYTE EEPROML, int meas
         
         
     // ending
-    IMUdata[0] = sampling_counterH;
-    IMUdata[1] = sampling_counterL;
-    writeEEPROM(selEEP,initEEPROMH,initEEPROML+0x06,IMUdata,2);
-    __delay_us(5000);
     writeEEPROM(selEEP, EEPROMH, EEPROML, &globalClock,6);
     __delay_us(5000);
     EEPROML += 0x06;

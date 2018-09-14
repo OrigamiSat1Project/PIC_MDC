@@ -101,6 +101,7 @@ void main()
     int measuring_time;
     
     initAll();
+    syncWithOBC(OBCClock);
     
     while(1){
     readCanData(bufOBC);
@@ -131,6 +132,7 @@ void main()
                 default:
                     break;
             }
+            break;
         case 0x20:   //HRM
             switch(bufOBC[1]){
                 case 0x21:
@@ -151,6 +153,7 @@ void main()
                 default:
                     break;
             }
+            break;
         case 0x30:
             switch(bufOBC[1]){
                 case 0x31:
@@ -160,6 +163,11 @@ void main()
                     sEEPROML = bufOBC[5];
 
                     readIMUsequence_ICM(selEEP,sEEPROMH,sEEPROML,measuring_time);
+                    
+                    data_length[6] = (sampling_counterL + sampling_counterH * 256 + 2) / 16;
+                    data_length[7] = ((sampling_counterL + sampling_counterH * 256 + 2) % 16) * 0x10;
+                    writeEEPROM(selEEP,sEEPROMH,sEEPROML+0x06,&data_length[6],2);
+                    __delay_us(5000);
 
                     break;
                 case 0x32:
@@ -169,10 +177,16 @@ void main()
                     sEEPROML = bufOBC[5];
 
                     readIMUsequence_adxl_ITG(selEEP,sEEPROMH,sEEPROML,measuring_time);
+                    
+                    data_length[6] = (sampling_counterL + sampling_counterH * 256 + 2) / 16;
+                    data_length[7] = ((sampling_counterL + sampling_counterH * 256 + 2) % 16) * 0x10;
+                    writeEEPROM(selEEP,sEEPROMH,sEEPROML+0x06,&data_length[6],2);
+                    __delay_us(5000);
 
                     break;
                 default:
                     break;
+            }
         case 0x40:
             switch(bufOBC[1]){
                 case 0x41:
@@ -188,6 +202,24 @@ void main()
                 default:
                     break;
             }
+            break;
+        case 0x50:
+            selEEP = bufOBC[1];
+            sEEPROMH = bufOBC[2];
+            sEEPROML = bufOBC[3];
+            
+//            data_length[6] = (sampling_counterL + sampling_counterH * 256 + 2) / 16;
+//            data_length[7] = ((sampling_counterL + sampling_counterH * 256 + 2) % 16) * 0x10;
+//            writeEEPROM(selEEP,sEEPROMH,sEEPROML,&data_length,8);
+//            __delay_us(5000);
+            readEEPROM(selEEP,sEEPROMH,sEEPROML,&data_length,8);
+            __delay_us(5000);
+//            data_length[6] = (sampling_counterL + sampling_counterH * 256 + 2) / 16;
+//            data_length[7] = ((sampling_counterL + sampling_counterH * 256 + 2) % 16) * 0x10;
+            sendCanData(&data_length);
+            __delay_us(3000);
+            break;
+            
         case 0xE0:
             selEEP = bufOBC[1];
             sEEPROMH = bufOBC[2];
@@ -212,7 +244,6 @@ void main()
                 globalClock.minute = bufOBC[5];
                 globalClock.second = bufOBC[6];
                 break;
-            }
             
         //function test
         case 0x80:
