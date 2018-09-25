@@ -95,6 +95,7 @@ void main()
     UBYTE LEDstatus[8] = {};
     UBYTE solar1[8] = {};
     UBYTE solar2[8] = {};
+    UBYTE solar_datalength[8] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x02};
     UBYTE EEPROMwritetest[8];
     UBYTE EEPROMreadtest[8];
     UBYTE testboarder[8] = {0xAA,0xAA,0xAA,0xAA,0xAA,0xAA,0xAA,0xAA};
@@ -190,14 +191,26 @@ void main()
         case 0x40:
             switch(bufOBC[1]){
                 case 0x41:
+                    selEEP = bufOBC[2];
+                    sEEPROMH = bufOBC[3];
+                    sEEPROML = bufOBC[4];
                     readSolar1(solar1);
                     wait1ms(1000);
-                    sendCanData(solar1);
+                    writeEEPROM(selEEP,sEEPROMH,sEEPROML,&solar_datalength,8);
+                    __delay_us(5000);
+                    writeEEPROM(selEEP,sEEPROMH,sEEPROML,&solar1,8);
+                    __delay_us(5000);
                     break;
                 case 0x42:
-                    readSolar2(solar2);
+                    selEEP = bufOBC[2];
+                    sEEPROMH = bufOBC[3];
+                    sEEPROML = bufOBC[4];
+                    readSolar1(solar1);
                     wait1ms(1000);
-                    sendCanData(solar2);
+                    writeEEPROM(selEEP,sEEPROMH,sEEPROML,&solar_datalength,8);
+                    __delay_us(5000);
+                    writeEEPROM(selEEP,sEEPROMH,sEEPROML,&solar1,8);
+                    __delay_us(5000);
                     break;
                 default:
                     break;
@@ -207,15 +220,8 @@ void main()
             selEEP = bufOBC[1];
             sEEPROMH = bufOBC[2];
             sEEPROML = bufOBC[3];
-            
-//            data_length[6] = (sampling_counterL + sampling_counterH * 256 + 2) / 16;
-//            data_length[7] = ((sampling_counterL + sampling_counterH * 256 + 2) % 16) * 0x10;
-//            writeEEPROM(selEEP,sEEPROMH,sEEPROML,&data_length,8);
-//            __delay_us(5000);
             readEEPROM(selEEP,sEEPROMH,sEEPROML,&data_length,8);
             __delay_us(5000);
-//            data_length[6] = (sampling_counterL + sampling_counterH * 256 + 2) / 16;
-//            data_length[7] = ((sampling_counterL + sampling_counterH * 256 + 2) % 16) * 0x10;
             sendCanData(&data_length);
             __delay_us(3000);
             break;
