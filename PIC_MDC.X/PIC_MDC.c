@@ -198,7 +198,7 @@ void main()
                     wait1ms(1000);
                     writeEEPROM(selEEP,sEEPROMH,sEEPROML,&solar_datalength,8);
                     __delay_us(5000);
-                    writeEEPROM(selEEP,sEEPROMH,sEEPROML,&solar1,8);
+                    writeEEPROM(selEEP,sEEPROMH,sEEPROML + 0x08,&solar1,8);
                     __delay_us(5000);
                     break;
                 case 0x42:
@@ -209,7 +209,7 @@ void main()
                     wait1ms(1000);
                     writeEEPROM(selEEP,sEEPROMH,sEEPROML,&solar_datalength,8);
                     __delay_us(5000);
-                    writeEEPROM(selEEP,sEEPROMH,sEEPROML,&solar1,8);
+                    writeEEPROM(selEEP,sEEPROMH,sEEPROML + 0x08,&solar1,8);
                     __delay_us(5000);
                     break;
                 default:
