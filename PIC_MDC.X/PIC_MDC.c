@@ -91,7 +91,9 @@ void main()
     UBYTE eEEPROML = 0x00;
     UWORD eEEPROM = 0x0000;
     UBYTE selEEP;
+    UBYTE EEP;
     UBYTE data_length[8] = {};
+    USLONG data_leng;
     UBYTE LEDstatus[8] = {};
     UBYTE solar1[8] = {};
     UBYTE solar2[8] = {};
@@ -173,15 +175,17 @@ void main()
                     break;
                 case 0x32:
                     measuring_time = bufOBC[2] * 62;
-                    selEEP = bufOBC[3];
+                    EEP = bufOBC[3];
                     sEEPROMH = bufOBC[4];
                     sEEPROML = bufOBC[5];
 
-                    readIMUsequence_adxl_ITG(selEEP,sEEPROMH,sEEPROML,measuring_time);
+                    readIMUsequence_adxl_ITG(EEP,sEEPROMH,sEEPROML,measuring_time);
                     
-                    data_length[6] = (sampling_counterL + sampling_counterH * 256 + 2) / 16;
-                    data_length[7] = ((sampling_counterL + sampling_counterH * 256 + 2) % 16) * 0x10;
-                    writeEEPROM(selEEP,sEEPROMH,sEEPROML+0x06,&data_length[6],2);
+                    data_leng = (sampling_counterL + sampling_counterH * 255 + 2)*16;
+                    data_length[5] = (UBYTE)(data_leng >> 16);
+                    data_length[6] = (UBYTE)(data_leng >> 8);
+                    data_length[7] = (UBYTE)data_leng;
+                    writeEEPROM(EEP,sEEPROMH,sEEPROML+0x0C,&data_length[4],4);
                     __delay_us(5000);
 
                     break;
@@ -196,9 +200,7 @@ void main()
                     sEEPROML = bufOBC[4];
                     readSolar1(solar1);
                     wait1ms(1000);
-                    writeEEPROM(selEEP,sEEPROMH,sEEPROML,&solar_datalength,8);
-                    __delay_us(5000);
-                    writeEEPROM(selEEP,sEEPROMH,sEEPROML + 0x08,&solar1,8);
+                    writeEEPROM(selEEP,sEEPROMH,sEEPROML,&solar1,8);
                     __delay_us(5000);
                     break;
                 case 0x42:
@@ -207,9 +209,7 @@ void main()
                     sEEPROML = bufOBC[4];
                     readSolar1(solar1);
                     wait1ms(1000);
-                    writeEEPROM(selEEP,sEEPROMH,sEEPROML,&solar_datalength,8);
-                    __delay_us(5000);
-                    writeEEPROM(selEEP,sEEPROMH,sEEPROML + 0x08,&solar1,8);
+                    writeEEPROM(selEEP,sEEPROMH,sEEPROML,&solar1,8);
                     __delay_us(5000);
                     break;
                 default:
@@ -220,7 +220,7 @@ void main()
             selEEP = bufOBC[1];
             sEEPROMH = bufOBC[2];
             sEEPROML = bufOBC[3];
-            readEEPROM(selEEP,sEEPROMH,sEEPROML,&data_length,8);
+            readEEPROM(selEEP,sEEPROMH,sEEPROML+0x08,&data_length,8);
             __delay_us(5000);
             sendCanData(&data_length);
             __delay_us(3000);
