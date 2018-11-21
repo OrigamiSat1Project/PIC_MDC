@@ -10,7 +10,7 @@
 #ifndef INTERRUPT_H
 #define	INTERRUPT_H
 int timer_counter = 0;
-int constant_timer_counter = 0;
+UINT constant_timer_counter = 0;
 
 //  XXX     :   this is not good timer declation is here
 //UDWORD globalCount;
@@ -29,5 +29,7 @@ UINT syncWithOBC(UBYTE *OBCClock);
 void increment_globalClock(void);
 void initInterrupt(void);
 //void interrupt incrementTimer(void);
+void delay_ms(unsigned short long);
+void delay_us(unsigned short long);
 
 #endif	/* INTERRUPT_H */

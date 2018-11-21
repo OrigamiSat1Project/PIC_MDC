@@ -85,6 +85,7 @@ void main()
     UBYTE ITG_data[8] = {};
     UBYTE ICM_data[16] = {};
     UBYTE SMA_data[16] = {};
+    UBYTE rate;
     UBYTE sEEPROMH = 0x00;
     UBYTE sEEPROML = 0x00;
     UBYTE eEEPROMH = 0x00;
@@ -101,7 +102,7 @@ void main()
     UBYTE EEPROMwritetest[8];
     UBYTE EEPROMreadtest[8];
     UBYTE testboarder[8] = {0xAA,0xAA,0xAA,0xAA,0xAA,0xAA,0xAA,0xAA};
-    int measuring_time;
+    UINT measuring_time;
     
     initAll();
     syncWithOBC(OBCClock);
@@ -160,7 +161,7 @@ void main()
         case 0x30:
             switch(bufOBC[1]){
                 case 0x31:
-                    measuring_time = bufOBC[2] * 62;
+                    measuring_time = (UINT)bufOBC[2] * 62;
                     selEEP   = bufOBC[3];
                     sEEPROMH = bufOBC[4];
                     sEEPROML = bufOBC[5];
@@ -174,19 +175,37 @@ void main()
 
                     break;
                 case 0x32:
-                    measuring_time = bufOBC[2] * 62;
+                    measuring_time = (UINT)bufOBC[2] * 62;
                     EEP = bufOBC[3];
                     sEEPROMH = bufOBC[4];
                     sEEPROML = bufOBC[5];
 
                     readIMUsequence_adxl_ITG(EEP,sEEPROMH,sEEPROML,measuring_time);
                     
-                    data_leng = (sampling_counterL + sampling_counterH * 255 + 2)*16;
+                    data_leng = ((USLONG)sampling_counterL + (USLONG)sampling_counterH * 255 + 2)*16;
                     data_length[5] = (UBYTE)(data_leng >> 16);
                     data_length[6] = (UBYTE)(data_leng >> 8);
                     data_length[7] = (UBYTE)data_leng;
                     writeEEPROM(EEP,sEEPROMH,sEEPROML+0x0C,&data_length[4],4);
                     __delay_us(5000);
+//                    sendCanData(data_length);
+
+                    break;
+                case 0x33:
+                    measuring_time = bufOBC[2] * 62;
+                    EEP = bufOBC[3];
+                    sEEPROMH = bufOBC[4];
+                    sEEPROML = bufOBC[5];
+
+                    readIMUsequence_adxl_ITG_50Hz(EEP,sEEPROMH,sEEPROML,measuring_time);
+                    
+                    data_leng = ((USLONG)sampling_counterL + (USLONG)sampling_counterH * 255 + 2)*16;
+                    data_length[5] = (UBYTE)(data_leng >> 16);
+                    data_length[6] = (UBYTE)(data_leng >> 8);
+                    data_length[7] = (UBYTE)data_leng;
+                    writeEEPROM(EEP,sEEPROMH,sEEPROML+0x0C,&data_length[4],4);
+                    __delay_us(5000);
+//                    sendCanData(data_length);
 
                     break;
                 default:
@@ -232,9 +251,9 @@ void main()
             sEEPROML = bufOBC[3];
             data_length[1] = bufOBC[4];
             data_length[0] = bufOBC[5];
-            eEEPROM = sEEPROML + (sEEPROMH << 8) + (data_length[1] << 8) + data_length[0];
-            eEEPROMH = eEEPROM >> 8;
-            eEEPROML = eEEPROM;
+            eEEPROM = (UWORD)sEEPROML + ((UWORD)sEEPROMH << 8) + ((UWORD)data_length[1] << 8) + (UWORD)data_length[0];
+            eEEPROMH = (UBYTE)(eEEPROM >> 8);
+            eEEPROML = (UBYTE)eEEPROM;
             
             if((eEEPROML % 8) != 0){
                 eEEPROML = data_length[0] + 8 * (1 - data_length[0]);

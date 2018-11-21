@@ -77,7 +77,7 @@ void sendEEPROMdata(UBYTE ee_p, UBYTE address1, UBYTE address2, UBYTE address3, 
         }else{
             address2 += 0x08;
         }
-        if(address1 == 0xF8){
+        if((address1 == 0xFF) && (address2 == 0xF8)){
             ee_p += 1;
             if(ee_p == 4){
                 break;

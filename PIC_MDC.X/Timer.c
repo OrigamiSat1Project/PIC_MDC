@@ -119,3 +119,15 @@ void interrupt incrementTimer(void){
     interruptI2C();
 }
 */
+
+void delay_us(USLONG time){
+    for(USLONG i = 0; i < time ; i++){
+        __delay_us(1);
+    }
+}
+
+void delay_ms(USLONG time){
+    for (USLONG i = 0 ; i < time ; i++){
+        __delay_ms(1);
+    }
+}
